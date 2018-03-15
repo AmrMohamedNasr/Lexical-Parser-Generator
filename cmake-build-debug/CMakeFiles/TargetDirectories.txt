@@ -1,0 +1,3 @@
+/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles/edit_cache.dir
+/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles/compilers.dir
