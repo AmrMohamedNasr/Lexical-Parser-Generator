@@ -258,6 +258,87 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+models/Edge.o: models/Edge.cpp.o
+
+.PHONY : models/Edge.o
+
+# target to build an object file
+models/Edge.cpp.o:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/Edge.cpp.o
+.PHONY : models/Edge.cpp.o
+
+models/Edge.i: models/Edge.cpp.i
+
+.PHONY : models/Edge.i
+
+# target to preprocess a source file
+models/Edge.cpp.i:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/Edge.cpp.i
+.PHONY : models/Edge.cpp.i
+
+models/Edge.s: models/Edge.cpp.s
+
+.PHONY : models/Edge.s
+
+# target to generate assembly for a file
+models/Edge.cpp.s:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/Edge.cpp.s
+.PHONY : models/Edge.cpp.s
+
+models/FiniteStateAcceptor.o: models/FiniteStateAcceptor.cpp.o
+
+.PHONY : models/FiniteStateAcceptor.o
+
+# target to build an object file
+models/FiniteStateAcceptor.cpp.o:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o
+.PHONY : models/FiniteStateAcceptor.cpp.o
+
+models/FiniteStateAcceptor.i: models/FiniteStateAcceptor.cpp.i
+
+.PHONY : models/FiniteStateAcceptor.i
+
+# target to preprocess a source file
+models/FiniteStateAcceptor.cpp.i:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.i
+.PHONY : models/FiniteStateAcceptor.cpp.i
+
+models/FiniteStateAcceptor.s: models/FiniteStateAcceptor.cpp.s
+
+.PHONY : models/FiniteStateAcceptor.s
+
+# target to generate assembly for a file
+models/FiniteStateAcceptor.cpp.s:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.s
+.PHONY : models/FiniteStateAcceptor.cpp.s
+
+models/Node.o: models/Node.cpp.o
+
+.PHONY : models/Node.o
+
+# target to build an object file
+models/Node.cpp.o:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/Node.cpp.o
+.PHONY : models/Node.cpp.o
+
+models/Node.i: models/Node.cpp.i
+
+.PHONY : models/Node.i
+
+# target to preprocess a source file
+models/Node.cpp.i:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/Node.cpp.i
+.PHONY : models/Node.cpp.i
+
+models/Node.s: models/Node.cpp.s
+
+.PHONY : models/Node.s
+
+# target to generate assembly for a file
+models/Node.cpp.s:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/Node.cpp.s
+.PHONY : models/Node.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -282,6 +363,15 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... models/Edge.o"
+	@echo "... models/Edge.i"
+	@echo "... models/Edge.s"
+	@echo "... models/FiniteStateAcceptor.o"
+	@echo "... models/FiniteStateAcceptor.i"
+	@echo "... models/FiniteStateAcceptor.s"
+	@echo "... models/Node.o"
+	@echo "... models/Node.i"
+	@echo "... models/Node.s"
 .PHONY : help
 
 

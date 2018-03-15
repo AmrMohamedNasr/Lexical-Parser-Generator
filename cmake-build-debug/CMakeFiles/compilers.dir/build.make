@@ -177,13 +177,88 @@ CMakeFiles/compilers.dir/DfaMinimizer.cpp.o.provides: CMakeFiles/compilers.dir/D
 CMakeFiles/compilers.dir/DfaMinimizer.cpp.o.provides.build: CMakeFiles/compilers.dir/DfaMinimizer.cpp.o
 
 
+CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o: CMakeFiles/compilers.dir/flags.make
+CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o: ../models/FiniteStateAcceptor.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o -c "/media/programajor/Work/Engineering/Compiler Project/compilers/models/FiniteStateAcceptor.cpp"
+
+CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/programajor/Work/Engineering/Compiler Project/compilers/models/FiniteStateAcceptor.cpp" > CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.i
+
+CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/programajor/Work/Engineering/Compiler Project/compilers/models/FiniteStateAcceptor.cpp" -o CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.s
+
+CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o.requires:
+
+.PHONY : CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o.requires
+
+CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o.provides: CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o.provides.build
+.PHONY : CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o.provides
+
+CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o.provides.build: CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o
+
+
+CMakeFiles/compilers.dir/models/Node.cpp.o: CMakeFiles/compilers.dir/flags.make
+CMakeFiles/compilers.dir/models/Node.cpp.o: ../models/Node.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/compilers.dir/models/Node.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/compilers.dir/models/Node.cpp.o -c "/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.cpp"
+
+CMakeFiles/compilers.dir/models/Node.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compilers.dir/models/Node.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.cpp" > CMakeFiles/compilers.dir/models/Node.cpp.i
+
+CMakeFiles/compilers.dir/models/Node.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compilers.dir/models/Node.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.cpp" -o CMakeFiles/compilers.dir/models/Node.cpp.s
+
+CMakeFiles/compilers.dir/models/Node.cpp.o.requires:
+
+.PHONY : CMakeFiles/compilers.dir/models/Node.cpp.o.requires
+
+CMakeFiles/compilers.dir/models/Node.cpp.o.provides: CMakeFiles/compilers.dir/models/Node.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/Node.cpp.o.provides.build
+.PHONY : CMakeFiles/compilers.dir/models/Node.cpp.o.provides
+
+CMakeFiles/compilers.dir/models/Node.cpp.o.provides.build: CMakeFiles/compilers.dir/models/Node.cpp.o
+
+
+CMakeFiles/compilers.dir/models/Edge.cpp.o: CMakeFiles/compilers.dir/flags.make
+CMakeFiles/compilers.dir/models/Edge.cpp.o: ../models/Edge.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/compilers.dir/models/Edge.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/compilers.dir/models/Edge.cpp.o -c "/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.cpp"
+
+CMakeFiles/compilers.dir/models/Edge.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compilers.dir/models/Edge.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.cpp" > CMakeFiles/compilers.dir/models/Edge.cpp.i
+
+CMakeFiles/compilers.dir/models/Edge.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compilers.dir/models/Edge.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.cpp" -o CMakeFiles/compilers.dir/models/Edge.cpp.s
+
+CMakeFiles/compilers.dir/models/Edge.cpp.o.requires:
+
+.PHONY : CMakeFiles/compilers.dir/models/Edge.cpp.o.requires
+
+CMakeFiles/compilers.dir/models/Edge.cpp.o.provides: CMakeFiles/compilers.dir/models/Edge.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/Edge.cpp.o.provides.build
+.PHONY : CMakeFiles/compilers.dir/models/Edge.cpp.o.provides
+
+CMakeFiles/compilers.dir/models/Edge.cpp.o.provides.build: CMakeFiles/compilers.dir/models/Edge.cpp.o
+
+
 # Object files for target compilers
 compilers_OBJECTS = \
 "CMakeFiles/compilers.dir/main.cpp.o" \
 "CMakeFiles/compilers.dir/NfaBuilder.cpp.o" \
 "CMakeFiles/compilers.dir/NfaCombiner.cpp.o" \
 "CMakeFiles/compilers.dir/NfaDfaConverter.cpp.o" \
-"CMakeFiles/compilers.dir/DfaMinimizer.cpp.o"
+"CMakeFiles/compilers.dir/DfaMinimizer.cpp.o" \
+"CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o" \
+"CMakeFiles/compilers.dir/models/Node.cpp.o" \
+"CMakeFiles/compilers.dir/models/Edge.cpp.o"
 
 # External object files for target compilers
 compilers_EXTERNAL_OBJECTS =
@@ -193,9 +268,12 @@ compilers: CMakeFiles/compilers.dir/NfaBuilder.cpp.o
 compilers: CMakeFiles/compilers.dir/NfaCombiner.cpp.o
 compilers: CMakeFiles/compilers.dir/NfaDfaConverter.cpp.o
 compilers: CMakeFiles/compilers.dir/DfaMinimizer.cpp.o
+compilers: CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o
+compilers: CMakeFiles/compilers.dir/models/Node.cpp.o
+compilers: CMakeFiles/compilers.dir/models/Edge.cpp.o
 compilers: CMakeFiles/compilers.dir/build.make
 compilers: CMakeFiles/compilers.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable compilers"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable compilers"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/compilers.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -208,6 +286,9 @@ CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/NfaBuilder.cpp.o.req
 CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/NfaCombiner.cpp.o.requires
 CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/NfaDfaConverter.cpp.o.requires
 CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/DfaMinimizer.cpp.o.requires
+CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o.requires
+CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/models/Node.cpp.o.requires
+CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/models/Edge.cpp.o.requires
 
 .PHONY : CMakeFiles/compilers.dir/requires
 

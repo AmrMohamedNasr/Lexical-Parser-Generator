@@ -111,6 +111,24 @@
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/main.cpp">
 			<Option target="compilers"/>
 		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.cpp">
+			<Option target="compilers"/>
+		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.h">
+			<Option target="compilers"/>
+		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/FiniteStateAcceptor.cpp">
+			<Option target="compilers"/>
+		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/FiniteStateAcceptor.h">
+			<Option target="compilers"/>
+		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.cpp">
+			<Option target="compilers"/>
+		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h">
+			<Option target="compilers"/>
+		</Unit>
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

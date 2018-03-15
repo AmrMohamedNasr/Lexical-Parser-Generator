@@ -4,6 +4,9 @@ file(REMOVE_RECURSE
   "CMakeFiles/compilers.dir/NfaCombiner.cpp.o"
   "CMakeFiles/compilers.dir/NfaDfaConverter.cpp.o"
   "CMakeFiles/compilers.dir/DfaMinimizer.cpp.o"
+  "CMakeFiles/compilers.dir/models/FiniteStateAcceptor.cpp.o"
+  "CMakeFiles/compilers.dir/models/Node.cpp.o"
+  "CMakeFiles/compilers.dir/models/Edge.cpp.o"
   "compilers.pdb"
   "compilers"
 )
