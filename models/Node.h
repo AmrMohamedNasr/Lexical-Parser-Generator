@@ -15,7 +15,13 @@ class Node {
     private:
         string name;
         vector<Edge> edges;
-        bool isAcceptedState;
+        bool acceptedState;
+    public:
+    	bool isAcceptedState();
+    	string getName();
+    	vector<Edge> getEdges();
+    	void addEdge(Edge e);
+    	Node(string stateName, bool accept);
 };
 
 

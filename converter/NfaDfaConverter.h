@@ -5,7 +5,7 @@
 #ifndef COMPILERS_NFADFACONVERTER_H
 #define COMPILERS_NFADFACONVERTER_H
 
-#include "../models/FiniteStateAcceptor.h"
+#include "../models/Node.h"
 
 class NfaDfaConverter {
 
@@ -15,7 +15,7 @@ class NfaDfaConverter {
          * @param combinedNfa the combined NFA from the combiner
          * @return a non minimized DFA from the given NFA.
          */
-        FiniteStateAcceptor getNonMinimizedDFA(FiniteStateAcceptor combinedNfa);
+        Node getNonMinimizedDFA(Node combinedNfa);
 };
 
 

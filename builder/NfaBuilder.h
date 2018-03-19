@@ -6,7 +6,11 @@
 #define COMPILERS_NFABUILDER_H
 
 
-#include "../models/FiniteStateAcceptor.h"
+#include "../models/Node.h"
+#include <vector>
+#include <iostream>
+
+using namespace std;
 
 class NfaBuilder {
     public:
@@ -16,7 +20,7 @@ class NfaBuilder {
          * @param grammar the grammar from the given text file.
          * @return a list of separated NFAs created from the grammar file.
          */
-        vector<FiniteStateAcceptor> getSeparatedNfas(string grammar);
+        vector<Node> getSeparatedNfas(ifstream grammar_stream);
 };
 
 

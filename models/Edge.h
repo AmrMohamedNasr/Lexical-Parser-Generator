@@ -7,21 +7,23 @@
 
 #include <string>
 #include "Node.h"
+#include <vector>
 
 using namespace std;
 
 class Edge {
     private:
-        string transition;
-        Node* start;
-        Node* end;
-
+        char first_allowed_char;
+        char last_allowed_char;
+        Node* target_node;
+        int allowing_range;
+        vector<char> disallowed_chars;
     public:
-        string getTransition() { return transition; }
-
-        Node* getStart() { return start; }
-
-        Node* getEnd() { return end; }
+        Node * do_transition(char c);
+        bool is_eps_transition(void);
+        bool valid_transition(char c);
+        void disallow_character(char c);
+        Edge(char start, char end, Node *target);
 };
 
 

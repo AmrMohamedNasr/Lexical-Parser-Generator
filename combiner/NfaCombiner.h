@@ -6,7 +6,10 @@
 #define COMPILERS_NFACOMBINER_H
 
 
-#include "../models/FiniteStateAcceptor.h"
+#include "../models/Node.h"
+#include <vector>
+
+using namespace std;
 
 class NFACombiner {
     public:
@@ -16,7 +19,7 @@ class NFACombiner {
          * @param separatedStateAcceptors the separated NFAs from the builder
          * @return a combined NFA for all the separated NFAs.
          */
-        FiniteStateAcceptor getCombinedNfa(vector<FiniteStateAcceptor> separatedStateAcceptors);
+        Node getCombinedNfa(vector<Node> separatedStateAcceptors);
 };
 
 
