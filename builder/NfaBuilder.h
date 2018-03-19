@@ -28,9 +28,9 @@ class NfaBuilder {
          * Example lists:
          * regExpNames : {"id", "digit"}
          * regExp : { "a-z A-Z |", "0-9"}
-         * @return a list of separated NFAs created from the grammar file.
+         * @return a list of separated NFAs created from the grammar file in param nfas.
          */
-        vector<Node> getSeparatedNfas(vector<string> regExpNames, vector<string> regExp);
+        void getSeparatedNfas(vector<Node> * nfas, vector<string> * regExpNames, vector<string> * regExp);
 };
 
 

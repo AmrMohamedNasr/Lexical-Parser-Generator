@@ -15,7 +15,7 @@ class NfaDfaConverter {
          * @param combinedNfa the combined NFA from the combiner
          * @return a non minimized DFA from the given NFA.
          */
-        Node getNonMinimizedDFA(Node combinedNfa);
+        Node *getNonMinimizedDFA(Node *combinedNfa);
 };
 
 

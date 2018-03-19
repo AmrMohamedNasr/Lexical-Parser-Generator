@@ -16,7 +16,7 @@ class DfaMinimizer {
          * @param nonMinimizedDFA the non minimized DFA from the converter
          * @return a minimized DFA from the given non minimized one.
          */
-        Node getMinimizedDFA(Node nonMinimizedDFA);
+        Node *getMinimizedDFA(Node *nonMinimizedDFA);
 };
 
 
