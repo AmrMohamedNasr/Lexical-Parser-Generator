@@ -9,7 +9,7 @@
 #define P1_TESTS_H_
 
 void test_edge(void);
-
+void test_node(void);
 
 
 #endif /* P1_TESTS_H_ */

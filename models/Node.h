@@ -13,13 +13,13 @@ class Edge;
 class Node {
     private:
         string name;
-        vector<Edge> edges;
+        vector<Edge *> edges;
         bool acceptedState;
     public:
     	bool isAcceptedState();
     	string getName();
-    	vector<Edge> getEdges();
-    	void addEdge(Edge e);
+    	vector<Edge *> getEdges();
+    	void addEdge(Edge * e);
     	Node(string stateName, bool accept);
 };
 
