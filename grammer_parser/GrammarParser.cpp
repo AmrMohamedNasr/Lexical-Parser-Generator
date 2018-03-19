@@ -5,11 +5,13 @@
  *      Author: amrnasr
  */
 #include "GrammarParser.h"
+#include "../models/NfaToken.h"
+
 #include <regex>
 
 const regex GrammarParser::regDefRegex = regex("a");
 const regex GrammarParser::regExpRegex = regex();
-const regex GrammarParser::keyWordRegex = regex();
+const regex GrammarParser::keyWordRegex = regex("\\s*\\{((?:\\s*[^\\s]*\\s*)*)}\\s*");
 const regex GrammarParser::punctRegex = regex("\\s*\\[((?:\\s*[^\\s]*\\s*)*)]\\s*");
 
 string filter_string(string str);
@@ -31,7 +33,24 @@ bool GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream * grammar_s
 				string filtered = filter_string(sm[1]);
 				vector<string> tokens = split_spaces(filtered);
 				for (unsigned i = 0; i < tokens.size(); i++) {
-					cout<<tokens[i]<<endl;
+					NfaToken token (PUNCTUATION, tokens[i]);
+					MiniToken mtoken (WORD, tokens[i]);
+					token.tokens.push_back(mtoken);
+					result->push_back(token);
+				}
+			} else if (regex_match(line, keyWordRegex)) {
+				smatch sm;
+				regex_search(line,sm,keyWordRegex);
+				if (!escapeReserved(sm[1], false)) {
+					return false;
+				}
+				string filtered = filter_string(sm[1]);
+				vector<string> tokens = split_spaces(filtered);
+				for (unsigned i = 0; i < tokens.size(); i++) {
+					NfaToken token (KEYWORD, tokens[i]);
+					MiniToken mtoken (WORD, tokens[i]);
+					token.tokens.push_back(mtoken);
+					result->push_back(token);
 				}
 			}
 		}

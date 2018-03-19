@@ -13,19 +13,23 @@
 
 using namespace std;
 
+enum MiniType {OPERATION, CHAR_GROUP, WORD};
+enum TokenType{PUNCTUATION, KEYWORD, REGULAR_EXPRESSION};
+
 class MiniToken {
 	public:
-		enum MiniType {OPERATION, CHAR_GROUP, WORD};
+		MiniType type;
 		string tok;
+		MiniToken(MiniType tp, string token);
 };
 
 class NfaToken {
 	public:
 		string tokenName;
 		vector<MiniToken> tokens;
-		enum tokenType{PUNCTUATION, KEYWORD, REGULAR_EXPRESSION};
+		TokenType type;
+		NfaToken(TokenType tp, string tkName);
 };
-
 
 
 #endif /* MODELS_NFATOKEN_H_ */
