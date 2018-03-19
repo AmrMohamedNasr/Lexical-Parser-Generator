@@ -25,3 +25,7 @@ Node::Node(string stateName, bool accept) {
 	this->acceptedState = accept;
 	this->name = stateName;
 }
+
+void Node::setAcceptState(bool newState) {
+	this->acceptedState = newState;
+}

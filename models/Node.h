@@ -17,6 +17,7 @@ class Node {
         bool acceptedState;
     public:
     	bool isAcceptedState();
+    	void setAcceptState(bool newState);
     	string getName();
     	vector<Edge *> getEdges();
     	void addEdge(Edge * e);

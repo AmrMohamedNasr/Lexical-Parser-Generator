@@ -6,21 +6,31 @@
 #define COMPILERS_NFABUILDER_H
 
 
-#include "../models/Node.h"
+#include "../models/Nfa.h"
 #include <vector>
 #include <iostream>
 
 using namespace std;
 
 class NfaBuilder {
+	private:
+		Nfa construct_eps_nfa();
+		Nfa construct_letter_nfa(char c);
+		Nfa construct_or_nfa(Nfa a, Nfa b);
+		Nfa construct_and_nfa(Nfa a, Nfa b);
+		Nfa construct_closure_nfa(Nfa a);
+		Nfa construct_positive_closure_nfa(Nfa a);
     public:
-
         /**
-         * takes the input grammar and returns separated NFAs from it.
-         * @param grammar the grammar from the given text file.
+         * takes list of regular expression names and their corresponding post-fix rules.
+         * @param regExpNames List of regular names (LHS)
+         * @param regExp 	  List of regular expressions in post-fix format (RHS).
+         * Example lists:
+         * regExpNames : {"id", "digit"}
+         * regExp : { "a-z A-Z |", "0-9"}
          * @return a list of separated NFAs created from the grammar file.
          */
-        vector<Node> getSeparatedNfas(ifstream grammar_stream);
+        vector<Node> getSeparatedNfas(vector<string> regExpNames, vector<string> regExp);
 };
 
 
