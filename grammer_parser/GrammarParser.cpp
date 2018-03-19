@@ -6,11 +6,11 @@
  */
 #include "GrammarParser.h"
 #include "../models/NfaToken.h"
-
+#include <map>
 #include <regex>
 
-const regex GrammarParser::regDefRegex = regex("a");
-const regex GrammarParser::regExpRegex = regex();
+const regex GrammarParser::regDefRegex = regex("\\s*([A-Za-z][A-Za-z0-9_]*)\\s*=\\s*(.*)$");
+const regex GrammarParser::regExpRegex = regex("\\s*([A-Za-z][A-Za-z0-9_]*)\\s*:\\s*(.*)$");
 const regex GrammarParser::keyWordRegex = regex("\\s*\\{((?:\\s*[^\\s]*\\s*)*)}\\s*");
 const regex GrammarParser::punctRegex = regex("\\s*\\[((?:\\s*[^\\s]*\\s*)*)]\\s*");
 
@@ -18,10 +18,12 @@ string filter_string(string str);
 bool isReservedSymbol(char c);
 bool escapeReserved(string str, bool regOps);
 vector<string> split_spaces(string str);
+vector<string> regular_expression_split(string str, map<string, vector<string>> mapOfDefinitions);
+vector<MiniToken> regular_expression_postfix(vector<string> regexp);
 
 bool GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream * grammar_stream) {
 	string line;
-	vector<string> regDef, regExp, keywords,punct;
+	map<string, vector<string>> mapOfDefinitions;
 	if (grammar_stream->is_open()) {
 		while (getline (*grammar_stream,line) ) {
 			if (regex_match(line, punctRegex)) {
@@ -52,6 +54,26 @@ bool GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream * grammar_s
 					token.tokens.push_back(mtoken);
 					result->push_back(token);
 				}
+			} else if (regex_match(line, regDefRegex)) {
+				smatch sm;
+				regex_search(line,sm,regDefRegex);
+				string tokenName = sm[1];
+				string tokenRegex = sm[2];
+				vector<string> tokens = regular_expression_split(tokenRegex, mapOfDefinitions);
+				mapOfDefinitions.insert(make_pair(tokenName, tokens));
+			} else if (regex_match(line, regExpRegex)) {
+				smatch sm;
+				regex_search(line,sm,regExpRegex);
+				string tokenName = sm[1];
+				string tokenRegex = sm[2];
+				vector<MiniToken> tokens = regular_expression_postfix(regular_expression_split(tokenRegex, mapOfDefinitions));
+				NfaToken token(REGULAR_EXPRESSION, tokenName);
+				for (unsigned i = 0; i < tokens.size(); i++) {
+					token.tokens.push_back(tokens[i]);
+				}
+				result->push_back(token);
+			} else {
+				return false;
 			}
 		}
 	}
@@ -99,5 +121,15 @@ vector<string> split_spaces(string str) {
 	while (ss >> buf) {
 		tokens.push_back(buf);
 	}
+	return tokens;
+}
+
+vector<string> regular_expression_split(string str, map<string, vector<string>> mapOfDefinitions) {
+	vector<string> res;
+	return res;
+}
+vector<MiniToken> regular_expression_postfix(vector<string> regexp) {
+	vector<MiniToken> tokens;
+
 	return tokens;
 }

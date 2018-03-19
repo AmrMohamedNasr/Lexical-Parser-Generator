@@ -22,7 +22,9 @@ void test_grammar_parser(void) {
 	bool error = false;
 	ifstream infile;
 	infile.open("rules.txt");
-	gp.parse_grammar(&regTokens, &infile);
+	if (!gp.parse_grammar(&regTokens, &infile)) {
+		cout << "ERROR DETECTED IN RIGHT PROGRAM!!" << endl;
+	}
 	for (auto it = regTokens.begin(); it != regTokens.end(); ++it) {
 	    cout << (*it).tokenName << endl;
 	}
