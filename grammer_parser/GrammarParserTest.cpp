@@ -12,18 +12,19 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "../models/NfaToken.h"
 
 using namespace std;
 
 void test_grammar_parser(void) {
 	GrammarParser gp;
-	vector<string> regName, regExp;
+	vector<NfaToken> regTokens;
 	bool error = false;
 	ifstream infile;
 	infile.open("rules.txt");
-	gp.parse_grammar(&regName, &regExp, &infile);
-	for (auto it = regName.begin(); it != regName.end(); ++it) {
-	    cout << *it << endl;
+	gp.parse_grammar(&regTokens, &infile);
+	for (auto it = regTokens.begin(); it != regTokens.end(); ++it) {
+	    cout << (*it).tokenName << endl;
 	}
 	infile.close();
 	if (!error) {

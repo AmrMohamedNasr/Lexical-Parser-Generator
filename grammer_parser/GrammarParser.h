@@ -11,11 +11,20 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <regex>
+#include <string>
+#include "../models/NfaToken.h"
+
 using namespace std;
 
 class GrammarParser {
+	private:
+		static const regex regDefRegex;
+		static const regex regExpRegex;
+		static const regex keyWordRegex;
+		static const regex punctRegex;
 	public:
-		bool parse_grammar(vector<string> *regExpNames, vector<string> *regExp, ifstream * grammar_stream);
+		bool parse_grammar(vector<NfaToken> *tokens , ifstream * grammar_stream);
 };
 
 
