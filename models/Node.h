@@ -7,10 +7,9 @@
 
 #include <string>
 #include <vector>
-#include "Edge.h"
 
 using namespace std;
-
+class Edge;
 class Node {
     private:
         string name;

@@ -6,9 +6,8 @@
 #define COMPILERS_EDGE_H
 
 #include <string>
-#include "Node.h"
 #include <vector>
-
+#include "Node.h"
 using namespace std;
 
 class Edge {
