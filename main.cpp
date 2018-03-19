@@ -1,6 +1,7 @@
 #include <iostream>
+#include "p1_tests.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+	test_edge();
     return 0;
 }

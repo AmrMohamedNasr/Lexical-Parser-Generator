@@ -22,6 +22,7 @@ class Edge {
         bool is_eps_transition(void);
         bool valid_transition(char c);
         void disallow_character(char c);
+        int getAllowedRange();
         Edge(char start, char end, Node *target);
 };
 
