@@ -7,6 +7,7 @@
 
 
 #include "../models/Nfa.h"
+#include "../models/NfaToken.h"
 #include <vector>
 #include <iostream>
 
@@ -20,6 +21,7 @@ class NfaBuilder {
 		Nfa construct_and_nfa(Nfa a, Nfa b);
 		Nfa construct_closure_nfa(Nfa a);
 		Nfa construct_positive_closure_nfa(Nfa a);
+        void build_graph(NfaToken& nfa_token);
     public:
         /**
          * takes list of regular expression names and their corresponding post-fix rules.
@@ -30,7 +32,7 @@ class NfaBuilder {
          * regExp : { "a-z A-Z |", "0-9"}
          * @return a list of separated NFAs created from the grammar file in param nfas.
          */
-        void getSeparatedNfas(vector<Node> * nfas, vector<string> * regExpNames, vector<string> * regExp);
+		vector<Node> get_separated_nfas(vector<NfaToken> nfa_tokens);
 };
 
 
