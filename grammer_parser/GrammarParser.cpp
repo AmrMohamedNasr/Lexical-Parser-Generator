@@ -60,6 +60,11 @@ bool GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream * grammar_s
 				string tokenName = sm[1];
 				string tokenRegex = sm[2];
 				vector<string> tokens = regular_expression_split(tokenRegex, mapOfDefinitions);
+				cout << tokenName << endl;
+				for (auto tok_i = tokens.begin(); tok_i != tokens.end(); tok_i++) {
+					cout << (*tok_i) << endl;
+				}
+				cout << "END" << endl << endl;
 				mapOfDefinitions.insert(make_pair(tokenName, tokens));
 			} else if (regex_match(line, regExpRegex)) {
 				smatch sm;
@@ -126,6 +131,11 @@ vector<string> split_spaces(string str) {
 
 vector<string> regular_expression_split(string str, map<string, vector<string>> mapOfDefinitions) {
 	vector<string> res;
+	for (unsigned i = 0; i < str.length(); i++) {
+		string k = "";
+		k += str.at(i);
+		res.push_back(k);
+	}
 	return res;
 }
 vector<MiniToken> regular_expression_postfix(vector<string> regexp) {

@@ -29,6 +29,7 @@ class NfaToken {
 		vector<MiniToken> tokens;
 		TokenType type;
 		NfaToken(TokenType tp, string tkName);
+		NfaToken(TokenType tp, string tkName, vector<MiniToken> list_tok);
 };
 
 
