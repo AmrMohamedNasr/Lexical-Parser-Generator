@@ -41,7 +41,7 @@ void test_minimizer(void) {
 	a.addEdge(&ac);
 	DfaMinimizer g;
 	Closure cl(1);
-	Element ele(&a);
+	Element ele(&a, true);
 	cl.addEle(&ele);
 	bool flag = cl.nodeExists(&ele);
 	if (!flag) {

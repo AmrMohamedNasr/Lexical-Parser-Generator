@@ -23,10 +23,12 @@ class Closure {
 	private:
 		vector<Element*> elements;
 		int number;
-
+		bool finished;
 	public:
 		vector<Element*> getElements();
 		int getNumber();
+		bool isFinished();
+		void setFinished();
 		void setNumber(int number);
 		Closure(int number);
 		bool nodeExists(Element *ele);
@@ -45,6 +47,7 @@ class DfaMinimizer {
 		bool checkSameTrans(Element* ele1, Element* ele2);
 		void initTwoClosures(Node *nonMinimizedDfa, Closure *clS, Closure *clF);
 		int getNumByEle(Element* ele);
+		int getNumOfUnfinishedClos();
     public:
         /**
          * takes non minimized DFA from the converter and return it minimized.

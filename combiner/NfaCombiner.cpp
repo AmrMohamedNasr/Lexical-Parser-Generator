@@ -3,3 +3,20 @@
 //
 
 #include "NfaCombiner.h"
+#include "../builder/NfaBuilder.h"
+
+Nfa* NFACombiner::getCombinedNfa(vector<Nfa> separatedStateAcceptors) {
+    NfaBuilder nfaBuilder;
+    Nfa final;
+    bool first = true;
+    for (Nfa nfa : separatedStateAcceptors) {
+        if (first) {
+            first = false;
+            final = nfa;
+        } else {
+            final = nfaBuilder.construct_or_nfa(final, nfa);
+        }
+    }
+
+    return &final;
+}

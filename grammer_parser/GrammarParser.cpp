@@ -7,7 +7,8 @@
 #include "GrammarParser.h"
 #include "../models/NfaToken.h"
 #include <map>
-#include <regex.h>
+#include <regex>
+#include <stack>
 
 const regex GrammarParser::regDefRegex = regex("\\s*([A-Za-z][A-Za-z0-9_]*)\\s*=\\s*(.*)$");
 const regex GrammarParser::regExpRegex = regex("\\s*([A-Za-z][A-Za-z0-9_]*)\\s*:\\s*(.*)$");
@@ -18,12 +19,16 @@ string filter_string(string str);
 bool isReservedSymbol(char c);
 bool escapeReserved(string str, bool regOps);
 vector<string> split_spaces(string str);
-vector<string> regular_expression_split(string str, map<string, vector<string>> mapOfDefinitions);
-vector<MiniToken> regular_expression_postfix(vector<string> regexp);
+vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniToken>> mapOfDefinitions);
+vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp);
+bool is_operation_char(char c);
+char nonspacechar_before(string str, unsigned i);
+char nonspacechar_after(string str, unsigned i);
+bool is_parenthesis(char c);
 
 bool GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream * grammar_stream) {
 	string line;
-	map<string, vector<string>> mapOfDefinitions;
+	map<string, vector<MiniToken>> mapOfDefinitions;
 	if (grammar_stream->is_open()) {
 		while (getline (*grammar_stream,line) ) {
 			if (regex_match(line, punctRegex)) {
@@ -59,13 +64,19 @@ bool GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream * grammar_s
 				regex_search(line,sm,regDefRegex);
 				string tokenName = sm[1];
 				string tokenRegex = sm[2];
-				vector<string> tokens = regular_expression_split(tokenRegex, mapOfDefinitions);
+				if (!escapeReserved(tokenRegex, true)) {
+					return false;
+				}
+				vector<MiniToken> tokens = regular_expression_split(tokenRegex, mapOfDefinitions);
 				mapOfDefinitions.insert(make_pair(tokenName, tokens));
 			} else if (regex_match(line, regExpRegex)) {
 				smatch sm;
 				regex_search(line,sm,regExpRegex);
 				string tokenName = sm[1];
 				string tokenRegex = sm[2];
+				if (!escapeReserved(tokenRegex, true)) {
+					return false;
+				}
 				vector<MiniToken> tokens = regular_expression_postfix(regular_expression_split(tokenRegex, mapOfDefinitions));
 				NfaToken token(REGULAR_EXPRESSION, tokenName);
 				for (unsigned i = 0; i < tokens.size(); i++) {
@@ -93,17 +104,32 @@ string filter_string(string str) {
 
 bool escapeReserved(string str, bool regOps) {
 	for (unsigned i = 0; i < str.size(); i++) {
-		if (str.at(i) == '\\' && i < str.size() - 1 && isReservedSymbol(str.at(i+1))) {
-			i++;
-		}
 		if (isReservedSymbol(str.at(i)) && i > 0 && str.at(i-1) != '\\') {
 			if (regOps) {
 				if (str.at(i) == '=' || str.at(i) == ':') {
 					return false;
 				}
+				if (str.at(i) == '-') {
+					char bf = nonspacechar_before(str, i - 1);
+					char af = nonspacechar_after(str, i + 1);
+					if (af == '\0' || bf == '\0' || isReservedSymbol(af)) {
+						return false;
+					} else if (isReservedSymbol(bf)) {
+						int j = i - 1;
+						while (j >= 0 && isspace(str.at(j))) {
+							j--;
+						}
+						if (j < 1 || str.at(j - 1) != '\\') {
+							return false;
+						}
+					}
+
+				}
 			} else {
 				return false;
 			}
+		} else if (isReservedSymbol(str.at(i)) && i == 0) {
+			return false;
 		}
 	}
 	return true;
@@ -124,12 +150,135 @@ vector<string> split_spaces(string str) {
 	return tokens;
 }
 
-vector<string> regular_expression_split(string str, map<string, vector<string>> mapOfDefinitions) {
-	vector<string> res;
+vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniToken>> mapOfDefinitions) {
+	vector<MiniToken> res;
+	for (unsigned i = 0; i < str.length(); i++) {
+		string k = "";
+		char c = str.at(i);
+		while (isspace(c)) {
+			i++;
+			c = str.at(i);
+		}
+		if (is_operation_char(c)) {
+			k+=c;
+			res.push_back(MiniToken(OPERATION, k));
+		} else if (is_parenthesis(c)) {
+			k+=c;
+			res.push_back(MiniToken(PARENTHESES, k));
+		} else if (c == '-') {
+			k += nonspacechar_before(str, i - 1);
+			k += c;
+			char temp = nonspacechar_after(str, i + 1);
+			k += temp;
+			i = str.find(temp, i);
+			res.push_back(MiniToken(CHAR_GROUP, k));
+		} else {
+			bool collecting_token = true;
+			bool add_eps = false;
+			while (collecting_token && i < str.length()) {
+				c = str.at(i);
+				if (isspace(c) || isReservedSymbol(c)) {
+					collecting_token = false;
+					i--;
+				} else if (c == '\\') {
+					if (i == str.length() - 1 || !isReservedSymbol(str.at(i+1))) {
+						if (str.at(i+1) == 'L') {
+							add_eps = true;
+							collecting_token = false;
+							i++;
+						} else {
+							k += c;
+						}
+					} else {
+						i++;
+						k += str.at(i);
+					}
+				} else if (i == str.length() - 1 || nonspacechar_after(str, i + 1) != '-') {
+					k += c;
+				} else {
+					collecting_token = false;
+				}
+				i++;
+			}
+			i--;
+			if (k != "") {
+				if (mapOfDefinitions.find(k) != mapOfDefinitions.end()) {
+					vector<MiniToken> temp = mapOfDefinitions.find(k)->second;
+					res.push_back(MiniToken(PARENTHESES, "("));
+					for (auto it = temp.begin(); it != temp.end(); it++) {
+						res.push_back(*it);
+					}
+					res.push_back(MiniToken(PARENTHESES, ")"));
+				} else {
+					res.push_back(MiniToken(WORD, k));
+				}
+			}
+			if (add_eps) {
+				res.push_back(MiniToken(EPSILON, "\\L"));
+			}
+		}
+	}
 	return res;
 }
-vector<MiniToken> regular_expression_postfix(vector<string> regexp) {
-	vector<MiniToken> tokens;
 
+char nonspacechar_before(string str, unsigned i) {
+	while (i >= 0) {
+		if (!isspace(str.at(i))) {
+			return str.at(i);
+		}
+		i--;
+	}
+	return '\0';
+}
+
+char nonspacechar_after(string str, unsigned i) {
+	while (i < str.length()) {
+		if (!isspace(str.at(i))) {
+			return str.at(i);
+		}
+		i++;
+	}
+	return '\0';
+}
+bool is_parenthesis(char c) {
+	return c == '(' || c == ')';
+}
+bool is_operation_char(char c) {
+	return c == '*' || c == '+' || c == '|';
+}
+
+vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp) {
+	vector<MiniToken> tokens;
+	stack<MiniToken> operations;
+	unsigned i = 0;
+	while (i < regexp.size()) {
+		MiniToken cur = regexp[i];
+		if (cur.type == WORD || cur.type == CHAR_GROUP || cur.type == EPSILON) {
+			tokens.push_back(cur);
+		} else if (cur.type == OPERATION) {
+			if (cur.tok == "|") {
+				while (!operations.empty() && (operations.top().type != OPERATION || operations.top().tok == "|") && !(operations.top().type == PARENTHESES && operations.top().tok == "(")) {
+					tokens.push_back(operations.top());
+					operations.pop();
+				}
+				operations.push(cur);
+			} else {
+				tokens.push_back(cur);
+			}
+		} else if (cur.type == PARENTHESES) {
+			if (cur.tok == "(") {
+				operations.push(cur);
+			} else {
+				MiniToken popped = operations.top();
+				operations.pop();
+				while (popped.type != PARENTHESES || popped.tok != "(") {
+					tokens.push_back(popped);
+					popped = operations.top();
+					operations.pop();
+				}
+			}
+		}
+		i++;
+	}
 	return tokens;
 }

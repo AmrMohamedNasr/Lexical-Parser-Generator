@@ -1,6 +1,8 @@
 #include <iostream>
 #include "p1_tests.h"
 
+using namespace std;
+
 void run_tests(void);
 
 
@@ -15,4 +17,5 @@ void run_tests() {
 	test_node();
 	test_grammar_parser();
 	test_minimizer();
+	test_nfa_builder();
 }
