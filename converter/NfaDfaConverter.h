@@ -30,7 +30,7 @@ private:
 
     Node * getEpslonClosureFromSet(set<Node *> states);
 
-    bool setContainsState(set<Node *> states, Node *node);
+    Node * setContainsState(set<Node *> states, Node *node);
 
     bool representingSameNfa(Node *n1, Node *n2);
 

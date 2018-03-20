@@ -1,6 +1,10 @@
 
 # Created by https://www.gitignore.io/api/c,c++,clion,intellij
 
+#Eclipse
+.project
+.settings/*
+
 ### C ###
 # Prerequisites
 *.d
@@ -77,6 +81,9 @@ dkms.conf
 ### CLion ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+CMakeLists.txt
+.idea/*
 
 # User-specific stuff:
 .idea/**/workspace.xml
@@ -182,3 +189,7 @@ fabric.properties
 
 # End of https://www.gitignore.io/api/c,c++,clion,intellij
 /Default/
+
+CMakeLists\.txt
+
+\.idea/
