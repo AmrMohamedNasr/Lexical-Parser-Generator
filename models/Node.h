@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#define ACCEPT_STATE true
+
 using namespace std;
 class Edge;
 class Node {
@@ -21,7 +23,8 @@ class Node {
     	string getName();
     	vector<Edge *> getEdges();
     	void addEdge(Edge * e);
-    	Node(string stateName, bool accept);
+		explicit Node(bool accept);
+		Node(string stateName, bool accept);
 };
 
 
