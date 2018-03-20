@@ -11,5 +11,6 @@
 void test_edge(void);
 void test_node(void);
 void test_grammar_parser(void);
+void test_minimizer(void);
 
 #endif /* P1_TESTS_H_ */

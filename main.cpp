@@ -14,4 +14,5 @@ void run_tests() {
 	test_edge();
 	test_node();
 	test_grammar_parser();
+	test_minimizer();
 }

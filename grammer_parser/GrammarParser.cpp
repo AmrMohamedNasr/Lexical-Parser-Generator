@@ -7,7 +7,7 @@
 #include "GrammarParser.h"
 #include "../models/NfaToken.h"
 #include <map>
-#include <regex>
+#include <regex.h>
 
 const regex GrammarParser::regDefRegex = regex("\\s*([A-Za-z][A-Za-z0-9_]*)\\s*=\\s*(.*)$");
 const regex GrammarParser::regExpRegex = regex("\\s*([A-Za-z][A-Za-z0-9_]*)\\s*:\\s*(.*)$");
