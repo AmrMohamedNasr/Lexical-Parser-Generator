@@ -3,6 +3,7 @@
 
 #Eclipse
 #.project
+#.settings/*
 
 ### C ###
 # Prerequisites
