@@ -150,6 +150,33 @@ builder/NfaBuilder.cpp.s:
 	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/builder/NfaBuilder.cpp.s
 .PHONY : builder/NfaBuilder.cpp.s
 
+builder/NfaBuilderTest.o: builder/NfaBuilderTest.cpp.o
+
+.PHONY : builder/NfaBuilderTest.o
+
+# target to build an object file
+builder/NfaBuilderTest.cpp.o:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o
+.PHONY : builder/NfaBuilderTest.cpp.o
+
+builder/NfaBuilderTest.i: builder/NfaBuilderTest.cpp.i
+
+.PHONY : builder/NfaBuilderTest.i
+
+# target to preprocess a source file
+builder/NfaBuilderTest.cpp.i:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.i
+.PHONY : builder/NfaBuilderTest.cpp.i
+
+builder/NfaBuilderTest.s: builder/NfaBuilderTest.cpp.s
+
+.PHONY : builder/NfaBuilderTest.s
+
+# target to generate assembly for a file
+builder/NfaBuilderTest.cpp.s:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.s
+.PHONY : builder/NfaBuilderTest.cpp.s
+
 combiner/NfaCombiner.o: combiner/NfaCombiner.cpp.o
 
 .PHONY : combiner/NfaCombiner.o
@@ -203,6 +230,60 @@ converter/NfaDfaConverter.s: converter/NfaDfaConverter.cpp.s
 converter/NfaDfaConverter.cpp.s:
 	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/converter/NfaDfaConverter.cpp.s
 .PHONY : converter/NfaDfaConverter.cpp.s
+
+grammer_parser/GrammarParser.o: grammer_parser/GrammarParser.cpp.o
+
+.PHONY : grammer_parser/GrammarParser.o
+
+# target to build an object file
+grammer_parser/GrammarParser.cpp.o:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o
+.PHONY : grammer_parser/GrammarParser.cpp.o
+
+grammer_parser/GrammarParser.i: grammer_parser/GrammarParser.cpp.i
+
+.PHONY : grammer_parser/GrammarParser.i
+
+# target to preprocess a source file
+grammer_parser/GrammarParser.cpp.i:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.i
+.PHONY : grammer_parser/GrammarParser.cpp.i
+
+grammer_parser/GrammarParser.s: grammer_parser/GrammarParser.cpp.s
+
+.PHONY : grammer_parser/GrammarParser.s
+
+# target to generate assembly for a file
+grammer_parser/GrammarParser.cpp.s:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.s
+.PHONY : grammer_parser/GrammarParser.cpp.s
+
+grammer_parser/GrammarParserTest.o: grammer_parser/GrammarParserTest.cpp.o
+
+.PHONY : grammer_parser/GrammarParserTest.o
+
+# target to build an object file
+grammer_parser/GrammarParserTest.cpp.o:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o
+.PHONY : grammer_parser/GrammarParserTest.cpp.o
+
+grammer_parser/GrammarParserTest.i: grammer_parser/GrammarParserTest.cpp.i
+
+.PHONY : grammer_parser/GrammarParserTest.i
+
+# target to preprocess a source file
+grammer_parser/GrammarParserTest.cpp.i:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.i
+.PHONY : grammer_parser/GrammarParserTest.cpp.i
+
+grammer_parser/GrammarParserTest.s: grammer_parser/GrammarParserTest.cpp.s
+
+.PHONY : grammer_parser/GrammarParserTest.s
+
+# target to generate assembly for a file
+grammer_parser/GrammarParserTest.cpp.s:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.s
+.PHONY : grammer_parser/GrammarParserTest.cpp.s
 
 main.o: main.cpp.o
 
@@ -285,6 +366,33 @@ models/Edge.cpp.s:
 	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/Edge.cpp.s
 .PHONY : models/Edge.cpp.s
 
+models/EdgeTest.o: models/EdgeTest.cpp.o
+
+.PHONY : models/EdgeTest.o
+
+# target to build an object file
+models/EdgeTest.cpp.o:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/EdgeTest.cpp.o
+.PHONY : models/EdgeTest.cpp.o
+
+models/EdgeTest.i: models/EdgeTest.cpp.i
+
+.PHONY : models/EdgeTest.i
+
+# target to preprocess a source file
+models/EdgeTest.cpp.i:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/EdgeTest.cpp.i
+.PHONY : models/EdgeTest.cpp.i
+
+models/EdgeTest.s: models/EdgeTest.cpp.s
+
+.PHONY : models/EdgeTest.s
+
+# target to generate assembly for a file
+models/EdgeTest.cpp.s:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/EdgeTest.cpp.s
+.PHONY : models/EdgeTest.cpp.s
+
 models/NfaToken.o: models/NfaToken.cpp.o
 
 .PHONY : models/NfaToken.o
@@ -339,6 +447,33 @@ models/Node.cpp.s:
 	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/Node.cpp.s
 .PHONY : models/Node.cpp.s
 
+models/NodeTest.o: models/NodeTest.cpp.o
+
+.PHONY : models/NodeTest.o
+
+# target to build an object file
+models/NodeTest.cpp.o:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/NodeTest.cpp.o
+.PHONY : models/NodeTest.cpp.o
+
+models/NodeTest.i: models/NodeTest.cpp.i
+
+.PHONY : models/NodeTest.i
+
+# target to preprocess a source file
+models/NodeTest.cpp.i:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/NodeTest.cpp.i
+.PHONY : models/NodeTest.cpp.i
+
+models/NodeTest.s: models/NodeTest.cpp.s
+
+.PHONY : models/NodeTest.s
+
+# target to generate assembly for a file
+models/NodeTest.cpp.s:
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/NodeTest.cpp.s
+.PHONY : models/NodeTest.cpp.s
+
 models/SupportingNfaNodes.o: models/SupportingNfaNodes.cpp.o
 
 .PHONY : models/SupportingNfaNodes.o
@@ -378,12 +513,21 @@ help:
 	@echo "... builder/NfaBuilder.o"
 	@echo "... builder/NfaBuilder.i"
 	@echo "... builder/NfaBuilder.s"
+	@echo "... builder/NfaBuilderTest.o"
+	@echo "... builder/NfaBuilderTest.i"
+	@echo "... builder/NfaBuilderTest.s"
 	@echo "... combiner/NfaCombiner.o"
 	@echo "... combiner/NfaCombiner.i"
 	@echo "... combiner/NfaCombiner.s"
 	@echo "... converter/NfaDfaConverter.o"
 	@echo "... converter/NfaDfaConverter.i"
 	@echo "... converter/NfaDfaConverter.s"
+	@echo "... grammer_parser/GrammarParser.o"
+	@echo "... grammer_parser/GrammarParser.i"
+	@echo "... grammer_parser/GrammarParser.s"
+	@echo "... grammer_parser/GrammarParserTest.o"
+	@echo "... grammer_parser/GrammarParserTest.i"
+	@echo "... grammer_parser/GrammarParserTest.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
@@ -393,12 +537,18 @@ help:
 	@echo "... models/Edge.o"
 	@echo "... models/Edge.i"
 	@echo "... models/Edge.s"
+	@echo "... models/EdgeTest.o"
+	@echo "... models/EdgeTest.i"
+	@echo "... models/EdgeTest.s"
 	@echo "... models/NfaToken.o"
 	@echo "... models/NfaToken.i"
 	@echo "... models/NfaToken.s"
 	@echo "... models/Node.o"
 	@echo "... models/Node.i"
 	@echo "... models/Node.s"
+	@echo "... models/NodeTest.o"
+	@echo "... models/NodeTest.i"
+	@echo "... models/NodeTest.s"
 	@echo "... models/SupportingNfaNodes.o"
 	@echo "... models/SupportingNfaNodes.i"
 	@echo "... models/SupportingNfaNodes.s"

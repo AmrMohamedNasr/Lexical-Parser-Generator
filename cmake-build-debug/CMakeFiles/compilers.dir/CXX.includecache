@@ -7,24 +7,42 @@
 #IncludeRegexTransform: 
 
 /media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilder.cpp
+algorithm
+-
+stack
+-
 NfaBuilder.h
 /media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilder.h
+../models/Edge.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.h
 
 /media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilder.h
 ../models/Nfa.h
 /media/programajor/Work/Engineering/Compiler Project/compilers/models/Nfa.h
+../models/NfaToken.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/NfaToken.h
 vector
 -
 iostream
 -
 
+/media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilderTest.cpp
+NfaBuilder.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilder.h
+../p1_tests.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/p1_tests.h
+
 /media/programajor/Work/Engineering/Compiler Project/compilers/combiner/NfaCombiner.cpp
 NfaCombiner.h
 /media/programajor/Work/Engineering/Compiler Project/compilers/combiner/NfaCombiner.h
+../builder/NfaBuilder.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilder.h
 
 /media/programajor/Work/Engineering/Compiler Project/compilers/combiner/NfaCombiner.h
 ../models/Node.h
 /media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+../models/Nfa.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Nfa.h
 vector
 -
 
@@ -45,6 +63,52 @@ NfaDfaConverter.h
 /media/programajor/Work/Engineering/Compiler Project/compilers/converter/NfaDfaConverter.h
 ../models/Node.h
 /media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParser.cpp
+GrammarParser.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParser.h
+../models/NfaToken.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/NfaToken.h
+map
+-
+regex
+-
+stack
+-
+list
+-
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParser.h
+vector
+-
+iostream
+-
+fstream
+-
+regex
+-
+string
+-
+../models/NfaToken.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/NfaToken.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParserTest.cpp
+GrammarParser.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParser.h
+../p1_tests.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/p1_tests.h
+iostream
+-
+string
+-
+fstream
+-
+string
+-
+vector
+-
+../models/NfaToken.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/NfaToken.h
 
 /media/programajor/Work/Engineering/Compiler Project/compilers/main.cpp
 iostream
@@ -78,6 +142,14 @@ vector
 Node.h
 /media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
 
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/EdgeTest.cpp
+Edge.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.h
+iostream
+-
+../p1_tests.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/p1_tests.h
+
 /media/programajor/Work/Engineering/Compiler Project/compilers/models/Nfa.h
 Node.h
 /media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
@@ -109,6 +181,18 @@ SupportingNfaNodes.h
 /media/programajor/Work/Engineering/Compiler Project/compilers/models/SupportingNfaNodes.h
 Edge.h
 /media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/NodeTest.cpp
+../p1_tests.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/p1_tests.h
+Edge.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.h
+iostream
+-
+Node.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+string
+-
 
 /media/programajor/Work/Engineering/Compiler Project/compilers/models/SupportingNfaNodes.cpp
 SupportingNfaNodes.h

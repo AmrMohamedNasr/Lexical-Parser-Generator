@@ -273,6 +273,126 @@ CMakeFiles/compilers.dir/models/SupportingNfaNodes.cpp.o.provides: CMakeFiles/co
 CMakeFiles/compilers.dir/models/SupportingNfaNodes.cpp.o.provides.build: CMakeFiles/compilers.dir/models/SupportingNfaNodes.cpp.o
 
 
+CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o: CMakeFiles/compilers.dir/flags.make
+CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o: ../builder/NfaBuilderTest.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o -c "/media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilderTest.cpp"
+
+CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilderTest.cpp" > CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.i
+
+CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilderTest.cpp" -o CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.s
+
+CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o.requires:
+
+.PHONY : CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o.requires
+
+CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o.provides: CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o.provides.build
+.PHONY : CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o.provides
+
+CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o.provides.build: CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o
+
+
+CMakeFiles/compilers.dir/models/EdgeTest.cpp.o: CMakeFiles/compilers.dir/flags.make
+CMakeFiles/compilers.dir/models/EdgeTest.cpp.o: ../models/EdgeTest.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/compilers.dir/models/EdgeTest.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/compilers.dir/models/EdgeTest.cpp.o -c "/media/programajor/Work/Engineering/Compiler Project/compilers/models/EdgeTest.cpp"
+
+CMakeFiles/compilers.dir/models/EdgeTest.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compilers.dir/models/EdgeTest.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/programajor/Work/Engineering/Compiler Project/compilers/models/EdgeTest.cpp" > CMakeFiles/compilers.dir/models/EdgeTest.cpp.i
+
+CMakeFiles/compilers.dir/models/EdgeTest.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compilers.dir/models/EdgeTest.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/programajor/Work/Engineering/Compiler Project/compilers/models/EdgeTest.cpp" -o CMakeFiles/compilers.dir/models/EdgeTest.cpp.s
+
+CMakeFiles/compilers.dir/models/EdgeTest.cpp.o.requires:
+
+.PHONY : CMakeFiles/compilers.dir/models/EdgeTest.cpp.o.requires
+
+CMakeFiles/compilers.dir/models/EdgeTest.cpp.o.provides: CMakeFiles/compilers.dir/models/EdgeTest.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/EdgeTest.cpp.o.provides.build
+.PHONY : CMakeFiles/compilers.dir/models/EdgeTest.cpp.o.provides
+
+CMakeFiles/compilers.dir/models/EdgeTest.cpp.o.provides.build: CMakeFiles/compilers.dir/models/EdgeTest.cpp.o
+
+
+CMakeFiles/compilers.dir/models/NodeTest.cpp.o: CMakeFiles/compilers.dir/flags.make
+CMakeFiles/compilers.dir/models/NodeTest.cpp.o: ../models/NodeTest.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/compilers.dir/models/NodeTest.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/compilers.dir/models/NodeTest.cpp.o -c "/media/programajor/Work/Engineering/Compiler Project/compilers/models/NodeTest.cpp"
+
+CMakeFiles/compilers.dir/models/NodeTest.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compilers.dir/models/NodeTest.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/programajor/Work/Engineering/Compiler Project/compilers/models/NodeTest.cpp" > CMakeFiles/compilers.dir/models/NodeTest.cpp.i
+
+CMakeFiles/compilers.dir/models/NodeTest.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compilers.dir/models/NodeTest.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/programajor/Work/Engineering/Compiler Project/compilers/models/NodeTest.cpp" -o CMakeFiles/compilers.dir/models/NodeTest.cpp.s
+
+CMakeFiles/compilers.dir/models/NodeTest.cpp.o.requires:
+
+.PHONY : CMakeFiles/compilers.dir/models/NodeTest.cpp.o.requires
+
+CMakeFiles/compilers.dir/models/NodeTest.cpp.o.provides: CMakeFiles/compilers.dir/models/NodeTest.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/models/NodeTest.cpp.o.provides.build
+.PHONY : CMakeFiles/compilers.dir/models/NodeTest.cpp.o.provides
+
+CMakeFiles/compilers.dir/models/NodeTest.cpp.o.provides.build: CMakeFiles/compilers.dir/models/NodeTest.cpp.o
+
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o: CMakeFiles/compilers.dir/flags.make
+CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o: ../grammer_parser/GrammarParser.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o -c "/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParser.cpp"
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParser.cpp" > CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.i
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParser.cpp" -o CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.s
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o.requires:
+
+.PHONY : CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o.requires
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o.provides: CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o.provides.build
+.PHONY : CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o.provides
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o.provides.build: CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o
+
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o: CMakeFiles/compilers.dir/flags.make
+CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o: ../grammer_parser/GrammarParserTest.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o -c "/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParserTest.cpp"
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParserTest.cpp" > CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.i
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParserTest.cpp" -o CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.s
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o.requires:
+
+.PHONY : CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o.requires
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o.provides: CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compilers.dir/build.make CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o.provides.build
+.PHONY : CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o.provides
+
+CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o.provides.build: CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o
+
+
 # Object files for target compilers
 compilers_OBJECTS = \
 "CMakeFiles/compilers.dir/main.cpp.o" \
@@ -283,7 +403,12 @@ compilers_OBJECTS = \
 "CMakeFiles/compilers.dir/models/NfaToken.cpp.o" \
 "CMakeFiles/compilers.dir/models/Node.cpp.o" \
 "CMakeFiles/compilers.dir/models/Edge.cpp.o" \
-"CMakeFiles/compilers.dir/models/SupportingNfaNodes.cpp.o"
+"CMakeFiles/compilers.dir/models/SupportingNfaNodes.cpp.o" \
+"CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o" \
+"CMakeFiles/compilers.dir/models/EdgeTest.cpp.o" \
+"CMakeFiles/compilers.dir/models/NodeTest.cpp.o" \
+"CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o" \
+"CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o"
 
 # External object files for target compilers
 compilers_EXTERNAL_OBJECTS =
@@ -297,9 +422,14 @@ compilers: CMakeFiles/compilers.dir/models/NfaToken.cpp.o
 compilers: CMakeFiles/compilers.dir/models/Node.cpp.o
 compilers: CMakeFiles/compilers.dir/models/Edge.cpp.o
 compilers: CMakeFiles/compilers.dir/models/SupportingNfaNodes.cpp.o
+compilers: CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o
+compilers: CMakeFiles/compilers.dir/models/EdgeTest.cpp.o
+compilers: CMakeFiles/compilers.dir/models/NodeTest.cpp.o
+compilers: CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o
+compilers: CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o
 compilers: CMakeFiles/compilers.dir/build.make
 compilers: CMakeFiles/compilers.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable compilers"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/media/programajor/Work/Engineering/Compiler Project/compilers/cmake-build-debug/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_15) "Linking CXX executable compilers"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/compilers.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -316,6 +446,11 @@ CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/models/NfaToken.cpp.
 CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/models/Node.cpp.o.requires
 CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/models/Edge.cpp.o.requires
 CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/models/SupportingNfaNodes.cpp.o.requires
+CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o.requires
+CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/models/EdgeTest.cpp.o.requires
+CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/models/NodeTest.cpp.o.requires
+CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o.requires
+CMakeFiles/compilers.dir/requires: CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o.requires
 
 .PHONY : CMakeFiles/compilers.dir/requires
 

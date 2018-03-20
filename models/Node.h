@@ -35,7 +35,7 @@ class Node {
 		explicit Node(bool accept);
 		Node(string stateName, bool accept);
     	void addDfaEdge(Edge * e);
-    	Node(string stateName, bool accept);
+//    	Node(string stateName, bool accept);
 		void setSupportingNfaNodes(set<Node *> nodes);
 		set<Node*> getSupportedNfaNodes();
 

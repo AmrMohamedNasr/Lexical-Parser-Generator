@@ -8,6 +8,11 @@ file(REMOVE_RECURSE
   "CMakeFiles/compilers.dir/models/Node.cpp.o"
   "CMakeFiles/compilers.dir/models/Edge.cpp.o"
   "CMakeFiles/compilers.dir/models/SupportingNfaNodes.cpp.o"
+  "CMakeFiles/compilers.dir/builder/NfaBuilderTest.cpp.o"
+  "CMakeFiles/compilers.dir/models/EdgeTest.cpp.o"
+  "CMakeFiles/compilers.dir/models/NodeTest.cpp.o"
+  "CMakeFiles/compilers.dir/grammer_parser/GrammarParser.cpp.o"
+  "CMakeFiles/compilers.dir/grammer_parser/GrammarParserTest.cpp.o"
   "compilers.pdb"
   "compilers"
 )

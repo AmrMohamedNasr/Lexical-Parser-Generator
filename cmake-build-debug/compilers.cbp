@@ -90,6 +90,9 @@
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilder.h">
 			<Option target="compilers"/>
 		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilderTest.cpp">
+			<Option target="compilers"/>
+		</Unit>
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/combiner/NfaCombiner.cpp">
 			<Option target="compilers"/>
 		</Unit>
@@ -100,6 +103,15 @@
 			<Option target="compilers"/>
 		</Unit>
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/converter/NfaDfaConverter.h">
+			<Option target="compilers"/>
+		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParser.cpp">
+			<Option target="compilers"/>
+		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParser.h">
+			<Option target="compilers"/>
+		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/grammer_parser/GrammarParserTest.cpp">
 			<Option target="compilers"/>
 		</Unit>
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/main.cpp">
@@ -117,6 +129,9 @@
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.h">
 			<Option target="compilers"/>
 		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/EdgeTest.cpp">
+			<Option target="compilers"/>
+		</Unit>
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/Nfa.h">
 			<Option target="compilers"/>
 		</Unit>
@@ -132,10 +147,16 @@
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h">
 			<Option target="compilers"/>
 		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/NodeTest.cpp">
+			<Option target="compilers"/>
+		</Unit>
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/SupportingNfaNodes.cpp">
 			<Option target="compilers"/>
 		</Unit>
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/models/SupportingNfaNodes.h">
+			<Option target="compilers"/>
+		</Unit>
+		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/p1_tests.h">
 			<Option target="compilers"/>
 		</Unit>
 		<Unit filename="/media/programajor/Work/Engineering/Compiler Project/compilers/CMakeLists.txt">
