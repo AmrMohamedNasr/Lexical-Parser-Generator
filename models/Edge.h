@@ -9,7 +9,7 @@
 #include <vector>
 #include "Node.h"
 using namespace std;
-
+class Node;
 class Edge {
     private:
         char first_allowed_char;

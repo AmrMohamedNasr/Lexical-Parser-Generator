@@ -28,7 +28,7 @@ class Closure {
 		vector<Element*> getElements();
 		int getNumber();
 		bool isFinished();
-		void setFinished();
+		void setFinished(bool finish);
 		void setNumber(int number);
 		Closure(int number);
 		bool nodeExists(Element *ele);

@@ -16,6 +16,25 @@ class NfaDfaConverter {
          * @return a non minimized DFA from the given NFA.
          */
         Node *getNonMinimizedDFA(Node *combinedNfa);
+
+private:
+    set<Node*> getEpslonClosure(Node *node);
+
+    string getStateName(set<Node *> states);
+
+    bool getIsAccepted(set<Node *> states);
+
+    vector<Edge *> getEdges(set<Node *> states);
+
+    Node * getDfaStartState(Node *combinedNfa);
+
+    Node * getEpslonClosureFromSet(set<Node *> states);
+
+    bool setContainsState(set<Node *> states, Node *node);
+
+    bool representingSameNfa(Node *n1, Node *n2);
+
+    bool isFound(vector<Edge *> vector, Edge *&edge);
 };
 
 

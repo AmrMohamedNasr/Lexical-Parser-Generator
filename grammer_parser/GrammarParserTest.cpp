@@ -39,7 +39,6 @@ static const vector<NfaToken> correctTokens = {
 				MiniToken (OPERATION, "+"),
 				MiniToken (CHAR_GROUP, "0-9"),
 				MiniToken (OPERATION, "+"),
-				MiniToken (OPERATION, "|"),
 				MiniToken (WORD, "."),
 				MiniToken (OPERATION, "@"),
 				MiniToken (CHAR_GROUP, "0-9"),
@@ -51,7 +50,8 @@ static const vector<NfaToken> correctTokens = {
 				MiniToken (OPERATION, "+"),
 				MiniToken (OPERATION, "@"),
 				MiniToken (OPERATION, "|"),
-				MiniToken (OPERATION, "@")
+				MiniToken (OPERATION, "@"),
+				MiniToken (OPERATION, "|"),
 		})),
 		NfaToken (REGULAR_EXPRESSION, "relop", vector<MiniToken> ({
 				MiniToken (WORD, "=="),

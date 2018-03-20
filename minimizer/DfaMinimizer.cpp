@@ -197,7 +197,7 @@ int DfaMinimizer::getNumOfUnfinishedClos() {
 bool Closure:: isFinished() {
 
 }
-void Closure::setFinished() {
+void Closure::setFinished(bool finish) {
 
 }
 
