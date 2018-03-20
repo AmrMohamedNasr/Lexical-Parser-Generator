@@ -193,3 +193,4 @@ fabric.properties
 CMakeLists\.txt
 
 \.idea/
+/.cproject
