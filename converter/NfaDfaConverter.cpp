@@ -51,13 +51,18 @@ Node *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa) {
                 }
             }
             Node* newDfaNode = getEpslonClosureFromSet(nextStates);
-            if (!setContainsState(dfaNodes, newDfaNode)) {
+            Node* dfaRepresenter = setContainsState(dfaNodes, newDfaNode);
+            if (dfaRepresenter == NULL) {
                 dfaNodes.insert(newDfaNode);
                 nonMarkedNodes.push(newDfaNode);
+                Edge *edge = (Edge*) malloc(sizeof (Edge));
+                new (edge) Edge(startChar, lastChar, newDfaNode);
+                node->addDfaEdge(edge);
+            } else {
+                Edge *edge = (Edge*) malloc(sizeof (Edge));
+                new (edge) Edge(startChar, lastChar, dfaRepresenter);
+                node->addDfaEdge(edge);
             }
-            Edge *edge = (Edge*) malloc(sizeof (Edge));
-            new (edge) Edge(startChar, lastChar, newDfaNode);
-            node->addDfaEdge(edge);
         }
     }
     return start;
@@ -159,15 +164,15 @@ vector<Edge *> NfaDfaConverter::getEdges(set<Node *> states) {
     return edges;
 }
 
-bool NfaDfaConverter::setContainsState(set<Node *> states, Node *node) {
+Node* NfaDfaConverter::setContainsState(set<Node *> states, Node *node) {
     std::set<Node *>::iterator it;
     for (it = states.begin(); it != states.end(); it++) {
         Node* curr = *it;
         if (representingSameNfa(node, curr)) {
-            return true;
+            return curr;
         }
     }
-    return false;
+    return NULL;
 }
 
 bool NfaDfaConverter::representingSameNfa(Node *n1, Node *n2) {
@@ -177,6 +182,7 @@ bool NfaDfaConverter::representingSameNfa(Node *n1, Node *n2) {
     if (s1.size() != s2.size()) {
         return false;
     }
+
     std::set<Node *>::iterator it;
     for (it = s1.begin(); it != s1.end(); it++) {
         Node* curr = *it;
