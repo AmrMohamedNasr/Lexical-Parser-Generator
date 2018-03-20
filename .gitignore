@@ -185,3 +185,5 @@ fabric.properties
 /CMakeLists.txt
 /cmake-build-debug/
 /.cproject
+/.settings/
+ 
