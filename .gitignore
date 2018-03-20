@@ -2,8 +2,8 @@
 # Created by https://www.gitignore.io/api/c,c++,clion,intellij
 
 #Eclipse
-#.project
-#.settings/*
+.project
+.settings/*
 
 ### C ###
 # Prerequisites
@@ -83,6 +83,7 @@ dkms.conf
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 CMakeLists.txt
+.idea/*
 
 # User-specific stuff:
 .idea/**/workspace.xml
