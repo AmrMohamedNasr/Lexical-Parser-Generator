@@ -253,7 +253,6 @@ vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp) {
 	unsigned i = 0;
 	while (i < regexp.size()) {
 		MiniToken cur = regexp[i];
-		cout << cur.tok << " ";
 		if (cur.type == WORD || cur.type == CHAR_GROUP || cur.type == EPSILON) {
 			tokens.push_back(cur);
 		} else if (cur.type == OPERATION) {
