@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string.h>
+#include <utility>
 #include "../models/Node.h"
 
 class Element {
@@ -48,6 +49,8 @@ class DfaMinimizer {
 		void initTwoClosures(Node *nonMinimizedDfa, Closure *clS, Closure *clF);
 		int getNumByEle(Element* ele);
 		int getNumOfUnfinishedClos();
+		int getNumByNode(Node* node);
+		pair<int, Node*> getNodeWithNum(Node *);
     public:
         /**
          * takes non minimized DFA from the converter and return it minimized.

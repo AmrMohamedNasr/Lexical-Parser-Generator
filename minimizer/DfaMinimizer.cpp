@@ -6,6 +6,7 @@
 #include "../models/Node.h"
 #include <vector>
 #include "../models/Edge.h"
+#include <utility>
 #include <string.h>
 #include <queue>
 
@@ -88,8 +89,7 @@ Node *DfaMinimizer :: getMinimizedDFA(Node *nonMinimizedDFA) {
 	this->getClosures().push_back(&clS);
 	this->getClosures().push_back(&clF);
 	initTwoClosures(nonMinimizedDFA, &clS, &clF);
-	int unFinishedClosures = 2;
-	while (unFinishedClosures > 0 ) {
+	while (getNumOfUnfinishedClos() > 0) {
 		vector<Closure*> nextClosures;
 		for (auto it = this->getClosures().begin();
 				it != this->getClosures().end(); ) {
@@ -111,24 +111,45 @@ Node *DfaMinimizer :: getMinimizedDFA(Node *nonMinimizedDFA) {
 				}
 				if (flag == 1) {
 					nextClosures.push_back(&temp);
-					unFinishedClosures++;
 				} else {
+					temp.setFinished(true);
 					this->addClosure(&temp);
-					unFinishedClosures--;
 				}
 			}
-			if ((*it)->getElements().empty()){
-				this->removeClosure((*it));
-			} else {
-				it++;
-			}
+			this->removeClosure((*it));
 		}
 		while (!nextClosures.empty()) {
 			this->getClosures().push_back(nextClosures.back());
 			nextClosures.pop_back();
 		}
-
 	}
+	queue<pair<int, Node*>> qTransition;
+	pair<int, Node*> pStart = getNodeWithNum(nonMinimizedDFA);
+	vector<int> substituter;
+	qTransition.push(pStart);
+	while (!qTransition.empty()) {
+		for (auto it = qTransition.front().second->getEdges().begin();
+				it != qTransition.front().second->getEdges().end(); ++it) {
+			if (getNumByNode((*it)->get_target_node()) == qTransition.front().first) {
+				(*it)->set_target_node(qTransition.front().second);
+			} else {
+				pair<int, Node*> temp = getNodeWithNum((*it)->get_target_node());
+				bool flag = true;
+				for (auto j = substituter.begin(); j != substituter.end(); j++) {
+					if (j == temp.first) {
+						flag = false;
+					}
+				}
+				if (flag) {
+					substituter.push_back(temp.first);
+					qTransition.push(temp);
+				}
+			}
+		}
+		qTransition.pop();
+	}
+	return nonMinimizedDFA;
+
 }
 
 void DfaMinimizer :: addClosure(Closure* clo) {
@@ -185,19 +206,44 @@ int  DfaMinimizer :: getNumByEle(Element* ele) {
 	// error TODO to be handled
 	return 0;
 }
+
+int  DfaMinimizer :: getNumByNode(Node* node) {
+	for (auto i = this->closures.begin(); i != this->closures.end(); i++) {
+		for (auto j = (*i)->getElements().begin(); j != (*i)->getElements().end(); j++) {
+			if ((*j)->getNode()->getName().compare(node->getName())) {
+				return (*i)->getNumber();
+			}
+		}
+
+	}
+	// error TODO to be handled
+	return 0;
+}
 vector<Closure*> DfaMinimizer ::  getClosures(){
 	return this->closures;
 }
 
 int DfaMinimizer::getNumOfUnfinishedClos() {
-
+	int count = 0;
+	for (auto it = this->getClosures().begin(); it != this->getClosures().end(); it++) {
+		if (!(*it)->isFinished()) {
+			count++;
+		}
+	}
+	return count;
 }
 
 
 bool Closure:: isFinished() {
-
+	return this->finished;
 }
 void Closure::setFinished(bool finish) {
+  this->finished = finish;
+}
 
+pair<int, Node*> DfaMinimizer:: getNodeWithNum(Node * node) {
+	int temp = getNumByNode(node);
+	pair<int, Node*> p(temp, node);
+	return p;
 }
 
