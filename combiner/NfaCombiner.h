@@ -7,6 +7,7 @@
 
 
 #include "../models/Node.h"
+#include "../models/Nfa.h"
 #include <vector>
 
 using namespace std;
@@ -19,7 +20,7 @@ class NFACombiner {
          * @param separatedStateAcceptors the separated NFAs from the builder
          * @return a combined NFA for all the separated NFAs.
          */
-        Node *getCombinedNfa(vector<Node> *separatedStateAcceptors);
+        Nfa *getCombinedNfa(vector<Nfa> separatedStateAcceptors);
 };
 
 

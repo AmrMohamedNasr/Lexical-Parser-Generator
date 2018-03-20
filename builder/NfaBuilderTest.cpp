@@ -90,5 +90,5 @@ void test_nfa_builder() {
     nfaTokens.push_back(t1);
 //
     NfaBuilder nfaBuilder;
-    nfaBuilder.get_separated_nfas(nfaTokens);
+    nfaBuilder.get_separated_nfas(correctTokens);
 }

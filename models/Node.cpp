@@ -13,6 +13,10 @@ string Node::getName() {
 	return this->name;
 }
 
+void Node::setName(string name) {
+	this->name = name;
+}
+
 vector<Edge *> Node::getEdges() {
 	return this->edges;
 }

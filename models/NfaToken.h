@@ -13,7 +13,7 @@
 
 using namespace std;
 
-enum MiniType {OPERATION, CHAR_GROUP, WORD, EPSILON};
+enum MiniType {OPERATION, CHAR_GROUP, WORD, EPSILON}; // TODO rename operation to operator
 enum TokenType{PUNCTUATION, KEYWORD, REGULAR_EXPRESSION};
 
 class MiniToken {

@@ -9,6 +9,7 @@
 #include <vector>
 
 #define ACCEPT_STATE true
+#define EPS '\0'
 
 using namespace std;
 class Edge;
@@ -21,6 +22,7 @@ class Node {
     	bool isAcceptedState();
     	void setAcceptState(bool newState);
     	string getName();
+    	void setName(string name);
     	vector<Edge *> getEdges();
     	void addEdge(Edge * e);
 		explicit Node(bool accept);
