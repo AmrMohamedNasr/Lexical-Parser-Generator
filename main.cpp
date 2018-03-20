@@ -131,12 +131,9 @@ int main() {
 
 
 void run_tests() {
-//	test_edge();
-//	test_node();
-//	test_grammar_parser();
-//	test_nfa_builder();
-//	test_edge();
-//	test_node();
-//	test_grammar_parser();
-
+	test_edge();
+	test_node();
+	test_grammar_parser();
+	test_minimizer();
+	test_nfa_builder();
 }

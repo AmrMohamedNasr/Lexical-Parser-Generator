@@ -157,13 +157,13 @@ Nfa NfaBuilder::get_nfa (MiniToken miniToken) {
     Nfa result;
 
     switch (miniToken.type) {
-        case CHAR_GROUP:
+        case CHAR_GROUP: {
             result = construct_range_nfa(miniToken.tok[0], miniToken.tok[miniToken.tok.size() - 1]);
-            break;
-        case EPSILON:
+        } break;
+        case EPSILON: {
             result = construct_eps_nfa();
-            break;
-        case WORD:
+        } break;
+        case WORD: {
             bool first = true;
             Nfa prev;
             for (char c : tok) {
@@ -177,7 +177,12 @@ Nfa NfaBuilder::get_nfa (MiniToken miniToken) {
                 }
             }
             result = prev;
-            break;
+
+        } break;
+        case OPERATION: {}
+        	break;
+        case PARENTHESES: {}
+        	break;
     }
 
     return result;

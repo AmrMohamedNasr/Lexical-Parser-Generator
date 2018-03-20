@@ -19,13 +19,15 @@ class Edge {
         vector<char> disallowed_chars;
     public:
         Node * do_transition(char c);
-        Node * getTargetNode();
+        Node *get_target_node();
+        char get_first_allowed_char();
+        char get_last_allowed_char();
+        vector<char> get_disallowed_chars();
         bool is_eps_transition(void);
         bool valid_transition(char c);
         void disallow_character(char c);
         int getAllowedRange();
-        char getFirstAllowedCharacter();
-        char getLastAllowedCharacter();
+        bool equals(Edge* edge);
         Edge(char start, char end, Node *target);
 };
 

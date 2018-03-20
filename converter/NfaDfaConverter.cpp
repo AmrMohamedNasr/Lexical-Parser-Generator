@@ -40,13 +40,13 @@ Node *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa) {
             if (node->getEdges()[i]->is_eps_transition()) {
                 continue;
             }
-            char startChar = node->getEdges()[i]->getFirstAllowedCharacter();
-            char lastChar = node->getEdges()[i]->getLastAllowedCharacter();
+            char startChar = node->getEdges()[i]->get_first_allowed_char();
+            char lastChar = node->getEdges()[i]->get_last_allowed_char();
             nextStates.insert(node->getEdges()[i]->do_transition(startChar));
             for (int j = i + 1; j < node->getEdges().size(); j++) {
                 Edge* e = node->getEdges()[j];
-                if (startChar >= e->getFirstAllowedCharacter() &&
-                        lastChar <= e->getLastAllowedCharacter()) {
+                if (startChar >= e->get_first_allowed_char() &&
+                        lastChar <= e->get_last_allowed_char()) {
                     nextStates.insert(node->getEdges()[j]->do_transition(startChar));
                 }
             }
@@ -196,9 +196,9 @@ bool NfaDfaConverter::representingSameNfa(Node *n1, Node *n2) {
 bool NfaDfaConverter::isFound(vector<Edge *> vector, Edge *&edge) {
     for (int i = 0; i < vector.size(); ++i) {
         Edge* e = vector[i];
-        if (e->getTargetNode() == edge->getTargetNode() &&
-                e->getFirstAllowedCharacter() == edge->getFirstAllowedCharacter() &&
-                e->getLastAllowedCharacter() == edge->getLastAllowedCharacter()) {
+        if (e->get_target_node() == edge->get_target_node() &&
+                e->get_first_allowed_char() == edge->get_first_allowed_char() &&
+                e->get_last_allowed_char() == edge->get_last_allowed_char()) {
             return true;
         }
     }
