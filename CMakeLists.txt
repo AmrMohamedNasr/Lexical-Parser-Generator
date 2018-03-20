@@ -3,5 +3,5 @@ project(compilers)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp builder/NfaBuilder.cpp builder/NfaBuilder.h combiner/NfaCombiner.cpp combiner/NfaCombiner.h converter/NfaDfaConverter.cpp converter/NfaDfaConverter.h minimizer/DfaMinimizer.cpp minimizer/DfaMinimizer.h models/FiniteStateAcceptor.cpp models/FiniteStateAcceptor.h models/Node.cpp models/Node.h models/Edge.cpp models/Edge.h)
+set(SOURCE_FILES main.cpp builder/NfaBuilder.cpp builder/NfaBuilder.h combiner/NfaCombiner.cpp combiner/NfaCombiner.h converter/NfaDfaConverter.cpp converter/NfaDfaConverter.h minimizer/DfaMinimizer.cpp minimizer/DfaMinimizer.h models/Nfa.h models/NfaToken.h models/NfaToken.cpp models/Node.cpp models/Node.h models/Edge.cpp models/Edge.h models/SupportingNfaNodes.cpp models/SupportingNfaNodes.h)
 add_executable(compilers ${SOURCE_FILES})

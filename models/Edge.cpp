@@ -42,3 +42,15 @@ bool Edge::valid_transition(char c) {
 		return c <= this->last_allowed_char && c >= this->first_allowed_char;
 	}
 }
+
+char Edge::getFirstAllowedCharacter() {
+	return this->first_allowed_char;
+}
+
+char Edge::getLastAllowedCharacter() {
+	return this->last_allowed_char;
+}
+
+Node *Edge::getTargetNode() {
+    return this->target_node;
+}

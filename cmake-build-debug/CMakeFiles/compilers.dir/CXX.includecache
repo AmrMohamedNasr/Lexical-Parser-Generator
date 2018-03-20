@@ -1,0 +1,124 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilder.cpp
+NfaBuilder.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilder.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/builder/NfaBuilder.h
+../models/Nfa.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Nfa.h
+vector
+-
+iostream
+-
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/combiner/NfaCombiner.cpp
+NfaCombiner.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/combiner/NfaCombiner.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/combiner/NfaCombiner.h
+../models/Node.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+vector
+-
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/converter/NfaDfaConverter.cpp
+set
+-
+stack
+-
+queue
+-
+map
+-
+algorithm
+-
+NfaDfaConverter.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/converter/NfaDfaConverter.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/converter/NfaDfaConverter.h
+../models/Node.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/main.cpp
+iostream
+-
+p1_tests.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/p1_tests.h
+models/Node.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+converter/NfaDfaConverter.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/converter/NfaDfaConverter.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/minimizer/DfaMinimizer.cpp
+DfaMinimizer.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/minimizer/DfaMinimizer.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/minimizer/DfaMinimizer.h
+../models/Node.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.cpp
+Edge.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.h
+algorithm
+-
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.h
+string
+-
+vector
+-
+Node.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Nfa.h
+Node.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/NfaToken.cpp
+NfaToken.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/NfaToken.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/NfaToken.h
+string
+-
+vector
+-
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.cpp
+Node.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+string
+-
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+string
+-
+vector
+-
+set
+-
+SupportingNfaNodes.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/SupportingNfaNodes.h
+Edge.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Edge.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/SupportingNfaNodes.cpp
+SupportingNfaNodes.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/SupportingNfaNodes.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/SupportingNfaNodes.h
+set
+-
+Node.h
+/media/programajor/Work/Engineering/Compiler Project/compilers/models/Node.h
+
+/media/programajor/Work/Engineering/Compiler Project/compilers/p1_tests.h
+
