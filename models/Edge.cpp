@@ -23,7 +23,7 @@ Node * Edge::do_transition(char c) {
 	if (this->valid_transition(c)) {
 		return this->target_node;
 	} else {
-		return NULL;
+		return nullptr;
 	}
 }
 

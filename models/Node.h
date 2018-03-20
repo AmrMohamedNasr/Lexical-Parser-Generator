@@ -11,6 +11,9 @@
 #include "SupportingNfaNodes.h"
 #include "Edge.h"
 
+#define ACCEPT_STATE true
+#define EPS '\0'
+
 using namespace std;
 //class SupportingNfaNodes;
 class Edge;
@@ -26,8 +29,11 @@ class Node {
     	bool isAcceptedState();
     	void setAcceptState(bool newState);
     	string getName();
+    	void setName(string name);
     	vector<Edge *> getEdges();
     	void addEdge(Edge * e);
+		explicit Node(bool accept);
+		Node(string stateName, bool accept);
     	void addDfaEdge(Edge * e);
     	Node(string stateName, bool accept);
 		void setSupportingNfaNodes(set<Node *> nodes);

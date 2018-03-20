@@ -13,6 +13,10 @@ string Node::getName() {
 	return this->name;
 }
 
+void Node::setName(string name) {
+	this->name = name;
+}
+
 vector<Edge *> Node::getEdges() {
 	return this->edges;
 }
@@ -32,6 +36,10 @@ void Node::addDfaEdge(Edge * e) {
 Node::Node(string stateName, bool accept) {
 	this->acceptedState = accept;
 	this->name = stateName;
+}
+
+Node::Node(bool accept) {
+	this->acceptedState = accept;
 }
 
 void Node::setAcceptState(bool newState) {

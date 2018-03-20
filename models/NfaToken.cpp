@@ -16,4 +16,8 @@ NfaToken::NfaToken(TokenType tp, string tkName) {
 	this->type = tp;
 }
 
-
+NfaToken::NfaToken(TokenType tp, string tkName, vector<MiniToken> listTok) {
+	this->tokenName = tkName;
+	this->type = tp;
+	this->tokens = listTok;
+}
