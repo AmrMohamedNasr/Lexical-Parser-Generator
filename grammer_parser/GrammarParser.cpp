@@ -9,6 +9,7 @@
 #include <map>
 #include <regex>
 #include <stack>
+#include <list>
 
 const regex GrammarParser::regDefRegex = regex("\\s*([A-Za-z][A-Za-z0-9_]*)\\s*=\\s*(.*)$");
 const regex GrammarParser::regExpRegex = regex("\\s*([A-Za-z][A-Za-z0-9_]*)\\s*:\\s*(.*)$");
@@ -20,7 +21,7 @@ bool isReservedSymbol(char c);
 bool escapeReserved(string str, bool regOps);
 vector<string> split_spaces(string str);
 vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniToken>> mapOfDefinitions);
-vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp);
+vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool * error);
 bool is_operation_char(char c);
 char nonspacechar_before(string str, unsigned i);
 char nonspacechar_after(string str, unsigned i);
@@ -77,7 +78,11 @@ bool GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream * grammar_s
 				if (!escapeReserved(tokenRegex, true)) {
 					return false;
 				}
-				vector<MiniToken> tokens = regular_expression_postfix(regular_expression_split(tokenRegex, mapOfDefinitions));
+				bool error = false;
+				vector<MiniToken> tokens = regular_expression_postfix(regular_expression_split(tokenRegex, mapOfDefinitions), &error);
+				if (error) {
+					return false;
+				}
 				NfaToken token(REGULAR_EXPRESSION, tokenName);
 				for (unsigned i = 0; i < tokens.size(); i++) {
 					token.tokens.push_back(tokens[i]);
@@ -218,9 +223,23 @@ vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniTo
 			}
 		}
 	}
-	return res;
+	list<MiniToken> expandedReg;
+	for (unsigned i = 0; i < res.size() - 1; i++) {
+		MiniToken cur = res[i];
+		MiniToken next = res[i + 1];
+		if ((cur.type == WORD || cur.type == CHAR_GROUP || cur.type == EPSILON ||
+				(cur.type == PARENTHESES && cur.tok == ")") || (cur.type == OPERATION && (cur.tok == "*" || cur.tok == "+"))) &&
+				(next.type == WORD || next.type == CHAR_GROUP || next.type == EPSILON ||
+						(next.type == PARENTHESES && next.tok == "("))) {
+			expandedReg.push_back(cur);
+			expandedReg.push_back(MiniToken(OPERATION,"@"));
+		} else {
+			expandedReg.push_back(cur);
+		}
+	}
+	expandedReg.push_back(res[res.size() - 1]);
+	return vector<MiniToken>(expandedReg.begin(), expandedReg.end());
 }
-
 char nonspacechar_before(string str, unsigned i) {
 	while (i >= 0) {
 		if (!isspace(str.at(i))) {
@@ -247,38 +266,69 @@ bool is_operation_char(char c) {
 	return c == '*' || c == '+' || c == '|';
 }
 
-vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp) {
+vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool * error) {
 	vector<MiniToken> tokens;
 	stack<MiniToken> operations;
 	unsigned i = 0;
-	while (i < regexp.size()) {
+	*error = false;
+	bool last_token_operand = false;
+	while (!(*error) && i < regexp.size()) {
 		MiniToken cur = regexp[i];
 		if (cur.type == WORD || cur.type == CHAR_GROUP || cur.type == EPSILON) {
 			tokens.push_back(cur);
+			last_token_operand = true;
 		} else if (cur.type == OPERATION) {
-			if (cur.tok == "|") {
-				while (!operations.empty() && (operations.top().type != OPERATION || operations.top().tok == "|") && !(operations.top().type == PARENTHESES && operations.top().tok == "(")) {
+			if (!last_token_operand) {
+				*error = true;
+			} else if (cur.tok == "|" || cur.tok == "@") {
+				last_token_operand = false;
+				while (!operations.empty()
+						&& (operations.top().type == OPERATION &&
+								!(operations.top().tok == "|" && cur.tok == "@"))
+						&& !(operations.top().type == PARENTHESES && operations.top().tok == "(")) {
 					tokens.push_back(operations.top());
 					operations.pop();
 				}
 				operations.push(cur);
-			} else {
+			} else if (cur.tok == "*" || cur.tok == "+"){
 				tokens.push_back(cur);
+			} else {
+				*error = true;
 			}
 		} else if (cur.type == PARENTHESES) {
 			if (cur.tok == "(") {
+				last_token_operand = false;
 				operations.push(cur);
-			} else {
+			} else if (cur.tok == ")"){
+				last_token_operand = true;
+				if (operations.empty()) {
+					*error = true;
+				}
 				MiniToken popped = operations.top();
 				operations.pop();
-				while (popped.type != PARENTHESES || popped.tok != "(") {
+				while (!operations.empty() && (popped.type != PARENTHESES || popped.tok != "(")) {
 					tokens.push_back(popped);
 					popped = operations.top();
 					operations.pop();
 				}
+				if (popped.type != PARENTHESES || popped.tok != "(") {
+					*error = true;
+				}
+			} else {
+				*error = true;
 			}
+		} else {
+			*error = true;
 		}
 		i++;
+	}
+	while (!operations.empty()) {
+		if (operations.top().type == PARENTHESES) {
+			*error = true;
+		} else {
+			tokens.push_back(operations.top());
+			operations.pop();
+		}
 	}
 	return tokens;
 }

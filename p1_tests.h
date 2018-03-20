@@ -11,6 +11,7 @@
 void test_edge(void);
 void test_node(void);
 void test_grammar_parser(void);
-void test_nfa_builder();
+void test_minimizer(void);
+void test_nfa_builder(void);
 
 #endif /* P1_TESTS_H_ */

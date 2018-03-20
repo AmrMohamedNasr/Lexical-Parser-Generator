@@ -5,7 +5,7 @@
 #include "NfaCombiner.h"
 #include "../builder/NfaBuilder.h"
 
-Nfa* NFACombiner::getCombinedNfa(vector<Nfa> separatedStateAcceptors) {
+Nfa NFACombiner::getCombinedNfa(vector<Nfa> separatedStateAcceptors) {
     NfaBuilder nfaBuilder;
     Nfa final;
     bool first = true;
@@ -18,5 +18,5 @@ Nfa* NFACombiner::getCombinedNfa(vector<Nfa> separatedStateAcceptors) {
         }
     }
 
-    return &final;
+    return final;
 }

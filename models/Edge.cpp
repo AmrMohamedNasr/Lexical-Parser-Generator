@@ -42,3 +42,45 @@ bool Edge::valid_transition(char c) {
 		return c <= this->last_allowed_char && c >= this->first_allowed_char;
 	}
 }
+
+Node * Edge :: get_target_node() {
+	return this->target_node;
+}
+
+char Edge :: get_first_allowed_char() {
+	return this->first_allowed_char;
+}
+
+char Edge :: get_last_allowed_char() {
+	return this->last_allowed_char;
+}
+
+vector<char> Edge :: get_disallowed_chars() {
+	return this->disallowed_chars;
+}
+
+bool  Edge :: equals(Edge* edge) {
+	if (edge->get_disallowed_chars().size() != this->get_disallowed_chars().size()) {
+		return false;
+	}
+	for (auto i = edge->get_disallowed_chars().begin();
+			i != edge->get_disallowed_chars().end(); ++i) {
+		int flag = 0;
+		for (auto j = this->get_disallowed_chars().begin();
+					j != this->get_disallowed_chars().end(); ++j) {
+				 if (i == j) {
+					 flag = 1;
+				 }
+			}
+		if (flag == 0) {
+			return false;
+		}
+		flag = 0;
+	}
+	return (this->get_first_allowed_char() == edge->get_first_allowed_char()) &&
+			(this->get_last_allowed_char() == edge->get_last_allowed_char());
+
+
+
+
+

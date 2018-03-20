@@ -184,3 +184,8 @@ fabric.properties
 
 # End of https://www.gitignore.io/api/c,c++,clion,intellij
 /Default/
+/CMakeLists.txt
+/cmake-build-debug/
+/.cproject
+/.settings/
+ 
