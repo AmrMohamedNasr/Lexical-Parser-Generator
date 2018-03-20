@@ -135,7 +135,7 @@ Node *DfaMinimizer :: getMinimizedDFA(Node *nonMinimizedDFA) {
 			} else {
 				pair<int, Node*> temp = getNodeWithNum((*it)->get_target_node());
 				bool flag = true;
-				for (auto j = substituter.begin(); j != substituter.end(); j++) {
+				for (int j : substituter) {
 					if (j == temp.first) {
 						flag = false;
 					}
