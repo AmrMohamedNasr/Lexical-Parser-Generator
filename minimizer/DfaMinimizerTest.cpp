@@ -61,8 +61,8 @@ void test_minimizer(void) {
 	x.addEdge(&xe);
 	DfaMinimizer g;
 	Closure cl(1);
-
 	Node * result = g.getMinimizedDFA(&x);
+
 	cout << "result is here";
 
 
