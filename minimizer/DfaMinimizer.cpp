@@ -33,7 +33,7 @@ Closure ::Closure(int number) {
 
 bool Closure :: nodeExists(Node *ele) {
 	for (auto it = this->elements.begin(); it != this->elements.end(); it++) {
-		  if ((*it)->getName().compare(ele->getName()) == 0) {
+		  if ((*it) == ele) {
 			  return true;
 		  }
 	}
@@ -42,7 +42,7 @@ bool Closure :: nodeExists(Node *ele) {
 
 void Closure :: removeEle(Node *ele) {
 	for (int i = 0; i < this->elements.size(); i++) {
-			  if (this->elements[i]->getName().compare(ele->getName()) == 0) {
+			  if (this->elements[i] == ele) {
 				  this->elements.erase(this->elements.begin() +i);
 				  return;
 			  }
@@ -56,7 +56,7 @@ void Closure :: addEle(Node *ele) {
 
 bool DfaMinimizer ::nodeExists(Node *ele) {
 	for (auto it = this->eles.begin(); it != this->eles.end(); it++) {
-		  if ((*it)->getName().compare(ele->getName()) == 0) {
+		  if ((*it) == ele) {
 			  return true;
 		  }
 	}
