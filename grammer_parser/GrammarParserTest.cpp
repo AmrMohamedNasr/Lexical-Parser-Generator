@@ -94,7 +94,7 @@ void test_grammar_parser(void) {
 	bool error = false;
 	ifstream infile;
 	infile.open("rules.txt");
-	if (!gp.parse_grammar(&regTokens, &infile)) {
+	if (!gp.parse_grammar(&regTokens, &infile).empty()) {
 		cout << "ERROR DETECTED IN RIGHT PROGRAM!!" << endl;
 	}
 	unsigned i = 0;

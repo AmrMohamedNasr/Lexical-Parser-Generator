@@ -24,7 +24,7 @@ class GrammarParser {
 		static const regex keyWordRegex;
 		static const regex punctRegex;
 	public:
-		bool parse_grammar(vector<NfaToken> *tokens , ifstream * grammar_stream);
+		vector<string> parse_grammar(vector<NfaToken> *tokens , ifstream * grammar_stream);
 };
 
 
