@@ -93,7 +93,7 @@ void test_grammar_parser(void) {
 	vector<NfaToken> regTokens;
 	bool error = false;
 	ifstream infile;
-	infile.open("rules.txt");
+	infile.open("./test_files/grammer_parser/correct_rules.txt");
 	if (!gp.parse_grammar(&regTokens, &infile).empty()) {
 		cout << "ERROR DETECTED IN RIGHT PROGRAM!!" << endl;
 	}
@@ -111,6 +111,24 @@ void test_grammar_parser(void) {
 	    i++;
 	}
 	infile.close();
+	cout << endl;
+	cout << "WRONG INPUT FILES TESTS :" << endl;
+	for (unsigned n = 1; n < 5; n++) {
+		infile.open("./test_files/grammar_parser/wrong_rules"+ to_string(n) + ".txt");
+		vector<string> errors = gp.parse_grammar(&regTokens, &infile);
+		if (errors.empty()) {
+			cout << "NO ERROR DETECTED IN WRONG PROGRAM!!" << endl;
+			error = true;
+		} else {
+			cout << "Wrong rules " << n << endl;
+			for (unsigned i = 0; i < errors.size(); i++) {
+				cout << errors[i] << endl;
+			}
+			cout << ".........................................................................." << endl;
+		}
+		infile.close();
+	}
+	cout << endl;
 	if (!error) {
 		cout << "Grammar Parser Success..." << endl;
 	}
