@@ -14,8 +14,7 @@ class Nfa {
 	public:
 		Node *start;
 		Node *end;
+		void print_nfa();
 };
-
-
 
 #endif /* MODELS_NFA_H_ */

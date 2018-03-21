@@ -23,7 +23,6 @@ class NfaBuilder {
 		Nfa construct_positive_closure_nfa(Nfa a);
         Nfa build_graph(NfaToken nfa_token);
 		Nfa get_nfa (MiniToken miniToken);
-
 		public:
         /**
          * takes list of regular expression names and their corresponding post-fix rules.
@@ -35,8 +34,9 @@ class NfaBuilder {
          * @return a list of separated NFAs created from the grammar file in param nfas.
          */
 		vector<Nfa> get_separated_nfas(vector<NfaToken> nfa_tokens);
-
 		Nfa construct_or_nfa(Nfa a, Nfa b);
+
+
 };
 
 

@@ -104,7 +104,7 @@ Nfa NfaBuilder::construct_positive_closure_nfa(Nfa a) {
 
     auto nfa = new Nfa();
     nfa->start = newStart;
-    nfa->end = oldEnd;
+    nfa->end = newEnd;
     return *nfa;
 }
 
@@ -122,15 +122,15 @@ Nfa NfaBuilder::build_graph(NfaToken nfa_token) {
     for (MiniToken& miniToken : nfa_token.tokens){
         if (miniToken.type == OPERATION) {
             if (miniToken.tok == "|") { // or
-                Nfa a = nfaStack.top();
-                nfaStack.pop();
                 Nfa b = nfaStack.top();
                 nfaStack.pop();
+                Nfa a = nfaStack.top();
+				nfaStack.pop();
                 nfaStack.push(construct_or_nfa(a, b));
             } else if (miniToken.tok == "@") { // and
-                Nfa a = nfaStack.top();
-                nfaStack.pop();
                 Nfa b = nfaStack.top();
+                nfaStack.pop();
+                Nfa a = nfaStack.top();
                 nfaStack.pop();
                 nfaStack.push(construct_and_nfa(a, b));
             } else if (miniToken.tok == "*") { // closure
