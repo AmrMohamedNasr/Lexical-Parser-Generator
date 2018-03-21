@@ -34,8 +34,12 @@ vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream *
 	vector<string> errors;
 	map<string, vector<MiniToken>> mapOfDefinitions;
 	if (grammar_stream->is_open()) {
-		unsigned line_number = 1;
+		unsigned line_number = 0;
 		while (getline (*grammar_stream,line) ) {
+			line_number++;
+			if (line.empty()) {
+				continue;
+			}
 			if (regex_match(line, punctRegex)) {
 				smatch sm;
 				regex_search(line,sm,punctRegex);
@@ -75,7 +79,13 @@ vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream *
 					continue;
 				} else {
 					vector<MiniToken> tokens = regular_expression_split(tokenRegex, mapOfDefinitions);
-					mapOfDefinitions.insert(make_pair(tokenName, tokens));
+					bool error = false;
+					regular_expression_postfix(tokens, &error, &errors, line_number);
+					if (error) {
+						continue;
+					} else {
+						mapOfDefinitions.insert(make_pair(tokenName, tokens));
+					}
 				}
 			} else if (regex_match(line, regExpRegex)) {
 				smatch sm;
@@ -100,7 +110,9 @@ vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream *
 				add_error(line_number, "Undefined Line Type.", &errors);
 				continue;
 			}
-			line_number++;
+		}
+		if (result->size() == 0) {
+			add_error(line_number, "Empty file...", &errors);
 		}
 	}
 	return errors;
@@ -125,11 +137,11 @@ bool escapeReserved(string str, bool regOps, vector<string> *errors, unsigned in
 				if (str.at(i) == '=' || str.at(i) == ':') {
 					if (i > 1) {
 						add_error(line_n,
-							"Reserved char " + to_string(str.at(i)) + "at position" + to_string(i) + " in \"" + str.substr(i - 2, i + 2) + "\". Please use \\" + to_string(str.at(i)) + " instead.",
+							string("Reserved char ") + str.at(i) + " at position " + to_string(i) + " in \"" + str.substr(i - 2, i + 2) + "\". Please use \\" + str.at(i) + " instead.",
 							errors);
 					} else {
 						add_error(line_n,
-							"Reserved char " + to_string(str.at(i)) + "at position" + to_string(i) + " in \"" + str.substr(i - 1, i + 3) + "\". Please use \\" + to_string(str.at(i)) + " instead.",
+							string("Reserved char ") + str.at(i) + " at position " + to_string(i) + " in \"" + str.substr(i - 1, i + 3) + "\". Please use \\" + str.at(i) + " instead.",
 							errors);
 					}
 					noError = false;
@@ -138,7 +150,7 @@ bool escapeReserved(string str, bool regOps, vector<string> *errors, unsigned in
 					char bf = nonspacechar_before(str, i - 1);
 					char af = nonspacechar_after(str, i + 1);
 					if (af == '\0' || bf == '\0' || isReservedSymbol(af)) {
-						string reason = isReservedSymbol(af) ? "Found reserved charcter after it.":"Missing character before or after range";
+						string reason = isReservedSymbol(af) ? "Found reserved charcter after it.":af == '\0'? "Missing character after range":"Missing character before range";
 						if (i > 1) {
 							add_error(line_n,
 								"Range operation error at position " + to_string(i) + " in \"" + str.substr(i - 2, i + 2) + "\". Range need two valid characters before and after it. " + reason,
@@ -166,10 +178,9 @@ bool escapeReserved(string str, bool regOps, vector<string> *errors, unsigned in
 							}
 							noError = false;
 						}
-					}
-					if (af < bf) {
+					} else if (af < bf) {
 						add_error(line_n,
-							"Range operation error at position " + to_string(i) + "Range needs to be in format of a-b where a is a character this is before b.",
+							"Range operation error at position " + to_string(i) + " . Range needs to be in format of a-b where a is a character this is before b.",
 							errors);
 						noError = false;
 					}
@@ -178,18 +189,18 @@ bool escapeReserved(string str, bool regOps, vector<string> *errors, unsigned in
 			} else {
 				if (i > 1) {
 					add_error(line_n,
-						"Reserved char " + to_string(str.at(i)) + "at position" + to_string(i) + " in \"" + str.substr(i - 2, i + 2) + "\". Please use \\" + to_string(str.at(i)) + " instead.",
+						string("Reserved char ") + str.at(i) + " at position " + to_string(i) + " in \"" + str.substr(i - 2, i + 2) + "\". Please use \\" + str.at(i) + " instead.",
 						errors);
 				} else {
 					add_error(line_n,
-						"Reserved char " + to_string(str.at(i)) + "at position" + to_string(i) + " in \"" + str.substr(i - 1, i + 3) + "\". Please use \\" + to_string(str.at(i)) + " instead.",
+						string("Reserved char ") + str.at(i) + " at position " + to_string(i) + " in \"" + str.substr(i - 1, i + 3) + "\". Please use \\" + str.at(i) + " instead.",
 						errors);
 				}
 				noError = false;
 			}
 		} else if (isReservedSymbol(str.at(i)) && i == 0) {
 			add_error(line_n,
-					"Reserved char " + to_string(str.at(i)) + "at position" + to_string(i) + " in \"" + str.substr(i, i + 4) + "\". Please use \\" + to_string(str.at(i)) + " instead.",
+					string("Reserved char ") + str.at(i) + " at position " + to_string(i) + " in \"" + str.substr(i, i + 4) + "\". Please use \\" + str.at(i) + " instead.",
 					errors);
 			noError = false;
 		}
@@ -385,14 +396,14 @@ vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool *err
 		}
 		i++;
 	}
-	while (!operations.empty()) {
+	while (!(*error) && !operations.empty()) {
 		if (operations.top().type == PARENTHESES) {
 			*error = true;
 			add_error(line_n, "Parenthesis opened without being closed", errors);
 		} else {
 			tokens.push_back(operations.top());
-			operations.pop();
 		}
+		operations.pop();
 	}
 	if(!(*error) && !valid_postfix(tokens, errors, line_n)) {
 		*error = true;
