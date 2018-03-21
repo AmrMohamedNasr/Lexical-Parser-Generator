@@ -23,14 +23,17 @@ class Node {
         bool acceptedState;
 		set<Node *> supportingNodes;
  	public:
-    	bool isAcceptedState();
+		// constructors
+		explicit Node(bool accept);
+		Node(string stateName, bool accept);
+		Node(string stateName, bool accept, vector<Edge *> edges);
+    	// end of constructors
+		bool isAcceptedState();
     	void setAcceptState(bool newState);
     	string getName();
     	void setName(string name);
     	vector<Edge *> getEdges();
     	void addEdge(Edge * e);
-		explicit Node(bool accept);
-		Node(string stateName, bool accept);
     	void addDfaEdge(Edge * e);
 		void setSupportingNfaNodes(set<Node *> nodes);
 		set<Node*> getSupportedNfaNodes();

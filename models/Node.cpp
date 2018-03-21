@@ -37,6 +37,13 @@ Node::Node(string stateName, bool accept) {
 	this->name = stateName;
 }
 
+Node::Node(string stateName, bool accept, vector<Edge *> edges) {
+	this->acceptedState = accept;
+	this->name = stateName;
+	this->edges = edges;
+}
+
+
 Node::Node(bool accept) {
 	this->acceptedState = accept;
 }

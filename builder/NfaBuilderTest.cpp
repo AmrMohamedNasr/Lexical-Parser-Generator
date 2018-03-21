@@ -1,10 +1,12 @@
 //
 // Created by marc on 3/20/18.
 //
+#include <list>
 #include "NfaBuilder.h"
 #include "../p1_tests.h"
 
 using namespace std;
+Node getIdGraph();
 
 static const vector<NfaToken> correctTokens = {
         NfaToken (REGULAR_EXPRESSION, "id", vector<MiniToken> ({
@@ -76,19 +78,117 @@ static const vector<NfaToken> correctTokens = {
           }))
 };
 
-void test_nfa_builder() {
-    vector<NfaToken> nfaTokens;
-    // id: a-z | eps
-    NfaToken t1(REGULAR_EXPRESSION, "id");
-    MiniToken m1(CHAR_GROUP, "a-z");
-    MiniToken m2(EPSILON, "eps");
-    MiniToken m3(OPERATION, "|");
-    t1.tokens.push_back(m1);
-    t1.tokens.push_back(m2);
-    t1.tokens.push_back(m3);
 
-    nfaTokens.push_back(t1);
-//
+void test_nfa_builder() {
     NfaBuilder nfaBuilder;
-    nfaBuilder.get_separated_nfas(correctTokens);
+    vector<Nfa> nfas = nfaBuilder.get_separated_nfas(correctTokens);
+    // size of nfas should be 18
+    bool error = false;
+    if (nfas.size() != 18) {
+        error = true;
+        cout << "NFAs count not correct" << endl << "WRONG. Found : " << endl;
+        cout << nfas.size();
+        cout << "Expected : 18" << endl;
+    }
+
+    Node node = getIdGraph();
+
+    set<Node*> visited;
+    list<Node*> queue;
+    queue.push_back(&node);
+
+    while (!queue.empty()) {
+        node = *queue.front();
+        queue.pop_front();
+
+        for (Edge* e : node.getEdges()) {
+            if (visited.find(e->get_target_node()) != visited.end()) {
+                visited.insert(e->get_target_node());
+
+            }
+        }
+    }
+
+    if (!error) {
+        cout << "NFA converter Success..." << endl;
+    }
+
+}
+
+Node getIdGraph() {
+    Node start(false);
+    Node n2 = Node("2", false);
+    Node n3 = Node("3", false);
+    Node n4 = Node("4", false);
+    Node n5 = Node("5", false);
+    Node n6 = Node("6", false);
+    Node n7 = Node("7", false);
+    Node n8 = Node("8", false);
+    Node n9 = Node("9", false);
+    Node n10 = Node("10", false);
+    Node n11 = Node("11", false);
+    Node n12 = Node("12", false);
+    Node n13 = Node("13", false);
+    Node n14 = Node("14", false);
+    Node n15 = Node("15", false);
+    Node n16 = Node("16", false);
+    Node n17 = Node("17", false);
+    Node n18 = Node("18", false);
+    Node n19 = Node("19", false);
+    Node end = Node("end", true);
+
+    Edge e1(EPS, EPS, &n2);
+    Edge e2(EPS, EPS, &n3);
+    Edge e3('a', 'z', &n4);
+    Edge e4(EPS, EPS, &n7);
+    Edge e5(EPS, EPS, &n5);
+    Edge e6('A', 'Z', &n6);
+    Edge e7(EPS, EPS, &n7);
+    Edge e8(EPS, EPS, &n8);
+
+    Edge e9(EPS, EPS, &n9);
+    Edge e10(EPS, EPS, &n10);
+    Edge e11(EPS, EPS, &n11);
+    Edge e12('a', 'z', &n12);
+    Edge e13(EPS, EPS, &n13);
+    Edge e14(EPS, EPS, &n14);
+    Edge e15('A', 'Z', &n15);
+    Edge e16(EPS, EPS, &n13);
+    Edge e17(EPS, EPS, &n18);
+    Edge e18(EPS, EPS, &n16);
+    Edge e19('0', '9', &n17);
+    Edge e20(EPS, EPS, &n18);
+    Edge e21(EPS, EPS, &n9);
+    Edge e22(EPS, EPS, &n19);
+    Edge e23(EPS, EPS, &n19);
+    Edge e24(EPS, EPS, &end);
+
+    start.addEdge(&e1);
+    n2.addEdge(&e2);
+    n2.addEdge(&e5);
+    n3.addEdge(&e3);
+    n4.addEdge(&e4);
+    n5.addEdge(&e6);
+    n6.addEdge(&e7);
+    n7.addEdge(&e8);
+
+    n8.addEdge(&e9);
+    n8.addEdge(&e22);
+    n9.addEdge(&e10);
+    n9.addEdge(&e18);
+    n10.addEdge(&e11);
+    n10.addEdge(&e14);
+    n11.addEdge(&e12);
+    n12.addEdge(&e13);
+    n13.addEdge(&e17);
+    n14.addEdge(&e15);
+    n15.addEdge(&e16);
+
+    n16.addEdge(&e19);
+    n17.addEdge(&e20);
+    n18.addEdge(&e21);
+    n18.addEdge(&e23);
+    n19.addEdge(&e24);
+
+    return start;
 }
