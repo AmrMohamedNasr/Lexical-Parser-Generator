@@ -27,7 +27,7 @@ Node * LexicalAnalyzerGenerator::generate_lexical_analyzer(string file_name) {
 		return nullptr;
 	}
 	vector<Nfa> nfas = this->builder.get_separated_nfas(tokens);
-	Node * startNode = this->combiner.getCombinedNfa(nfas);
+	Node * startNode = this->combiner.getCombinedNfa(nfas).start;
 	startNode = this->converter.getNonMinimizedDFA(startNode);
 	startNode = this->minimzer.getMinimizedDFA(startNode);
 	return startNode;
