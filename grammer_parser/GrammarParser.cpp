@@ -18,82 +18,92 @@ const regex GrammarParser::punctRegex = regex("\\s*\\[((?:\\s*[^\\s]*\\s*)*)]\\s
 
 string filter_string(string str);
 bool isReservedSymbol(char c);
-bool escapeReserved(string str, bool regOps);
+bool escapeReserved(string str, bool regOps, vector<string> *errors, unsigned line_n);
 vector<string> split_spaces(string str);
 vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniToken>> mapOfDefinitions);
-vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool * error);
+vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool * error,  vector<string> *errors, unsigned line_n);
+bool valid_postfix(vector<MiniToken> tokens, vector<string>* errors, unsigned line_n);
 bool is_operation_char(char c);
 char nonspacechar_before(string str, unsigned i);
 char nonspacechar_after(string str, unsigned i);
 bool is_parenthesis(char c);
+void add_error(unsigned line_n, string error, vector<string> *errors);
 
-bool GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream * grammar_stream) {
+vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream * grammar_stream) {
 	string line;
+	vector<string> errors;
 	map<string, vector<MiniToken>> mapOfDefinitions;
 	if (grammar_stream->is_open()) {
+		unsigned line_number = 1;
 		while (getline (*grammar_stream,line) ) {
 			if (regex_match(line, punctRegex)) {
 				smatch sm;
 				regex_search(line,sm,punctRegex);
-				if (!escapeReserved(sm[1], false)) {
-					return false;
-				}
-				string filtered = filter_string(sm[1]);
-				vector<string> tokens = split_spaces(filtered);
-				for (unsigned i = 0; i < tokens.size(); i++) {
-					NfaToken token (PUNCTUATION, tokens[i]);
-					MiniToken mtoken (WORD, tokens[i]);
-					token.tokens.push_back(mtoken);
-					result->push_back(token);
+				if (!escapeReserved(sm[1], false, &errors, line_number)) {
+					continue;
+				} else {
+					string filtered = filter_string(sm[1]);
+					vector<string> tokens = split_spaces(filtered);
+					for (unsigned i = 0; i < tokens.size(); i++) {
+						NfaToken token (PUNCTUATION, tokens[i]);
+						MiniToken mtoken (WORD, tokens[i]);
+						token.tokens.push_back(mtoken);
+						result->push_back(token);
+					}
 				}
 			} else if (regex_match(line, keyWordRegex)) {
 				smatch sm;
 				regex_search(line,sm,keyWordRegex);
-				if (!escapeReserved(sm[1], false)) {
-					return false;
-				}
-				string filtered = filter_string(sm[1]);
-				vector<string> tokens = split_spaces(filtered);
-				for (unsigned i = 0; i < tokens.size(); i++) {
-					NfaToken token (KEYWORD, tokens[i]);
-					MiniToken mtoken (WORD, tokens[i]);
-					token.tokens.push_back(mtoken);
-					result->push_back(token);
+				if (!escapeReserved(sm[1], false, &errors, line_number)) {
+					continue;
+				} else {
+					string filtered = filter_string(sm[1]);
+					vector<string> tokens = split_spaces(filtered);
+					for (unsigned i = 0; i < tokens.size(); i++) {
+						NfaToken token (KEYWORD, tokens[i]);
+						MiniToken mtoken (WORD, tokens[i]);
+						token.tokens.push_back(mtoken);
+						result->push_back(token);
+					}
 				}
 			} else if (regex_match(line, regDefRegex)) {
 				smatch sm;
 				regex_search(line,sm,regDefRegex);
 				string tokenName = sm[1];
 				string tokenRegex = sm[2];
-				if (!escapeReserved(tokenRegex, true)) {
-					return false;
+				if (!escapeReserved(tokenRegex, true, &errors, line_number)) {
+					continue;
+				} else {
+					vector<MiniToken> tokens = regular_expression_split(tokenRegex, mapOfDefinitions);
+					mapOfDefinitions.insert(make_pair(tokenName, tokens));
 				}
-				vector<MiniToken> tokens = regular_expression_split(tokenRegex, mapOfDefinitions);
-				mapOfDefinitions.insert(make_pair(tokenName, tokens));
 			} else if (regex_match(line, regExpRegex)) {
 				smatch sm;
 				regex_search(line,sm,regExpRegex);
 				string tokenName = sm[1];
 				string tokenRegex = sm[2];
-				if (!escapeReserved(tokenRegex, true)) {
-					return false;
+				if (!escapeReserved(tokenRegex, true, &errors, line_number)) {
+					continue;
+				} else {
+					bool error = false;
+					vector<MiniToken> tokens = regular_expression_postfix(regular_expression_split(tokenRegex, mapOfDefinitions), &error, &errors, line_number);
+					if (error) {
+						continue;
+					}
+					NfaToken token(REGULAR_EXPRESSION, tokenName);
+					for (unsigned i = 0; i < tokens.size(); i++) {
+						token.tokens.push_back(tokens[i]);
+					}
+					result->push_back(token);
 				}
-				bool error = false;
-				vector<MiniToken> tokens = regular_expression_postfix(regular_expression_split(tokenRegex, mapOfDefinitions), &error);
-				if (error) {
-					return false;
-				}
-				NfaToken token(REGULAR_EXPRESSION, tokenName);
-				for (unsigned i = 0; i < tokens.size(); i++) {
-					token.tokens.push_back(tokens[i]);
-				}
-				result->push_back(token);
 			} else {
-				return false;
+				add_error(line_number, "Undefined Line Type.", &errors);
+				continue;
 			}
+			line_number++;
 		}
 	}
-	return true;
+	return errors;
 }
 
 string filter_string(string str) {
@@ -107,37 +117,84 @@ string filter_string(string str) {
 	return res;
 }
 
-bool escapeReserved(string str, bool regOps) {
+bool escapeReserved(string str, bool regOps, vector<string> *errors, unsigned int line_n) {
+	bool noError = true;
 	for (unsigned i = 0; i < str.size(); i++) {
 		if (isReservedSymbol(str.at(i)) && i > 0 && str.at(i-1) != '\\') {
 			if (regOps) {
 				if (str.at(i) == '=' || str.at(i) == ':') {
-					return false;
+					if (i > 1) {
+						add_error(line_n,
+							"Reserved char " + to_string(str.at(i)) + "at position" + to_string(i) + " in \"" + str.substr(i - 2, i + 2) + "\". Please use \\" + to_string(str.at(i)) + " instead.",
+							errors);
+					} else {
+						add_error(line_n,
+							"Reserved char " + to_string(str.at(i)) + "at position" + to_string(i) + " in \"" + str.substr(i - 1, i + 3) + "\". Please use \\" + to_string(str.at(i)) + " instead.",
+							errors);
+					}
+					noError = false;
 				}
 				if (str.at(i) == '-') {
 					char bf = nonspacechar_before(str, i - 1);
 					char af = nonspacechar_after(str, i + 1);
 					if (af == '\0' || bf == '\0' || isReservedSymbol(af)) {
-						return false;
+						string reason = isReservedSymbol(af) ? "Found reserved charcter after it.":"Missing character before or after range";
+						if (i > 1) {
+							add_error(line_n,
+								"Range operation error at position " + to_string(i) + " in \"" + str.substr(i - 2, i + 2) + "\". Range need two valid characters before and after it. " + reason,
+								errors);
+						} else {
+							add_error(line_n,
+								"Range operation error at position " + to_string(i) + " in \"" + str.substr(i, i + 4) + "\". Range need two valid characters before and after it. " + reason,
+								errors);
+						}
+						noError = false;
 					} else if (isReservedSymbol(bf)) {
 						int j = i - 1;
 						while (j >= 0 && isspace(str.at(j))) {
 							j--;
 						}
 						if (j < 1 || str.at(j - 1) != '\\') {
-							return false;
+							if (i > 1) {
+								add_error(line_n,
+									"Range operation error at position " + to_string(i) + " in \"" + str.substr(i - 2, i + 2) + "\". Range need two valid characters before and after it. Found reserved character before it.",
+									errors);
+							} else {
+								add_error(line_n,
+									"Range operation error at position " + to_string(i) + " in \"" + str.substr(j, i + 1) + "\". Range need two valid characters before and after it. Found reserved character before it.",
+									errors);
+							}
+							noError = false;
 						}
+					}
+					if (af < bf) {
+						add_error(line_n,
+							"Range operation error at position " + to_string(i) + "Range needs to be in format of a-b where a is a character this is before b.",
+							errors);
+						noError = false;
 					}
 
 				}
 			} else {
-				return false;
+				if (i > 1) {
+					add_error(line_n,
+						"Reserved char " + to_string(str.at(i)) + "at position" + to_string(i) + " in \"" + str.substr(i - 2, i + 2) + "\". Please use \\" + to_string(str.at(i)) + " instead.",
+						errors);
+				} else {
+					add_error(line_n,
+						"Reserved char " + to_string(str.at(i)) + "at position" + to_string(i) + " in \"" + str.substr(i - 1, i + 3) + "\". Please use \\" + to_string(str.at(i)) + " instead.",
+						errors);
+				}
+				noError = false;
 			}
 		} else if (isReservedSymbol(str.at(i)) && i == 0) {
-			return false;
+			add_error(line_n,
+					"Reserved char " + to_string(str.at(i)) + "at position" + to_string(i) + " in \"" + str.substr(i, i + 4) + "\". Please use \\" + to_string(str.at(i)) + " instead.",
+					errors);
+			noError = false;
 		}
 	}
-	return true;
+	return noError;
 }
 
 bool isReservedSymbol(char c) {
@@ -266,7 +323,7 @@ bool is_operation_char(char c) {
 	return c == '*' || c == '+' || c == '|';
 }
 
-vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool * error) {
+vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool *error, vector<string> *errors, unsigned line_n) {
 	vector<MiniToken> tokens;
 	stack<MiniToken> operations;
 	unsigned i = 0;
@@ -280,6 +337,7 @@ vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool * er
 		} else if (cur.type == OPERATION) {
 			if (!last_token_operand) {
 				*error = true;
+				add_error(line_n, "Operation without a previous operand found ! Operation : " + cur.tok, errors);
 			} else if (cur.tok == "|" || cur.tok == "@") {
 				last_token_operand = false;
 				while (!operations.empty()
@@ -294,6 +352,7 @@ vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool * er
 				tokens.push_back(cur);
 			} else {
 				*error = true;
+				add_error(line_n, "Undefined operation : " + cur.tok, errors);
 			}
 		} else if (cur.type == PARENTHESES) {
 			if (cur.tok == "(") {
@@ -303,6 +362,7 @@ vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool * er
 				last_token_operand = true;
 				if (operations.empty()) {
 					*error = true;
+					add_error(line_n, "Parenthesis closed without being opened", errors);
 				}
 				MiniToken popped = operations.top();
 				operations.pop();
@@ -312,23 +372,73 @@ vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool * er
 					operations.pop();
 				}
 				if (popped.type != PARENTHESES || popped.tok != "(") {
+					add_error(line_n, "Parenthesis closed without being opened", errors);
 					*error = true;
 				}
 			} else {
 				*error = true;
+				add_error(line_n, "Undefined symbols " + cur.tok, errors);
 			}
 		} else {
 			*error = true;
+			add_error(line_n, "Undefined symbols " + cur.tok, errors);
 		}
 		i++;
 	}
 	while (!operations.empty()) {
 		if (operations.top().type == PARENTHESES) {
 			*error = true;
+			add_error(line_n, "Parenthesis opened without being closed", errors);
 		} else {
 			tokens.push_back(operations.top());
 			operations.pop();
 		}
 	}
+	if(!(*error) && !valid_postfix(tokens, errors, line_n)) {
+		*error = true;
+	}
 	return tokens;
+}
+bool valid_postfix(vector<MiniToken> tokens, vector<string>* errors, unsigned line_n) {
+	stack<MiniToken> operands;
+	bool noError = true;
+	for (unsigned i = 0; noError && i < tokens.size(); i++) {
+		MiniToken cur = tokens[i];
+		if (cur.type == CHAR_GROUP || cur.type == WORD || cur.type == EPSILON) {
+			operands.push(cur);
+		} else if (cur.type == OPERATION) {
+			if (cur.tok == "@" || cur.tok == "|") {
+				if (operands.size() < 2) {
+					noError = false;
+					add_error(line_n, "Binary operation " + cur.tok + " needs two operands.", errors);
+				} else {
+					operands.pop();
+					operands.pop();
+					operands.push(cur);
+				}
+			} else if (cur.tok == "*" || cur.tok == "+") {
+				if (operands.size() < 1) {
+					noError = false;
+					add_error(line_n, "Unary operation " + cur.tok + " needs one operand.", errors);
+				} else {
+					operands.pop();
+					operands.push(cur);
+				}
+			} else {
+				noError = false;
+				add_error(line_n, "Unknown token. ", errors);
+			}
+		} else {
+			noError = false;
+			add_error(line_n, "Unknown token. ", errors);
+		}
+	}
+	if (operands.size() != 1) {
+		add_error(line_n, "Missing operation.", errors);
+		noError = false;
+	}
+	return noError;
+}
+void add_error(unsigned line_n, string error, vector<string> *errors) {
+	errors->push_back("ERROR at " + to_string(line_n) + " : " + error);
 }
