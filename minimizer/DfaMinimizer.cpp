@@ -171,8 +171,6 @@ bool DfaMinimizer :: checkSameTrans(Node* ele1, Node* ele2) {
 		int flag = 0;
 		for (int j = 0; j < ele2->getEdges().size(); ++j) {
 				if (ele1->getEdges()[i]->equals(ele2->getEdges()[j])) {
-//					cout << getNumByNode(ele1->getEdges()[i]->get_target_node()) ;
-//					cout << " " << getNumByNode(ele2->getEdges()[j]->get_target_node()) << endl;
 					if (getNumByNode(ele1->getEdges()[i]->get_target_node()) ==
 							getNumByNode(ele2->getEdges()[j]->get_target_node())) {
 						flag = 1;
@@ -198,11 +196,9 @@ void DfaMinimizer :: initTwoClosures(Node *nonMinimizedDfa, Closure *clS, Closur
 }
 
 int  DfaMinimizer :: getNumByNode(Node* node) {
-	//cout << node->getName();
 	for (int i = 0; i != this->closures.size(); i++) {
 		for (int j = 0 ; j < this->closures[i]->getElements().size(); j++) {
-			if (this->closures[i]->getElements()[j]->getName().compare(node->getName()) == 0) {
-				//cout << " " << this->closures[i]->getNumber() << endl;
+			if (this->closures[i]->getElements()[j] == node ) {
 				return this->closures[i]->getNumber();
 			}
 		}
