@@ -2,7 +2,7 @@
 // Created by programajor on 3/21/18.
 //
 
-#include "../p1_tests.h";
+#include "../p1_tests.h"
 #include "NfaDfaConverter.h"
 
 void test_nfa_dfa_converter() {
