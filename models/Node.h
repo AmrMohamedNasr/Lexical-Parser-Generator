@@ -8,14 +8,12 @@
 #include <string>
 #include <vector>
 #include <set>
-#include "SupportingNfaNodes.h"
 #include "Edge.h"
 
 #define ACCEPT_STATE true
 #define EPS '\0'
 
 using namespace std;
-//class SupportingNfaNodes;
 class Edge;
 class Node {
     private:
@@ -24,8 +22,7 @@ class Node {
         vector<Edge *> dfaEdges;
         bool acceptedState;
 		set<Node *> supportingNodes;
-//		SupportingNfaNodes nfaNodes;
-    public:
+ 	public:
     	bool isAcceptedState();
     	void setAcceptState(bool newState);
     	string getName();
@@ -35,11 +32,9 @@ class Node {
 		explicit Node(bool accept);
 		Node(string stateName, bool accept);
     	void addDfaEdge(Edge * e);
-//    	Node(string stateName, bool accept);
 		void setSupportingNfaNodes(set<Node *> nodes);
 		set<Node*> getSupportedNfaNodes();
-
-	vector<Edge *> getDfaEdges();
+		vector<Edge *> getDfaEdges();
 };
 
 

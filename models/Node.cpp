@@ -3,7 +3,6 @@
 //
 
 #include "Node.h"
-#include <string>
 
 bool Node::isAcceptedState() {
 	return this->acceptedState;
@@ -47,12 +46,10 @@ void Node::setAcceptState(bool newState) {
 }
 
 void Node::setSupportingNfaNodes(set<Node *> nodes) {
-//	this->nfaNodes = SupportingNfaNodes(nodes);
 	this->supportingNodes = nodes;
 }
 
 set<Node *> Node::getSupportedNfaNodes() {
-//	return this->nfaNodes.getSupportingNodes();
 	return this->supportingNodes;
 }
 

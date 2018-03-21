@@ -9,23 +9,24 @@
 #include <algorithm>
 #include "NfaDfaConverter.h"
 
-struct smallerRangeKey {
-    inline bool operator() (Edge* e1, Edge* e2) {
-        if(e1 != NULL && e2 != NULL) {
-            int a = e1->getAllowedRange();
-            int b = e2->getAllowedRange();
-            return (a < b);
-        } else {
-            return 0;
-        }
-    }
-};
+//struct smallerRangeKey {
+//    inline bool operator() (Edge* e1, Edge* e2) {
+//        if(e1 != NULL && e2 != NULL) {
+//            int a = e1->getAllowedRange();
+//            int b = e2->getAllowedRange();
+//            return (a < b);
+//        } else {
+//            return 0;
+//        }
+//    }
+//};
 
 Node *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa) {
     Node *start = getDfaStartState(combinedNfa);
 
     set<Node*> dfaNodes;
     queue<Node*> nonMarkedNodes;
+
     dfaNodes.insert(start);
     nonMarkedNodes.push(start);
 
@@ -42,11 +43,11 @@ Node *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa) {
             }
             char startChar = node->getEdges()[i]->get_first_allowed_char();
             char lastChar = node->getEdges()[i]->get_last_allowed_char();
+
             nextStates.insert(node->getEdges()[i]->do_transition(startChar));
             for (int j = i + 1; j < node->getEdges().size(); j++) {
                 Edge* e = node->getEdges()[j];
-                if (startChar >= e->get_first_allowed_char() &&
-                        lastChar <= e->get_last_allowed_char()) {
+                if (startChar >= e->get_first_allowed_char() && lastChar <= e->get_last_allowed_char()) {
                     nextStates.insert(node->getEdges()[j]->do_transition(startChar));
                 }
             }
