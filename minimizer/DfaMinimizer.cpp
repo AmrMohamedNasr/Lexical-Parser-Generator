@@ -8,24 +8,14 @@
 #include "../models/Edge.h"
 #include <utility>
 #include <string.h>
+#include <iostream>
 #include <queue>
 
-bool Element::isStart() {
-	return this->start;
-}
-
-Node * Element::getNode() {
-	return this->node;
-}
 
 
 
-Element::Element(Node *node, bool start) {
-	this->node = node;
-	this->start = start;
-}
 
-vector<Element*> Closure:: getElements() {
+vector<Node*> Closure:: getElements() {
 	return this->elements;
 }
 
@@ -41,48 +31,54 @@ Closure ::Closure(int number) {
 	this->finished = false;
 }
 
-bool Closure :: nodeExists(Element *ele) {
+bool Closure :: nodeExists(Node *ele) {
 	for (auto it = this->elements.begin(); it != this->elements.end(); it++) {
-		  if ((*it)->getNode()->getName().compare(ele->getNode()->getName()) == 0) {
+		  if ((*it)->getName().compare(ele->getName()) == 0) {
 			  return true;
 		  }
 	}
 	return false;
 }
 
-void Closure :: removeEle(Element *ele) {
+void Closure :: removeEle(Node *ele) {
 	for (auto it = this->elements.begin(); it != this->elements.end(); it++) {
-			  if ((*it)->getNode()->getName().compare(ele->getNode()->getName()) == 0) {
+			  if ((*it)->getName().compare(ele->getName()) == 0) {
 				  this->elements.erase(it);
 				  return;
 			  }
 		}
 
 }
-void Closure :: addEle(Element *ele) {
+
+void Closure :: addEle(Node *ele) {
 	this->elements.push_back(ele);
 }
 
+bool DfaMinimizer ::nodeExists(Node *ele) {
+	for (auto it = this->eles.begin(); it != this->eles.end(); it++) {
+		  if ((*it)->getName().compare(ele->getName()) == 0) {
+			  return true;
+		  }
+	}
+	return false;
+}
 
 
 Node *DfaMinimizer :: getMinimizedDFA(Node *nonMinimizedDFA) {
 	queue<Node*> nodes;
 	nodes.push(nonMinimizedDFA);
-	int flag = 0;
-	Element ele(nodes.front(), true);
-	this->eles.push_back(&ele);
+	this->eles.push_back(nonMinimizedDFA);
 	while (!nodes.empty()) {
-		if (flag != 0) {
-			Element ele(nodes.front(), false);
-			this->eles.push_back(&ele);
-		}
-		flag = 1;
-		for (auto j = nodes.front()->getEdges().begin();
-				j != nodes.front()->getEdges().end(); ++j) {
-			nodes.push((*j)->get_target_node());
+		for (int j = 0; j < nodes.front()->getEdges().size(); ++j) {
+			if (!nodeExists(nodes.front()->getEdges()[j]->get_target_node())) {
+				nodes.push(nodes.front()->getEdges()[j]->get_target_node());
+				//cout << "get out" << endl;
+				this->eles.push_back(nodes.front()->getEdges()[j]->get_target_node());
+			}
 		}
 		nodes.pop();
 	}
+	cout << "get out";
 	int count = 1;
 	Closure clS(count++);
 	Closure clF(count++);
@@ -165,14 +161,14 @@ bool DfaMinimizer :: removeClosure(Closure* clo) {
 			}
 	return false;
 }
-bool DfaMinimizer :: checkSameTrans(Element* ele1, Element* ele2) {
-	for (auto i = ele1->getNode()->getEdges().begin();
-			i != ele1->getNode()->getEdges().end(); ++i) {
+bool DfaMinimizer :: checkSameTrans(Node* ele1, Node* ele2) {
+	for (auto i = ele1->getEdges().begin();
+			i != ele1->getEdges().end(); ++i) {
 		int flag = 0;
-		for (auto j = ele2->getNode()->getEdges().begin();
-					j != ele2->getNode()->getEdges().end(); ++j) {
+		for (auto j = ele2->getEdges().begin();
+					j != ele2->getEdges().end(); ++j) {
 				if ((*i)->equals((*j))) {
-					if (getNumByEle(ele1) != getNumByEle(ele2)) {
+					if (getNumByNode(ele1) != getNumByNode(ele2)) {
 						return false;
 					}
 					flag = 1;
@@ -186,7 +182,7 @@ bool DfaMinimizer :: checkSameTrans(Element* ele1, Element* ele2) {
 }
 void DfaMinimizer :: initTwoClosures(Node *nonMinimizedDfa, Closure *clS, Closure *clF) {
 	for (auto it = this->eles.begin(); it!= this->eles.end(); ++it) {
-		if ((*it)->getNode()->isAcceptedState()) {
+		if ((*it)->isAcceptedState()) {
 			clF->addEle(*it);
 		} else {
 			clS->addEle(*it);
@@ -194,23 +190,11 @@ void DfaMinimizer :: initTwoClosures(Node *nonMinimizedDfa, Closure *clS, Closur
 
 	}
 }
-int  DfaMinimizer :: getNumByEle(Element* ele) {
-	for (auto i = this->closures.begin(); i != this->closures.end(); i++) {
-		for (auto j = (*i)->getElements().begin(); j != (*i)->getElements().end(); j++) {
-			if ((*j)->getNode()->getName().compare(ele->getNode()->getName())) {
-				return (*i)->getNumber();
-			}
-		}
-
-	}
-	// error TODO to be handled
-	return 0;
-}
 
 int  DfaMinimizer :: getNumByNode(Node* node) {
 	for (auto i = this->closures.begin(); i != this->closures.end(); i++) {
 		for (auto j = (*i)->getElements().begin(); j != (*i)->getElements().end(); j++) {
-			if ((*j)->getNode()->getName().compare(node->getName())) {
+			if ((*j)->getName().compare(node->getName())) {
 				return (*i)->getNumber();
 			}
 		}

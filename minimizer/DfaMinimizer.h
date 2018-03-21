@@ -10,47 +10,39 @@
 #include <utility>
 #include "../models/Node.h"
 
-class Element {
-	private:
-		Node *node;
-		bool start;
-	public:
-		Node *getNode();
-		bool isStart();
-		Element(Node *node, bool start);
-};
+
 
 class Closure {
 	private:
-		vector<Element*> elements;
+		vector<Node*> elements;
 		int number;
 		bool finished;
 	public:
-		vector<Element*> getElements();
+		vector<Node*> getElements();
 		int getNumber();
 		bool isFinished();
 		void setFinished(bool finish);
 		void setNumber(int number);
 		Closure(int number);
-		bool nodeExists(Element *ele);
-		void removeEle(Element *ele);
-		void addEle(Element *ele);
+		bool nodeExists(Node *ele);
+		void removeEle(Node *ele);
+		void addEle(Node *ele);
 };
 
 class DfaMinimizer {
 
 	private:
-	    vector<Element*> eles;
+	    vector<Node*> eles;
 		vector<Closure*> closures;
 		vector<Closure*>  getClosures();
 		void addClosure(Closure* clo);
 		bool removeClosure(Closure* clo);
-		bool checkSameTrans(Element* ele1, Element* ele2);
+		bool checkSameTrans(Node* ele1, Node* ele2);
 		void initTwoClosures(Node *nonMinimizedDfa, Closure *clS, Closure *clF);
-		int getNumByEle(Element* ele);
 		int getNumOfUnfinishedClos();
 		int getNumByNode(Node* node);
 		pair<int, Node*> getNodeWithNum(Node *);
+		bool nodeExists(Node *node);
     public:
         /**
          * takes non minimized DFA from the converter and return it minimized.

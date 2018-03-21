@@ -14,40 +14,56 @@
 using namespace std;
 
 void test_minimizer(void) {
-	Node a("A",false);
-	Node b("B",false);
-	Node c("C",false);
-	Node d("D",false);
-	Node e("E",true);
-	Edge ab('a', 'a', &b);
-	Edge ac('b', 'b', &c);
-	Edge cc('b', 'b', &c);
-	Edge ec('b', 'b', &c);
-	Edge de('b', 'b', &e);
-	Edge bd('b', 'b', &d);
-	Edge cb('a', 'a', &b);
-	Edge bb('a', 'a', &b);
-	Edge db('a', 'a', &b);
-	Edge eb('a', 'a', &b);
-	e.addEdge(&ec);
-	e.addEdge(&eb);
-	d.addEdge(&db);
-	d.addEdge(&de);
-	c.addEdge(&cc);
-	c.addEdge(&cb);
-	b.addEdge(&bb);
-	b.addEdge(&bd);
-	a.addEdge(&ab);
-	a.addEdge(&ac);
+	Node x("A",false);
+	Node y("B",true);
+	Node z("C",false);
+	Node w("D",true);
+	Node t("E",true);
+	Node u("K",true);
+	Node v("H",true);
+	Node q("G",true);
+	Node e("\0", false);
+	Edge xy('0', '0', &y);
+	Edge xe('1', '1', &e);
+	Edge yz('0', '0', &z);
+	Edge yw('1', '1', &w);
+	Edge zt('0', '0', &t);
+	Edge zz('1', '1', &z);
+	Edge wu('0', '0', &u);
+	Edge wz('1', '1', &z);
+	Edge te('0', '0', &e);
+	Edge tv('1', '1', &v);
+	Edge uq('0', '0', &q);
+	Edge uv('1', '1', &v);
+	Edge vu('0', '0', &u);
+	Edge vz('1', '1', &z);
+	Edge qt('0', '0', &t);
+	Edge qw('1', '1', &w);
+	Edge ee('0', '0', &e);
+	Edge ee1('1', '1', &e);
+	e.addEdge(&ee);
+	e.addEdge(&ee1);
+	q.addEdge(&qw);
+	q.addEdge(&qt);
+	v.addEdge(&vz);
+	v.addEdge(&vu);
+	u.addEdge(&uv);
+	u.addEdge(&uq);
+	t.addEdge(&te);
+	t.addEdge(&tv);
+	w.addEdge(&wz);
+	w.addEdge(&wu);
+	z.addEdge(&zz);
+	z.addEdge(&zt);
+	y.addEdge(&yw);
+	y.addEdge(&yz);
+	x.addEdge(&xy);
+	x.addEdge(&xe);
 	DfaMinimizer g;
 	Closure cl(1);
-	Element ele(&a, true);
-	cl.addEle(&ele);
-	bool flag = cl.nodeExists(&ele);
-	if (!flag) {
-		cout << "error\n";
-	}
-	cl.removeEle(&ele);
+
+	Node * result = g.getMinimizedDFA(&x);
+	cout << "result is here";
 
 
 
