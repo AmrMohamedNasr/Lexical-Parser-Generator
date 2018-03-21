@@ -56,12 +56,10 @@ Node *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa) {
             if (dfaRepresenter == NULL) {
                 dfaNodes.insert(newDfaNode);
                 nonMarkedNodes.push(newDfaNode);
-                Edge *edge = (Edge*) malloc(sizeof (Edge));
-                new (edge) Edge(startChar, lastChar, newDfaNode);
+                Edge *edge = new Edge(startChar, lastChar, newDfaNode);
                 node->addDfaEdge(edge);
             } else {
-                Edge *edge = (Edge*) malloc(sizeof (Edge));
-                new (edge) Edge(startChar, lastChar, dfaRepresenter);
+                Edge *edge = new Edge(startChar, lastChar, dfaRepresenter);
                 node->addDfaEdge(edge);
             }
         }
@@ -89,8 +87,7 @@ Node * NfaDfaConverter::getEpslonClosureFromSet(set<Node *> states) {
 
     string stateName = getStateName(initials);
     bool isAccepted = getIsAccepted(initials);
-    Node* node = (Node*) malloc(sizeof (Node));
-    new (node) Node(stateName, isAccepted);
+    Node* node = new Node(stateName, isAccepted);
     vector<Edge *> edges = getEdges(initials);
     for (int i = 0; i < edges.size(); ++i) {
         node->addEdge(edges[i]);
