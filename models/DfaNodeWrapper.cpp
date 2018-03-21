@@ -17,5 +17,17 @@ vector<Edge *> DfaNodeWrapper::getNfaEdges() {
 }
 
 void DfaNodeWrapper::addDfaEdge(DfaEdge *edge) {
-    this->node->getEdges().push_back(edge);
+    this->node->addEdge(edge);
+}
+
+void DfaNodeWrapper::setSupportingNfaNodes(set<Node *> nodes) {
+    this->supportingNodes = nodes;
+}
+
+set<Node *> DfaNodeWrapper::getSupportedNfaNodes() {
+    return this->supportingNodes;
+}
+
+void DfaNodeWrapper::setDfaNode(DfaNode *dfaNode) {
+    this->node = dfaNode;
 }

@@ -33,10 +33,10 @@ DfaNode::DfaNode(string stateName, bool accept) {
     this->acceptedState = accept;
 }
 
-void DfaNode::setSupportingNfaNodes(set<Node *> nodes) {
-    this->supportingNodes = nodes;
-}
-
-set<Node *> DfaNode::getSupportedNfaNodes() {
-    return this->supportingNodes;
-}
+//void DfaNode::setSupportingNfaNodes(set<Node *> nodes) {
+//    this->supportingNodes = nodes;
+//}
+//
+//set<Node *> DfaNode::getSupportedNfaNodes() {
+//    return this->supportingNodes;
+//}

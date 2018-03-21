@@ -110,7 +110,9 @@ void test_nfa_dfa_converter() {
     n25.addEdge(&e28);
 
     NfaDfaConverter converter;
-    converter.getNonMinimizedDFA(&n16);
+    DfaNode* node = converter.getNonMinimizedDFA(&n16);
+    node->getEdges();
+//    nod
 }
 
 

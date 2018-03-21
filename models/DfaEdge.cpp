@@ -15,15 +15,30 @@ DfaEdge::DfaEdge(char start, char end, DfaNode* source, DfaNode* target) {
     this->target_node = target;
 }
 
-void DfaEdge::disallow_character(char c) {
-    this->disallowed_chars.push_back(c);
-    if (c >= this->first_allowed_char && c <= this->last_allowed_char) {
-        this->allowing_range = c - this->first_allowed_char + 1;
-        if (c != this->last_allowed_char) {
-            DfaEdge* newEdge = (DfaEdge*) malloc(sizeof (DfaEdge));
-            new (newEdge) DfaEdge(c, this->last_allowed_char, this->source_node, this->target_node);
-            this->source_node->getEdges().push_back(newEdge);
-        }
+void DfaEdge::disallow_character_sequence(char s, char t) {
+//    this->disallowed_chars.push_back(c);
+
+    if (t < this->first_allowed_char || s > this->last_allowed_char) {
+        return;
+    }
+
+    if (s > this->first_allowed_char && t < this->last_allowed_char) {
+        this->allowing_range = s - this->first_allowed_char;
+        DfaEdge* newEdge = new DfaEdge(t + 1, this->last_allowed_char, this->source_node, this->target_node);
+        this->source_node->addEdge(newEdge);
+        this->last_allowed_char = s - 1;
+    } else if (s == this->last_allowed_char) {
+        this->allowing_range--;
+        this->last_allowed_char--;
+    } else if (t == this->first_allowed_char) {
+        this->allowing_range--;
+        this->first_allowed_char++;
+    } else if (s > this->first_allowed_char && t >= this->last_allowed_char) {
+        this->allowing_range = s - this->first_allowed_char;
+        this->last_allowed_char = s - 1;
+    } else if (s <= this->first_allowed_char && t < this->last_allowed_char) {
+        this->allowing_range = this->last_allowed_char - t;
+        this->first_allowed_char = t + 1;
     }
 }
 
@@ -44,11 +59,11 @@ int DfaEdge::getAllowedRange() {
 }
 
 bool DfaEdge::valid_transition(char c) {
-    if (find(this->disallowed_chars.begin(), this->disallowed_chars.end(), c) != this->disallowed_chars.end()) {
-        return false;
-    } else {
+//    if (find(this->disallowed_chars.begin(), this->disallowed_chars.end(), c) != this->disallowed_chars.end()) {
+//        return false;
+//    } else {
         return c <= this->last_allowed_char && c >= this->first_allowed_char;
-    }
+//    }
 }
 
 DfaNode* DfaEdge :: get_target_node() {

@@ -13,14 +13,19 @@ class DfaNodeWrapper {
 private:
     vector<Edge*> nfaEdges;
     DfaNode* node;
+    set<Node *> supportingNodes;
 
 public:
-    DfaNode* getDfaNode();
-
     void setNfaEdges(vector <Edge*> edges);
     vector <Edge*> getNfaEdges();
 
     void addDfaEdge(DfaEdge* edge);
+
+    void setDfaNode(DfaNode* dfaNode);
+    DfaNode* getDfaNode();
+
+    void setSupportingNfaNodes(set<Node *> nodes);
+    set<Node*> getSupportedNfaNodes();
 };
 
 

@@ -6,6 +6,9 @@
 #define COMPILERS_NFADFACONVERTER_H
 
 #include "../models/Node.h"
+#include "../models/DfaNode.h"
+#include "../models/DfaEdge.h"
+#include "../models/DfaNodeWrapper.h"
 
 class NfaDfaConverter {
 
@@ -15,7 +18,7 @@ class NfaDfaConverter {
          * @param combinedNfa the combined NFA from the combiner
          * @return a non minimized DFA from the given NFA.
          */
-        Node *getNonMinimizedDFA(Node *combinedNfa);
+        DfaNode * getNonMinimizedDFA(Node *combinedNfa);
 
 private:
     set<Node*> getEpslonClosure(Node *node);
@@ -26,15 +29,17 @@ private:
 
     vector<Edge *> getEdges(set<Node *> states);
 
-    Node * getDfaStartState(Node *combinedNfa);
+    DfaNodeWrapper * getDfaStartState(Node *combinedNfa);
 
-    Node * getEpslonClosureFromSet(set<Node *> states);
+    DfaNodeWrapper * getEpslonClosureFromSet(set<Node *> states);
 
-    Node * setContainsState(set<Node *> states, Node *node);
+    DfaNodeWrapper* setContainsState(set<DfaNodeWrapper *> states, DfaNodeWrapper *node);
 
-    bool representingSameNfa(Node *n1, Node *n2);
+    bool representingSameNfa(DfaNodeWrapper *n1, DfaNodeWrapper *n2);
 
     bool isFound(vector<Edge *> vector, Edge *&edge);
+
+    DfaNode *removeRedundantEdges(DfaNode *node);
 };
 
 
