@@ -1,9 +1,21 @@
+////
+//// Created by programajor on 3/21/18.
+////
 //
-// Created by programajor on 3/21/18.
+//#include "DfaNode.h"
 //
-
-#include "DfaNode.h"
-
-DfaNode::DfaNode(bool accept) : Node(accept) {
-
-}
+//DfaNode::DfaNode(const string &stateName, bool accept) : Node(stateName, accept) {
+//
+//}
+//
+//DfaNode *DfaNode::do_transition(char c) {
+//    return nullptr;
+//}
+//
+//bool DfaNode::is_valid_transition(char c) {
+//    return false;
+//}
+//
+//void DfaNode::disallow_character(char c) {
+//
+//}
