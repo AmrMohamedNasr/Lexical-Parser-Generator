@@ -93,7 +93,6 @@ void test_nfa_builder() {
 
     Node node = getIdGraph();
     Node node2 = *nfas.front().start;
-
     set<Node*> visited;
     set<Node*> visited2;
     list<Node*> queue;
@@ -102,28 +101,37 @@ void test_nfa_builder() {
     queue2.push_back(&node2);
     queue.push_back(&node);
 
-    while (!queue.empty()) {
+    while (!error && !queue.empty()) {
         node = *queue.front();
         node2 = *queue2.front();
         queue.pop_front();
         queue2.pop_front();
-
-
-        for (auto e1 = node.getEdges().begin(), e2 = node2.getEdges().begin();
-                e1 != node.getEdges().end(); e1++, e2++) {
-            if (visited.find(e1.operator*()->get_target_node()) != visited.end()) {
-                visited.insert(e1.operator*()->get_target_node());
-                if (e1.operator*()->get_first_allowed_char() != e2.operator*()->get_last_allowed_char()) {
-                    error = true;
-                    cout << "ERROR!!!" << endl;
-                    break;
-                }
-            }
+        if (node.getEdges().size() != node2.getEdges().size()) {
+        	error = true;
+        } else {
+        	for (unsigned i = 0; i < node.getEdges().size(); i++) {
+        		Edge *e1 = node.getEdges()[i];
+        		Edge *e2 = node2.getEdges()[i];
+				if (e1->equals(e2)) {
+					Node *n1 = e1->get_target_node();
+					Node *n2 = e2->get_target_node();
+					if (visited.find(n1) == visited.end()) {
+						queue.push_back(n1);
+					}
+					if (visited2.find(n2) == visited2.end()) {
+						queue2.push_back(n2);
+					}
+				} else {
+					error = true;
+				}
+			}
         }
     }
 
     if (!error) {
         cout << "NFA converter Success..." << endl;
+    } else {
+    	cout << "NFA converter Failed..." << endl;
     }
 }
 
