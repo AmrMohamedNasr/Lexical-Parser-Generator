@@ -30,7 +30,7 @@ public:
     bool equals(DfaEdge* edge);
     DfaEdge(char start, char end, DfaNode* source, DfaNode* target);
 
-    void splitEdge(char c);
+//    void splitEdge(char c);
 };
 
 

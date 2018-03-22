@@ -30,6 +30,9 @@ public:
     void addEdge(DfaEdge * e);
 
     DfaNode(string stateName, bool accept);
+
+    bool valid_transition(char c);
+    DfaNode* do_transition(char c);
 };
 
 #endif //COMPILERS_DFANODE_H
