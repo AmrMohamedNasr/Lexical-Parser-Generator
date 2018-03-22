@@ -3,6 +3,7 @@
 //
 
 #include "DfaNode.h"
+#include "DfaEdge.h"
 
 bool DfaNode::isAcceptedState() {
     return this->acceptedState;
@@ -40,4 +41,25 @@ bool DfaNode::isStart() {
 
 void DfaNode::setStart(bool isStart) {
     this->start = isStart;
+}
+
+bool DfaNode::valid_transition(char c) {
+    for (int i = 0; i < edges.size(); i++) {
+        DfaEdge* e = edges[i];
+        if (e->valid_transition(c)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+DfaNode *DfaNode::do_transition(char c) {
+    for (int i = 0; i < edges.size(); i++) {
+        DfaEdge* e = edges[i];
+        DfaNode* destination = e->do_transition(c);
+        if (destination != nullptr) {
+            return destination;
+        }
+    }
+    return nullptr;
 }
