@@ -106,9 +106,9 @@ void DfaEdge :: set_target_node(DfaNode* node) {
     this->target_node = node;
 }
 
-void DfaEdge::splitEdge(char c) {
-    if (c > this->last_allowed_char || c < this->first_allowed_char) {
-        return;
-    }
-
-}
+//void DfaEdge::splitEdge(char c) {
+//    if (c > this->last_allowed_char || c < this->first_allowed_char) {
+//        return;
+//    }
+//
+//}
