@@ -112,7 +112,7 @@ void test_nfa_dfa_converter() {
     NfaDfaConverter converter;
     DfaNode* node = converter.getNonMinimizedDFA(&n16);
     node->getEdges();
-//    nod
+
 }
 
 

@@ -139,7 +139,7 @@ string NfaDfaConverter::getStateName(set<Node *> states) {
         Node* node = *it;
         name += node->getName() + ",";
         if (node->isAcceptedState()) {
-            break;
+            return node->getName();
         }
     }
     return name;
