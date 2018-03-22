@@ -143,6 +143,7 @@ DfaNode *DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
 	}
 	for (int i = 0; i < qTransition.size(); i++) {
 
+
 	}
 	return nonMinimizedDFA;
 
@@ -156,7 +157,7 @@ bool DfaMinimizer :: removeClosure(Closure* clo) {
 	for (auto it = this->closures.begin(); it != this->closures.end(); it++) {
 				  if ((*it)->getNumber() == clo->getNumber()) {
 					  this->closures.erase(it);
-					  delete it;
+					  delete *it;
 					  return true;
 				  }
 			}
