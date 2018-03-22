@@ -55,3 +55,10 @@ bool DfaNode::isStart() {
 void DfaNode::setStart(bool isStart) {
     this->start = isStart;
 }
+//void DfaNode::setSupportingNfaNodes(set<Node *> nodes) {
+//    this->supportingNodes = nodes;
+//}
+//
+//set<Node *> DfaNode::getSupportedNfaNodes() {
+//    return this->supportingNodes;
+//}

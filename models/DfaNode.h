@@ -30,6 +30,8 @@ public:
     void addEdge(DfaEdge * e);
 
     DfaNode(string stateName, bool accept);
+//    void setSupportingNfaNodes(set<Node *> nodes);
+//    set<Node *> getSupportedNfaNodes();
 //    DfaNode(string stateName, bool accept, bool start);
 
 //    void setSupportingNfaNodes(set<Node *> nodes);

@@ -8,74 +8,61 @@
 #include <map>
 #include <algorithm>
 #include "NfaDfaConverter.h"
+#include "../models/DfaNodeWrapper.h"
 
-//struct smallerRangeKey {
-//    inline bool operator() (Edge* e1, Edge* e2) {
-//        if(e1 != NULL && e2 != NULL) {
-//            int a = e1->getAllowedRange();
-//            int b = e2->getAllowedRange();
-//            return (a < b);
-//        } else {
-//            return 0;
-//        }
-//    }
-//};
+DfaNode *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa) {
+    DfaNodeWrapper* start = getDfaStartState(combinedNfa);
 
-Node *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa) {
-    Node *start = getDfaStartState(combinedNfa);
-
-    set<Node*> dfaNodes;
-    queue<Node*> nonMarkedNodes;
+    set<DfaNodeWrapper*> dfaNodes;
+    queue<DfaNodeWrapper*> nonMarkedNodes;
 
     dfaNodes.insert(start);
     nonMarkedNodes.push(start);
 
     while (!nonMarkedNodes.empty()) {
-        Node* node = nonMarkedNodes.front();
+        DfaNodeWrapper* node = nonMarkedNodes.front();
         nonMarkedNodes.pop();
-//        sort(node->getEdges().begin(), node->getEdges().end(), smallerRangeKey());
 
         // for every input symbol
-        for (int i = 0; i < node->getEdges().size(); i++) {
+        for (int i = 0; i < node->getNfaEdges().size(); i++) {
             set<Node*> nextStates;
-            if (node->getEdges()[i]->is_eps_transition()) {
+            if (node->getNfaEdges()[i]->is_eps_transition()) {
                 continue;
             }
-            char startChar = node->getEdges()[i]->get_first_allowed_char();
-            char lastChar = node->getEdges()[i]->get_last_allowed_char();
+            char startChar = node->getNfaEdges()[i]->get_first_allowed_char();
+            char lastChar = node->getNfaEdges()[i]->get_last_allowed_char();
 
-            nextStates.insert(node->getEdges()[i]->do_transition(startChar));
-            for (int j = i + 1; j < node->getEdges().size(); j++) {
-                Edge* e = node->getEdges()[j];
+            nextStates.insert(node->getNfaEdges()[i]->do_transition(startChar));
+            for (int j = i + 1; j < node->getNfaEdges().size(); j++) {
+                Edge* e = node->getNfaEdges()[j];
                 if (startChar >= e->get_first_allowed_char() && lastChar <= e->get_last_allowed_char()) {
-                    nextStates.insert(node->getEdges()[j]->do_transition(startChar));
+                    nextStates.insert(node->getNfaEdges()[j]->do_transition(startChar));
                 }
             }
-            Node* newDfaNode = getEpslonClosureFromSet(nextStates);
-            Node* dfaRepresenter = setContainsState(dfaNodes, newDfaNode);
+            DfaNodeWrapper* newDfaNode = getEpslonClosureFromSet(nextStates);
+            DfaNodeWrapper* dfaRepresenter = setContainsState(dfaNodes, newDfaNode);
             if (dfaRepresenter == NULL) {
                 dfaNodes.insert(newDfaNode);
                 nonMarkedNodes.push(newDfaNode);
-                Edge *edge = (Edge*) malloc(sizeof (Edge));
-                new (edge) Edge(startChar, lastChar, newDfaNode);
+                DfaEdge *edge = new DfaEdge(startChar, lastChar, node->getDfaNode(), newDfaNode->getDfaNode());
                 node->addDfaEdge(edge);
             } else {
-                Edge *edge = (Edge*) malloc(sizeof (Edge));
-                new (edge) Edge(startChar, lastChar, dfaRepresenter);
+                DfaEdge *edge = new DfaEdge(startChar, lastChar, node->getDfaNode(), dfaRepresenter->getDfaNode());
                 node->addDfaEdge(edge);
             }
         }
     }
-    return start;
+
+    return removeRedundantEdges(start->getDfaNode());
 }
 
-Node* NfaDfaConverter::getDfaStartState(Node *combinedNfa) {
+DfaNodeWrapper* NfaDfaConverter::getDfaStartState(Node *combinedNfa) {
     set<Node *> nodes;
     nodes.insert(combinedNfa);
     return getEpslonClosureFromSet(nodes);
 }
 
-Node * NfaDfaConverter::getEpslonClosureFromSet(set<Node *> states) {
+DfaNodeWrapper* NfaDfaConverter::getEpslonClosureFromSet(set<Node *> states) {
     set<Node*> initials;
     std::set<Node *>::iterator it;
     for (it = states.begin(); it != states.end(); it++) {
@@ -89,14 +76,19 @@ Node * NfaDfaConverter::getEpslonClosureFromSet(set<Node *> states) {
 
     string stateName = getStateName(initials);
     bool isAccepted = getIsAccepted(initials);
-    Node* node = (Node*) malloc(sizeof (Node));
-    new (node) Node(stateName, isAccepted);
     vector<Edge *> edges = getEdges(initials);
-    for (int i = 0; i < edges.size(); ++i) {
-        node->addEdge(edges[i]);
-    }
-    node->setSupportingNfaNodes(initials);
-    return node;
+
+    DfaNodeWrapper* wrapper = new DfaNodeWrapper();
+    DfaNode* dfaNode = new DfaNode(stateName, isAccepted);
+//    Node* node = new Node(stateName, isAccepted);
+//    for (int i = 0; i < edges.size(); ++i) {
+//        node->addEdge(edges[i]);
+//    }
+    wrapper->setDfaNode(dfaNode);
+    wrapper->setNfaEdges(edges);
+    wrapper->setSupportingNfaNodes(initials);
+//    node->setSupportingNfaNodes(initials);
+    return wrapper;
 }
 
 set<Node*> NfaDfaConverter::getEpslonClosure(Node *node) {
@@ -147,7 +139,7 @@ string NfaDfaConverter::getStateName(set<Node *> states) {
         Node* node = *it;
         name += node->getName() + ",";
         if (node->isAcceptedState()) {
-            break;
+            return node->getName();
         }
     }
     return name;
@@ -165,10 +157,10 @@ vector<Edge *> NfaDfaConverter::getEdges(set<Node *> states) {
     return edges;
 }
 
-Node* NfaDfaConverter::setContainsState(set<Node *> states, Node *node) {
-    std::set<Node *>::iterator it;
+DfaNodeWrapper* NfaDfaConverter::setContainsState(set<DfaNodeWrapper *> states, DfaNodeWrapper *node) {
+    std::set<DfaNodeWrapper *>::iterator it;
     for (it = states.begin(); it != states.end(); it++) {
-        Node* curr = *it;
+        DfaNodeWrapper* curr = *it;
         if (representingSameNfa(node, curr)) {
             return curr;
         }
@@ -176,7 +168,7 @@ Node* NfaDfaConverter::setContainsState(set<Node *> states, Node *node) {
     return NULL;
 }
 
-bool NfaDfaConverter::representingSameNfa(Node *n1, Node *n2) {
+bool NfaDfaConverter::representingSameNfa(DfaNodeWrapper *n1, DfaNodeWrapper *n2) {
     set<Node*> s1 = n1->getSupportedNfaNodes();
     set<Node*> s2 = n2->getSupportedNfaNodes();
 
@@ -204,5 +196,24 @@ bool NfaDfaConverter::isFound(vector<Edge *> vector, Edge *&edge) {
         }
     }
     return false;
+}
+
+DfaNode *NfaDfaConverter::removeRedundantEdges(DfaNode *node) {
+    for (int i = 0; i < node->getEdges().size(); i++) {
+        DfaEdge* edge = node->getEdges()[i];
+        for (int j = i + 1; j < node->getEdges().size(); j++) {
+            DfaEdge* curr = node->getEdges()[j];
+            curr->disallow_character_sequence(edge->get_first_allowed_char(),
+                                              edge->get_last_allowed_char());
+        }
+    }
+    for (int i = 0; i < node->getEdges().size(); i++) {
+        DfaEdge* edge = node->getEdges()[i];
+        DfaNode* next = edge->get_target_node();
+        if (node != next) {
+            edge->set_target_node(removeRedundantEdges(next));
+        }
+    }
+    return node;
 }
 
