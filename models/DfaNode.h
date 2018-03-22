@@ -18,16 +18,22 @@ private:
     bool start;
 public:
     bool isAcceptedState();
-    bool isStart();
     void setAcceptState(bool newState);
+
+    bool isStart();
+    void setStart(bool isStart);
+
     string getName();
     void setName(string name);
+
     vector<DfaEdge *> getEdges();
     void addEdge(DfaEdge * e);
+
     DfaNode(string stateName, bool accept);
-    DfaNode(string stateName, bool accept, bool start);
-    void setSupportingNfaNodes(set<Node *> nodes);
-    set<Node*> getSupportedNfaNodes();
+//    DfaNode(string stateName, bool accept, bool start);
+
+//    void setSupportingNfaNodes(set<Node *> nodes);
+//    set<Node*> getSupportedNfaNodes();
 };
 
 #endif //COMPILERS_DFANODE_H
