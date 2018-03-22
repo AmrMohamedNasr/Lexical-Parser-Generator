@@ -27,6 +27,7 @@ public:
     bool valid_transition(char c);
     void disallow_character(char c);
     int getAllowedRange();
+    bool equals(DfaEdge* edge);
     DfaEdge(char start, char end, DfaNode* source, DfaNode* target);
 };
 

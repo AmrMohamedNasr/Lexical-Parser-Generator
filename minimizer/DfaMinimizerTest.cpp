@@ -7,29 +7,29 @@
 #include "../p1_tests.h"
 #include <vector>
 #include <iostream>
-#include "../models/Node.h"
-#include "../models/Edge.h"
+#include "../models/DfaNode.h"
+#include "../models/DfaEdge.h"
 #include <string>
 #include "../minimizer/DfaMinimizer.h"
 using namespace std;
 
 
 void another_minimizer_test() {
-	Node x("A",false);
-	Node y("B",false);
-	Node z("C",true);
-	Node w("D",false);
-	Node t("E",false);
-	Edge xy('0', '0', &y);
-	Edge xz('1', '1', &z);
-	Edge yx('0', '0', &x);
-	Edge yz('1', '1', &z);
-	Edge zx('0', '0', &x);
-	Edge zw('1', '1', &w);
-	Edge wt('0', '0', &t);
-	Edge wz('1', '1', &z);
-	Edge tt('0', '0', &t);
-	Edge tz('1', '1', &z);
+	DfaNode x("A",false);
+	DfaNode y("B",false);
+	DfaNode z("C",true);
+	DfaNode w("D",false);
+	DfaNode t("E",false);
+	DfaEdge xy('0', '0', &x, &y);
+	DfaEdge xz('1', '1', &x, &z);
+	DfaEdge yx('0', '0', &y, &x);
+	DfaEdge yz('1', '1', &y, &z);
+	DfaEdge zx('0', '0', &z, &x);
+	DfaEdge zw('1', '1', &z, &w);
+	DfaEdge wt('0', '0', &w, &t);
+	DfaEdge wz('1', '1', &w, &z);
+	DfaEdge tt('0', '0', &t, &t);
+	DfaEdge tz('1', '1', &t, &z);
 	x.addEdge(&xy);
 	t.addEdge(&tz);
 	t.addEdge(&tt);
@@ -41,7 +41,7 @@ void another_minimizer_test() {
 	y.addEdge(&yz);
 	x.addEdge(&xz);
 	DfaMinimizer g;
-	Node* result = g.getMinimizedDFA(&x);
+	DfaNode* result = g.getMinimizedDFA(&x);
 	if ((result->getEdges()[0]->get_target_node()) != result){
 		cout << "error" << endl;
 	}
@@ -53,47 +53,37 @@ void another_minimizer_test() {
 				cout << "error" << endl;
 	}
 	cout << "Minimizer Success..." << endl;
-//	if (result->getEdges()[1]->get_target_node() != z){
-//		cout << "error" << endl;
-//	}
-//	if (z.getEdges()[0]->get_target_node() != x ||
-//			z.getEdges()[0]->get_target_node() != x ||
-//			&z.getEdges()[0]->get_target_node() != &y ||
-//			&z.getEdges()[0]->get_target_node() != &w ||
-//			&z.getEdges()[0]->get_target_node() != &t) {
-//		cout << "error" << endl;
-//	}
 }
 
 
 void test_minimizer(void) {
-	Node x("A",false);
-	Node y("B",true);
-	Node z("C",false);
-	Node w("D",true);
-	Node t("E",true);
-	Node u("K",true);
-	Node v("H",true);
-	Node q("G",true);
-	Node e("\0", false);
-	Edge xy('0', '0', &y);
-	Edge xe('1', '1', &e);
-	Edge yz('0', '0', &z);
-	Edge yw('1', '1', &w);
-	Edge zt('0', '0', &t);
-	Edge zz('1', '1', &z);
-	Edge wu('0', '0', &u);
-	Edge wz('1', '1', &z);
-	Edge te('0', '0', &e);
-	Edge tv('1', '1', &v);
-	Edge uq('0', '0', &q);
-	Edge uv('1', '1', &v);
-	Edge vu('0', '0', &u);
-	Edge vz('1', '1', &z);
-	Edge qt('0', '0', &t);
-	Edge qw('1', '1', &w);
-	Edge ee('0', '0', &e);
-	Edge ee1('1', '1', &e);
+	DfaNode x("A",false);
+	DfaNode y("B",true);
+	DfaNode z("C",false);
+	DfaNode w("D",true);
+	DfaNode t("E",true);
+	DfaNode u("K",true);
+	DfaNode v("H",true);
+	DfaNode q("G",true);
+	DfaNode e("\0", false);
+	DfaEdge xy('0', '0', &x, &y);
+	DfaEdge xe('1', '1', &x, &e);
+	DfaEdge yz('0', '0', &y, &z);
+	DfaEdge yw('1', '1', &y, &w);
+	DfaEdge zt('0', '0', &z, &t);
+	DfaEdge zz('1', '1', &z, &z);
+	DfaEdge wu('0', '0', &w, &u);
+	DfaEdge wz('1', '1', &w, &z);
+	DfaEdge te('0', '0', &t, &e);
+	DfaEdge tv('1', '1', &t, &v);
+	DfaEdge uq('0', '0', &u, &q);
+	DfaEdge uv('1', '1', &u, &v);
+	DfaEdge vu('0', '0', &v, &u);
+	DfaEdge vz('1', '1', &v, &z);
+	DfaEdge qt('0', '0', &q, &t);
+	DfaEdge qw('1', '1', &q, &w);
+	DfaEdge ee('0', '0', &e, &e);
+	DfaEdge ee1('1', '1', &e, &e);
 	e.addEdge(&ee);
 	e.addEdge(&ee1);
 	q.addEdge(&qw);
@@ -114,7 +104,7 @@ void test_minimizer(void) {
 	x.addEdge(&xe);
 	DfaMinimizer g;
 	Closure cl(1);
-	Node * result = g.getMinimizedDFA(&x);
+	DfaNode * result = g.getMinimizedDFA(&x);
 
 	another_minimizer_test();
 

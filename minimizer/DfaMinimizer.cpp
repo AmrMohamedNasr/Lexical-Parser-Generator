@@ -3,9 +3,9 @@
 //
 
 #include "DfaMinimizer.h"
-#include "../models/Node.h"
+#include "../models/DfaNode.h"
 #include <vector>
-#include "../models/Edge.h"
+#include "../models/DfaEdge.h"
 #include <utility>
 #include <string.h>
 #include <iostream>
@@ -15,7 +15,7 @@
 
 
 
-vector<Node*> Closure:: getElements() {
+vector<DfaNode*> Closure:: getElements() {
 	return this->elements;
 }
 
@@ -31,7 +31,7 @@ Closure ::Closure(int number) {
 	this->finished = false;
 }
 
-bool Closure :: nodeExists(Node *ele) {
+bool Closure :: nodeExists(DfaNode *ele) {
 	for (auto it = this->elements.begin(); it != this->elements.end(); it++) {
 		  if ((*it) == ele) {
 			  return true;
@@ -40,7 +40,7 @@ bool Closure :: nodeExists(Node *ele) {
 	return false;
 }
 
-void Closure :: removeEle(Node *ele) {
+void Closure :: removeEle(DfaNode *ele) {
 	for (int i = 0; i < this->elements.size(); i++) {
 			  if (this->elements[i] == ele) {
 				  this->elements.erase(this->elements.begin() +i);
@@ -50,11 +50,11 @@ void Closure :: removeEle(Node *ele) {
 
 }
 
-void Closure :: addEle(Node *ele) {
+void Closure :: addEle(DfaNode *ele) {
 	this->elements.push_back(ele);
 }
 
-bool DfaMinimizer ::nodeExists(Node *ele) {
+bool DfaMinimizer ::nodeExists(DfaNode *ele) {
 	for (auto it = this->eles.begin(); it != this->eles.end(); it++) {
 		  if ((*it) == ele) {
 			  return true;
@@ -64,8 +64,8 @@ bool DfaMinimizer ::nodeExists(Node *ele) {
 }
 
 
-Node *DfaMinimizer :: getMinimizedDFA(Node *nonMinimizedDFA) {
-	queue<Node*> nodes;
+DfaNode *DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
+	queue<DfaNode*> nodes;
 	nodes.push(nonMinimizedDFA);
 	this->eles.push_back(nonMinimizedDFA);
 	while (!nodes.empty()) {
@@ -89,12 +89,12 @@ Node *DfaMinimizer :: getMinimizedDFA(Node *nonMinimizedDFA) {
 	while ( counter > 0) {
 		while (max > 0) {
 			while (!this->closures[max -1]->getElements().empty()) {
-				Node* tempNode = this->closures[max -1]->getElements().back();
+				DfaNode* tempNode = this->closures[max -1]->getElements().back();
 				Closure *temp = new Closure(this->closures[max -1]->getNumber());
 				temp->addEle(tempNode);
 				int flag = 0;
 				for (int j = 0; j < this->closures[max -1]->getElements().size() - 1;j++) {
-					Node *tempNode2 = this->closures[max -1]->getElements()[j];
+					DfaNode *tempNode2 = this->closures[max -1]->getElements()[j];
 					if (checkSameTrans(tempNode, tempNode2)) {
 						temp->addEle(tempNode2);
 					} else {
@@ -119,8 +119,8 @@ Node *DfaMinimizer :: getMinimizedDFA(Node *nonMinimizedDFA) {
 		max = this->closures.size();
 
 	}
-	queue<pair<int, Node*>> qTransition;
-	pair<int, Node*> pStart = getNodeWithNum(nonMinimizedDFA);
+	queue<pair<int, DfaNode*>> qTransition;
+	pair<int, DfaNode*> pStart = getNodeWithNum(nonMinimizedDFA);
 	vector<int> substituter;
 	qTransition.push(pStart);
 	substituter.push_back(pStart.first);
@@ -130,7 +130,7 @@ Node *DfaMinimizer :: getMinimizedDFA(Node *nonMinimizedDFA) {
 					)[i]->get_target_node()) == qTransition.front().first) {
 				qTransition.front().second->getEdges()[i]->set_target_node(qTransition.front().second);
 			} else {
-				pair<int, Node*> temp = getNodeWithNum(qTransition.front(
+				pair<int, DfaNode*> temp =  getNodeWithNum(qTransition.front(
 						).second->getEdges()[i]->get_target_node());
 				bool flag = true;
 				for (int j : substituter) {
@@ -163,7 +163,7 @@ bool DfaMinimizer :: removeClosure(Closure* clo) {
 			}
 	return false;
 }
-bool DfaMinimizer :: checkSameTrans(Node* ele1, Node* ele2) {
+bool DfaMinimizer :: checkSameTrans(DfaNode* ele1, DfaNode* ele2) {
 	if (ele1->getEdges().size() != ele2->getEdges().size()) {
 		return false;
 	}
@@ -184,7 +184,7 @@ bool DfaMinimizer :: checkSameTrans(Node* ele1, Node* ele2) {
 	}
 	return true;
 }
-void DfaMinimizer :: initTwoClosures(Node *nonMinimizedDfa, Closure *clS, Closure *clF) {
+void DfaMinimizer :: initTwoClosures(DfaNode *nonMinimizedDfa, Closure *clS, Closure *clF) {
 	for (auto it = this->eles.begin(); it!= this->eles.end(); ++it) {
 		if ((*it)->isAcceptedState()) {
 			clF->addEle(*it);
@@ -195,7 +195,7 @@ void DfaMinimizer :: initTwoClosures(Node *nonMinimizedDfa, Closure *clS, Closur
 	}
 }
 
-int  DfaMinimizer :: getNumByNode(Node* node) {
+int  DfaMinimizer :: getNumByNode(DfaNode* node) {
 	for (int i = 0; i != this->closures.size(); i++) {
 		for (int j = 0 ; j < this->closures[i]->getElements().size(); j++) {
 			if (this->closures[i]->getElements()[j] == node ) {
@@ -230,9 +230,9 @@ void Closure::setFinished(bool finish) {
   this->finished = finish;
 }
 
-pair<int, Node*> DfaMinimizer:: getNodeWithNum(Node * node) {
+pair<int, DfaNode*> DfaMinimizer:: getNodeWithNum(DfaNode * node) {
 	int temp = getNumByNode(node);
-	pair<int, Node*> p(temp, node);
+	pair<int, DfaNode*> p(temp, node);
 	return p;
 }
 
