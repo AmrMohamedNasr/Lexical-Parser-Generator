@@ -8,81 +8,83 @@
 
 using namespace std;
 
-
-static const vector<NfaToken> correctTokens = {
-        NfaToken (REGULAR_EXPRESSION, "id", vector<MiniToken> ({
-               MiniToken (CHAR_GROUP, "a-z"),
-               MiniToken (CHAR_GROUP, "A-Z"),
-               MiniToken (OPERATION, "|"),
-               MiniToken (CHAR_GROUP, "a-z"),
-               MiniToken (CHAR_GROUP, "A-Z"),
-               MiniToken (OPERATION, "|"),
-               MiniToken (CHAR_GROUP, "0-9"),
-               MiniToken (OPERATION, "|"),
-               MiniToken (OPERATION, "*"),
-               MiniToken (OPERATION, "@")
-         })),
-        NfaToken (KEYWORD, "boolean", vector<MiniToken> ({MiniToken (WORD, "boolean")})),
-        NfaToken (KEYWORD, "int", vector<MiniToken> ({MiniToken (WORD, "int")})),
-        NfaToken (KEYWORD, "float", vector<MiniToken> ({MiniToken (WORD, "float")})),
-        NfaToken (REGULAR_EXPRESSION, "num", vector<MiniToken> ({
-            MiniToken (CHAR_GROUP, "0-9"),
-            MiniToken (OPERATION, "+"),
-            MiniToken (CHAR_GROUP, "0-9"),
-            MiniToken (OPERATION, "+"),
-            MiniToken (OPERATION, "|"),
-            MiniToken (WORD, "."),
-            MiniToken (OPERATION, "@"),
-            MiniToken (CHAR_GROUP, "0-9"),
-            MiniToken (OPERATION, "+"),
-            MiniToken (OPERATION, "@"),
-            MiniToken (EPSILON, "\\L"),
-            MiniToken (WORD, "E"),
-            MiniToken (CHAR_GROUP, "0-9"),
-            MiniToken (OPERATION, "+"),
-            MiniToken (OPERATION, "@"),
-            MiniToken (OPERATION, "|"),
-            MiniToken (OPERATION, "@")
-                    })),
-        NfaToken (REGULAR_EXPRESSION, "relop", vector<MiniToken> ({
-              MiniToken (WORD, "=="),
-              MiniToken (WORD, "!="),
-              MiniToken (OPERATION, "|"),
-              MiniToken (WORD, ">"),
-              MiniToken (OPERATION, "|"),
-              MiniToken (WORD, ">="),
-              MiniToken (OPERATION, "|"),
-              MiniToken (WORD, "<"),
-              MiniToken (OPERATION, "|"),
-              MiniToken (WORD, "<="),
-              MiniToken (OPERATION, "|")
-                                          })),
-        NfaToken (REGULAR_EXPRESSION, "assign", vector<MiniToken> ({MiniToken (WORD, "=")})),
-        NfaToken (KEYWORD, "if", vector<MiniToken> ({MiniToken (WORD, "if")})),
-        NfaToken (KEYWORD, "else", vector<MiniToken> ({MiniToken (WORD, "else")})),
-        NfaToken (KEYWORD, "while", vector<MiniToken> ({MiniToken (WORD, "while")})),
-        NfaToken (PUNCTUATION, ";", vector<MiniToken> ({MiniToken (WORD, ";")})),
-        NfaToken (PUNCTUATION, ",", vector<MiniToken> ({MiniToken (WORD, ",")})),
-        NfaToken (PUNCTUATION, "(", vector<MiniToken> ({MiniToken (WORD, "(")})),
-        NfaToken (PUNCTUATION, ")", vector<MiniToken> ({MiniToken (WORD, ")")})),
-        NfaToken (PUNCTUATION, "{", vector<MiniToken> ({MiniToken (WORD, "{")})),
-        NfaToken (PUNCTUATION, "}", vector<MiniToken> ({MiniToken (WORD, "}")})),
-        NfaToken (REGULAR_EXPRESSION, "addop", vector<MiniToken> ({
-                  MiniToken (WORD, "+"),
-                  MiniToken (WORD, "-"),
-                  MiniToken (OPERATION, "|"),
-          })),
-        NfaToken (REGULAR_EXPRESSION, "mulop", vector<MiniToken> ({
-                  MiniToken (WORD, "*"),
-                  MiniToken (WORD, "/"),
-                  MiniToken (OPERATION, "|"),
-          }))
-};
-
-
 void test_nfa_builder() {
-    NfaBuilder nfaBuilder;
-    vector<Nfa> nfas = nfaBuilder.get_separated_nfas(correctTokens);
+	vector<NfaToken> correctTokens = {
+	        NfaToken (REGULAR_EXPRESSION, "id", vector<MiniToken> ({
+	               MiniToken (CHAR_GROUP, "a-z"),
+	               MiniToken (CHAR_GROUP, "A-Z"),
+	               MiniToken (OPERATION, "|"),
+	               MiniToken (CHAR_GROUP, "a-z"),
+	               MiniToken (CHAR_GROUP, "A-Z"),
+	               MiniToken (OPERATION, "|"),
+	               MiniToken (CHAR_GROUP, "0-9"),
+	               MiniToken (OPERATION, "|"),
+	               MiniToken (OPERATION, "*"),
+	               MiniToken (OPERATION, "@")
+	         })),
+	        NfaToken (KEYWORD, "boolean", vector<MiniToken> ({MiniToken (WORD, "boolean")})),
+	        NfaToken (KEYWORD, "int", vector<MiniToken> ({MiniToken (WORD, "int")})),
+	        NfaToken (KEYWORD, "float", vector<MiniToken> ({MiniToken (WORD, "float")})),
+	        NfaToken (REGULAR_EXPRESSION, "num", vector<MiniToken> ({
+	            MiniToken (CHAR_GROUP, "0-9"),
+	            MiniToken (OPERATION, "+"),
+	            MiniToken (CHAR_GROUP, "0-9"),
+	            MiniToken (OPERATION, "+"),
+	            MiniToken (OPERATION, "|"),
+	            MiniToken (WORD, "."),
+	            MiniToken (OPERATION, "@"),
+	            MiniToken (CHAR_GROUP, "0-9"),
+	            MiniToken (OPERATION, "+"),
+	            MiniToken (OPERATION, "@"),
+	            MiniToken (EPSILON, "\\L"),
+	            MiniToken (WORD, "E"),
+	            MiniToken (CHAR_GROUP, "0-9"),
+	            MiniToken (OPERATION, "+"),
+	            MiniToken (OPERATION, "@"),
+	            MiniToken (OPERATION, "|"),
+	            MiniToken (OPERATION, "@")
+	                    })),
+	        NfaToken (REGULAR_EXPRESSION, "relop", vector<MiniToken> ({
+	              MiniToken (WORD, "=="),
+	              MiniToken (WORD, "!="),
+	              MiniToken (OPERATION, "|"),
+	              MiniToken (WORD, ">"),
+	              MiniToken (OPERATION, "|"),
+	              MiniToken (WORD, ">="),
+	              MiniToken (OPERATION, "|"),
+	              MiniToken (WORD, "<"),
+	              MiniToken (OPERATION, "|"),
+	              MiniToken (WORD, "<="),
+	              MiniToken (OPERATION, "|")
+	                                          })),
+	        NfaToken (REGULAR_EXPRESSION, "assign", vector<MiniToken> ({MiniToken (WORD, "=")})),
+	        NfaToken (KEYWORD, "if", vector<MiniToken> ({MiniToken (WORD, "if")})),
+	        NfaToken (KEYWORD, "else", vector<MiniToken> ({MiniToken (WORD, "else")})),
+	        NfaToken (KEYWORD, "while", vector<MiniToken> ({MiniToken (WORD, "while")})),
+	        NfaToken (PUNCTUATION, ";", vector<MiniToken> ({MiniToken (WORD, ";")})),
+	        NfaToken (PUNCTUATION, ",", vector<MiniToken> ({MiniToken (WORD, ",")})),
+	        NfaToken (PUNCTUATION, "(", vector<MiniToken> ({MiniToken (WORD, "(")})),
+	        NfaToken (PUNCTUATION, ")", vector<MiniToken> ({MiniToken (WORD, ")")})),
+	        NfaToken (PUNCTUATION, "{", vector<MiniToken> ({MiniToken (WORD, "{")})),
+	        NfaToken (PUNCTUATION, "}", vector<MiniToken> ({MiniToken (WORD, "}")})),
+	        NfaToken (REGULAR_EXPRESSION, "addop", vector<MiniToken> ({
+	                  MiniToken (WORD, "+"),
+	                  MiniToken (WORD, "-"),
+	                  MiniToken (OPERATION, "|"),
+	          })),
+	        NfaToken (REGULAR_EXPRESSION, "mulop", vector<MiniToken> ({
+	                  MiniToken (WORD, "*"),
+	                  MiniToken (WORD, "/"),
+	                  MiniToken (OPERATION, "|"),
+	          }))
+	};
+	NfaBuilder nfaBuilder;
+    vector<NfaToken *> correctTokensPnt;
+    for (unsigned i = 0; i < correctTokens.size(); i++) {
+    	correctTokensPnt.push_back(&correctTokens[i]);
+    }
+    vector<Nfa *> nfas;
+	nfaBuilder.get_separated_nfas(&nfas, &correctTokensPnt);
     // size of nfas should be 18
     bool error = false;
     if (nfas.size() != 18) {
@@ -165,7 +167,7 @@ void test_nfa_builder() {
 	n18.addEdge(&e23);
 	n19.addEdge(&e24);
     Node * node = &start;
-    Node * node2 = nfas.front().start;
+    Node * node2 = nfas.front()->start;
     unordered_set<Node*> visited;
     unordered_set<Node*> visited2;
     list<Node*> queue;
