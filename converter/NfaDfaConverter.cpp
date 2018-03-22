@@ -7,11 +7,14 @@
 #include <queue>
 #include <map>
 #include <algorithm>
+#include <climits>
 #include "NfaDfaConverter.h"
 #include "../models/DfaNodeWrapper.h"
 
-DfaNode *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa) {
-    DfaNodeWrapper* start = getDfaStartState(combinedNfa);
+static int stateNameCounter = 1;
+
+DfaNode *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa, vector<string> priorities) {
+    DfaNodeWrapper* start = getDfaStartState(combinedNfa, priorities);
     start->setStart(true);
 
     set<DfaNodeWrapper*> dfaNodes;
@@ -40,7 +43,7 @@ DfaNode *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa) {
                     nextStates.insert(node->getNfaEdges()[j]->do_transition(startChar));
                 }
             }
-            DfaNodeWrapper* newDfaNode = getEpslonClosureFromSet(nextStates);
+            DfaNodeWrapper* newDfaNode = getEpslonClosureFromSet(nextStates, priorities);
             DfaNodeWrapper* dfaRepresenter = setContainsState(dfaNodes, newDfaNode);
             if (dfaRepresenter == NULL) {
                 dfaNodes.insert(newDfaNode);
@@ -57,13 +60,13 @@ DfaNode *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa) {
     return removeRedundantEdges(start->getDfaNode());
 }
 
-DfaNodeWrapper* NfaDfaConverter::getDfaStartState(Node *combinedNfa) {
+DfaNodeWrapper* NfaDfaConverter::getDfaStartState(Node *combinedNfa, vector<string> priorities) {
     set<Node *> nodes;
     nodes.insert(combinedNfa);
-    return getEpslonClosureFromSet(nodes);
+    return getEpslonClosureFromSet(nodes, priorities);
 }
 
-DfaNodeWrapper* NfaDfaConverter::getEpslonClosureFromSet(set<Node *> states) {
+DfaNodeWrapper* NfaDfaConverter::getEpslonClosureFromSet(set<Node *> states, vector<string> priorities) {
     set<Node*> initials;
     std::set<Node *>::iterator it;
     for (it = states.begin(); it != states.end(); it++) {
@@ -75,7 +78,7 @@ DfaNodeWrapper* NfaDfaConverter::getEpslonClosureFromSet(set<Node *> states) {
         }
     }
 
-    string stateName = getStateName(initials);
+    string stateName = getStateName(initials, priorities);
     bool isAccepted = getIsAccepted(initials);
     vector<Edge *> edges = getEdges(initials);
 
@@ -128,15 +131,24 @@ bool NfaDfaConverter::getIsAccepted(set<Node *> states) {
     return isAccepted;
 }
 
-string NfaDfaConverter::getStateName(set<Node *> states) {
+string NfaDfaConverter::getStateName(set<Node *> states, vector<string> priorities) {
+    int priority = INT_MAX;
     string name = "";
     std::set<Node *>::iterator it;
     for (it = states.begin(); it != states.end(); it++) {
         Node* node = *it;
-        name += node->getName() + ",";
         if (node->isAcceptedState()) {
-            return node->getName();
+            for (int i = 0; i < priorities.size(); i++) {
+                if (node->getName() == priorities[i] && i < priority) {
+                    priority = i;
+                    name = node->getName();
+                }
+            }
         }
+    }
+    if (name == "") {
+        name = stateNameCounter + "";
+        stateNameCounter++;
     }
     return name;
 }

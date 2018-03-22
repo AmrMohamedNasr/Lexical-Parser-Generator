@@ -18,20 +18,20 @@ class NfaDfaConverter {
          * @param combinedNfa the combined NFA from the combiner
          * @return a non minimized DFA from the given NFA.
          */
-        DfaNode * getNonMinimizedDFA(Node *combinedNfa);
+        DfaNode * getNonMinimizedDFA(Node *combinedNfa, vector<string> priorities);
 
 private:
     set<Node*> getEpslonClosure(Node *node);
 
-    string getStateName(set<Node *> states);
+    string getStateName(set<Node *> states, vector<string> priorities);
 
     bool getIsAccepted(set<Node *> states);
 
     vector<Edge *> getEdges(set<Node *> states);
 
-    DfaNodeWrapper * getDfaStartState(Node *combinedNfa);
+    DfaNodeWrapper * getDfaStartState(Node *combinedNfa, vector<string> priorities);
 
-    DfaNodeWrapper * getEpslonClosureFromSet(set<Node *> states);
+    DfaNodeWrapper * getEpslonClosureFromSet(set<Node *> states, vector<string> priorities);
 
     DfaNodeWrapper* setContainsState(set<DfaNodeWrapper *> states, DfaNodeWrapper *node);
 
