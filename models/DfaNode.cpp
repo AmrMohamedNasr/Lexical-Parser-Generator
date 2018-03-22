@@ -12,6 +12,11 @@ void DfaNode::setAcceptState(bool newState) {
     this->acceptedState = newState;
 }
 
+DfaNode :: DfaNode(string stateName, bool accept, bool start) {
+	this->acceptedState = accept;
+	this->name = stateName;
+	this->start = true;
+}
 string DfaNode::getName() {
     return this->name;
 }
@@ -31,6 +36,7 @@ void DfaNode::addEdge(DfaEdge *e) {
 DfaNode::DfaNode(string stateName, bool accept) {
     this->name = stateName;
     this->acceptedState = accept;
+    this->start = false;
 }
 
 void DfaNode::setSupportingNfaNodes(set<Node *> nodes) {

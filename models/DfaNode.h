@@ -15,14 +15,17 @@ private:
     vector<DfaEdge *> edges;
     bool acceptedState;
     set<Node *> supportingNodes;
+    bool start;
 public:
     bool isAcceptedState();
+    bool isStart();
     void setAcceptState(bool newState);
     string getName();
     void setName(string name);
     vector<DfaEdge *> getEdges();
     void addEdge(DfaEdge * e);
     DfaNode(string stateName, bool accept);
+    DfaNode(string stateName, bool accept, bool start);
     void setSupportingNfaNodes(set<Node *> nodes);
     set<Node*> getSupportedNfaNodes();
 };

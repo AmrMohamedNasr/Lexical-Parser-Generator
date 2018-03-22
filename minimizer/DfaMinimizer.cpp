@@ -119,32 +119,30 @@ DfaNode *DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
 		max = this->closures.size();
 
 	}
-	queue<pair<int, DfaNode*>> qTransition;
+	vector<pair<int, DfaNode*>> qTransition;
 	pair<int, DfaNode*> pStart = getNodeWithNum(nonMinimizedDFA);
-	vector<int> substituter;
-	qTransition.push(pStart);
-	substituter.push_back(pStart.first);
-	while (!qTransition.empty()) {
-		for (int  i = 0; i < qTransition.front().second->getEdges().size(); ++i) {
-			if (getNumByNode(qTransition.front().second->getEdges(
-					)[i]->get_target_node()) == qTransition.front().first) {
-				qTransition.front().second->getEdges()[i]->set_target_node(qTransition.front().second);
+	for (int i = 0; i < this->closures.size(); i++) {
+		qTransition.push_back(
+		pair<int, DfaNode*> (this->closures[i]->getNumber(),
+				this->closures[i]->getElements()[0]));
+	}
+	for (int i = 0; i < qTransition.size(); i++) {
+		for (int  j = 0; j < qTransition[i].second->getEdges().size(); j++) {
+			if (getNumByNode(qTransition[i].second->getEdges(
+					)[j]->get_target_node()) == qTransition[i].first) {
+						qTransition[i].second->getEdges()[j]->set_target_node(
+								qTransition[i].second);
 			} else {
-				pair<int, DfaNode*> temp =  getNodeWithNum(qTransition.front(
-						).second->getEdges()[i]->get_target_node());
-				bool flag = true;
-				for (int j : substituter) {
-					if (j == temp.first) {
-						flag = false;
-					}
-				}
-				if (flag) {
-					substituter.push_back(temp.first);
-					qTransition.push(temp);
-				}
+				int index = getNumByNode(qTransition[i].second->getEdges(
+						)[j]->get_target_node()) - 1;
+				qTransition[i].second->getEdges()[j]->set_target_node(
+						qTransition[index].second);
+
 			}
 		}
-		qTransition.pop();
+	}
+	for (int i = 0; i < qTransition.size(); i++) {
+
 	}
 	return nonMinimizedDFA;
 
@@ -158,6 +156,7 @@ bool DfaMinimizer :: removeClosure(Closure* clo) {
 	for (auto it = this->closures.begin(); it != this->closures.end(); it++) {
 				  if ((*it)->getNumber() == clo->getNumber()) {
 					  this->closures.erase(it);
+					  delete it;
 					  return true;
 				  }
 			}

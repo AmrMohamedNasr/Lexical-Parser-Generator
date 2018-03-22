@@ -14,12 +14,69 @@
 using namespace std;
 
 
-void another_minimizer_test() {
-	DfaNode x("A",false);
-	DfaNode y("B",false);
-	DfaNode z("C",true);
-	DfaNode w("D",false);
-	DfaNode t("E",false);
+void minimizer_test_3() {
+	DfaNode x("X",false);
+	DfaNode y("Y",false);
+	DfaNode z("Z",true);
+	DfaNode w("W",false);
+	DfaNode t("T",false);
+	DfaNode u("U",true);
+	DfaNode v("V",true);
+	DfaNode phi("", true);
+	DfaEdge xy('0', '0', &x, &y);
+	DfaEdge xz('1', '1', &x, &z);
+	DfaEdge yy('0', '0', &y, &y);
+	DfaEdge yw('1', '1', &y, &w);
+	DfaEdge zt('0', '0', &z, &t);
+	DfaEdge zu('1', '1', &z, &u);
+	DfaEdge wt('0', '0', &w, &t);
+	DfaEdge wv('1', '1', &w, &v);
+	DfaEdge ty('0', '0', &t, &y);
+	DfaEdge tz('1', '1', &t, &z);
+	DfaEdge uphi('0', '0', &u, &phi);
+	DfaEdge ut('1', '1', &u, &t);
+	DfaEdge vy('0', '0', &v, &y);
+	DfaEdge vy_1('1', '1', &v, &y);
+	DfaEdge phiphi('0', '0', &phi, &phi);
+	DfaEdge phiphi_1('1', '1', &phi, &phi);
+	x.addEdge(&xz);
+	x.addEdge(&xy);
+	t.addEdge(&ty);
+	t.addEdge(&tz);
+	w.addEdge(&wv);
+	w.addEdge(&wt);
+	z.addEdge(&zt);
+	z.addEdge(&zu);
+	y.addEdge(&yy);
+	y.addEdge(&yw);
+	phi.addEdge(&phiphi);
+	phi.addEdge(&phiphi_1);
+	v.addEdge(&vy_1);
+	v.addEdge(&vy);
+	u.addEdge(&uphi);
+	u.addEdge(&ut);
+
+	DfaMinimizer g;
+	DfaNode* result = g.getMinimizedDFA(&x);
+	if ((result->getEdges()[0]->get_target_node()) != &z){
+		cout << "error4" << endl;
+	}
+	if ((result->getEdges()[1]->get_target_node()) != &y){
+			cout << "error5" << endl;
+	}
+	if ((z.getEdges()[1]->get_target_node()) != result){
+				cout << "error hna" << endl;
+	}
+	cout << "Minimizer Success..." << endl;
+}
+
+
+void minimizer_test_2() {
+	DfaNode x("X",false);
+	DfaNode y("Y",false);
+	DfaNode z("Z",true);
+	DfaNode w("W",false);
+	DfaNode t("T",false);
 	DfaEdge xy('0', '0', &x, &y);
 	DfaEdge xz('1', '1', &x, &z);
 	DfaEdge yx('0', '0', &y, &x);
@@ -43,28 +100,28 @@ void another_minimizer_test() {
 	DfaMinimizer g;
 	DfaNode* result = g.getMinimizedDFA(&x);
 	if ((result->getEdges()[0]->get_target_node()) != result){
-		cout << "error" << endl;
+		cout << "error1" << endl;
 	}
 	if ((result->getEdges()[1]->get_target_node()) != &z){
-			cout << "error" << endl;
+			cout << "error2" << endl;
 	}
 	if ((z.getEdges()[0]->get_target_node()) != result
-			&& (z.getEdges()[1]->get_target_node()) != result){
-				cout << "error" << endl;
+			|| (z.getEdges()[1]->get_target_node()) != result){
+				cout << "error3" << endl;
 	}
-	cout << "Minimizer Success..." << endl;
+	minimizer_test_3();
 }
 
 
 void test_minimizer(void) {
-	DfaNode x("A",false);
-	DfaNode y("B",true);
-	DfaNode z("C",false);
-	DfaNode w("D",true);
-	DfaNode t("E",true);
-	DfaNode u("K",true);
-	DfaNode v("H",true);
-	DfaNode q("G",true);
+	DfaNode x("X",false);
+	DfaNode y("Y",true);
+	DfaNode z("Z",false);
+	DfaNode w("W",true);
+	DfaNode t("T",true);
+	DfaNode u("U",true);
+	DfaNode v("V",true);
+	DfaNode q("Q",true);
 	DfaNode e("\0", false);
 	DfaEdge xy('0', '0', &x, &y);
 	DfaEdge xe('1', '1', &x, &e);
@@ -106,7 +163,7 @@ void test_minimizer(void) {
 	Closure cl(1);
 	DfaNode * result = g.getMinimizedDFA(&x);
 
-	another_minimizer_test();
+	minimizer_test_2();
 
 }
 
