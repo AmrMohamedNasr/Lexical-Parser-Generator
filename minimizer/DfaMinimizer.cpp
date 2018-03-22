@@ -64,7 +64,7 @@ bool DfaMinimizer ::nodeExists(DfaNode *ele) {
 }
 
 
-DfaNode *DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
+vector<DfaNode*>DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
 	queue<DfaNode*> nodes;
 	nodes.push(nonMinimizedDFA);
 	this->eles.push_back(nonMinimizedDFA);
@@ -141,11 +141,13 @@ DfaNode *DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
 			}
 		}
 	}
+	vector<DfaNode*> lastNodes;
+	lastNodes.push_back(qTransition[pStart.first - 1].second);
 	for (int i = 0; i < qTransition.size(); i++) {
-
-
+		if ((pStart.first - 1) != i)
+			lastNodes.push_back(qTransition[i].second);
 	}
-	return nonMinimizedDFA;
+	return lastNodes;
 
 }
 
@@ -157,7 +159,7 @@ bool DfaMinimizer :: removeClosure(Closure* clo) {
 	for (auto it = this->closures.begin(); it != this->closures.end(); it++) {
 				  if ((*it)->getNumber() == clo->getNumber()) {
 					  this->closures.erase(it);
-					  delete *it;
+					  //delete *it;
 					  return true;
 				  }
 			}

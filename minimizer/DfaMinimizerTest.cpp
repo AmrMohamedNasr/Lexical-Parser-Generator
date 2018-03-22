@@ -57,14 +57,14 @@ void minimizer_test_3() {
 	u.addEdge(&ut);
 
 	DfaMinimizer g;
-	DfaNode* result = g.getMinimizedDFA(&x);
-	if ((result->getEdges()[0]->get_target_node()) != &z){
+	vector<DfaNode*> result = g.getMinimizedDFA(&x);
+	if ((result[0]->getEdges()[0]->get_target_node()) != &z){
 		cout << "error4" << endl;
 	}
-	if ((result->getEdges()[1]->get_target_node()) != &y){
+	if ((result[0]->getEdges()[1]->get_target_node()) != &y){
 			cout << "error5" << endl;
 	}
-	if ((z.getEdges()[1]->get_target_node()) != result){
+	if ((z.getEdges()[0]->get_target_node()) != result[0]){
 				cout << "error hna" << endl;
 	}
 	cout << "Minimizer Success..." << endl;
@@ -98,15 +98,15 @@ void minimizer_test_2() {
 	y.addEdge(&yz);
 	x.addEdge(&xz);
 	DfaMinimizer g;
-	DfaNode* result = g.getMinimizedDFA(&x);
-	if ((result->getEdges()[0]->get_target_node()) != result){
+	vector<DfaNode*> result = g.getMinimizedDFA(&x);
+	if ((result[0]->getEdges()[1]->get_target_node()) != result[0]){
 		cout << "error1" << endl;
 	}
-	if ((result->getEdges()[1]->get_target_node()) != &z){
+	if ((result[0]->getEdges()[0]->get_target_node()) != &z){
 			cout << "error2" << endl;
 	}
-	if ((z.getEdges()[0]->get_target_node()) != result
-			|| (z.getEdges()[1]->get_target_node()) != result){
+	if ((z.getEdges()[0]->get_target_node()) != result[0]
+			|| (z.getEdges()[1]->get_target_node()) != result[0]){
 				cout << "error3" << endl;
 	}
 	minimizer_test_3();
@@ -161,7 +161,7 @@ void test_minimizer(void) {
 	x.addEdge(&xe);
 	DfaMinimizer g;
 	Closure cl(1);
-	DfaNode * result = g.getMinimizedDFA(&x);
+	vector<DfaNode*> result = g.getMinimizedDFA(&x);
 
 	minimizer_test_2();
 
