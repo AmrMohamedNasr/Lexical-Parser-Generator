@@ -29,10 +29,11 @@ char nonspacechar_after(string str, unsigned i);
 bool is_parenthesis(char c);
 void add_error(unsigned line_n, string error, vector<string> *errors);
 
-vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream * grammar_stream) {
+vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, vector<string> *priorities, ifstream * grammar_stream) {
 	string line;
 	vector<string> errors;
 	map<string, vector<MiniToken>> mapOfDefinitions;
+	vector<string> punctPr, keyPr, regPr;
 	if (grammar_stream->is_open()) {
 		unsigned line_number = 0;
 		while (getline (*grammar_stream,line) ) {
@@ -52,6 +53,7 @@ vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream *
 						NfaToken token (PUNCTUATION, tokens[i]);
 						MiniToken mtoken (WORD, tokens[i]);
 						token.tokens.push_back(mtoken);
+						punctPr.push_back(token.tokenName);
 						result->push_back(token);
 					}
 				}
@@ -67,6 +69,7 @@ vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream *
 						NfaToken token (KEYWORD, tokens[i]);
 						MiniToken mtoken (WORD, tokens[i]);
 						token.tokens.push_back(mtoken);
+						keyPr.push_back(token.tokenName);
 						result->push_back(token);
 					}
 				}
@@ -104,6 +107,7 @@ vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream *
 					for (unsigned i = 0; i < tokens.size(); i++) {
 						token.tokens.push_back(tokens[i]);
 					}
+					regPr.push_back(token.tokenName);
 					result->push_back(token);
 				}
 			} else {
@@ -113,6 +117,17 @@ vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, ifstream *
 		}
 		if (result->size() == 0) {
 			add_error(line_number, "Empty file...", &errors);
+		}
+	}
+	if (errors.empty()) {
+		for (unsigned i = 0; i < punctPr.size(); i++) {
+			priorities->push_back(punctPr[i]);
+		}
+		for (unsigned i = 0; i < keyPr.size(); i++) {
+			priorities->push_back(keyPr[i]);
+		}
+		for (unsigned i = 0; i < regPr.size(); i++) {
+			priorities->push_back(regPr[i]);
 		}
 	}
 	return errors;
