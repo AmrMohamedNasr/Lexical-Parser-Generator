@@ -86,7 +86,6 @@ bool  DfaEdge :: equals(DfaEdge* edge) {
 		if (flag == 0) {
 			return false;
 		}
-		flag = 0;
 	}
 	return (this->get_first_allowed_char() == edge->get_first_allowed_char()) &&
 			(this->get_last_allowed_char() == edge->get_last_allowed_char());

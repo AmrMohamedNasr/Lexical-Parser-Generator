@@ -12,6 +12,7 @@
 
 DfaNode *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa) {
     DfaNodeWrapper* start = getDfaStartState(combinedNfa);
+    start->setStart(true);
 
     set<DfaNodeWrapper*> dfaNodes;
     queue<DfaNodeWrapper*> nonMarkedNodes;
@@ -80,14 +81,9 @@ DfaNodeWrapper* NfaDfaConverter::getEpslonClosureFromSet(set<Node *> states) {
 
     DfaNodeWrapper* wrapper = new DfaNodeWrapper();
     DfaNode* dfaNode = new DfaNode(stateName, isAccepted);
-//    Node* node = new Node(stateName, isAccepted);
-//    for (int i = 0; i < edges.size(); ++i) {
-//        node->addEdge(edges[i]);
-//    }
     wrapper->setDfaNode(dfaNode);
     wrapper->setNfaEdges(edges);
     wrapper->setSupportingNfaNodes(initials);
-//    node->setSupportingNfaNodes(initials);
     return wrapper;
 }
 

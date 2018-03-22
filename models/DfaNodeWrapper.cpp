@@ -31,3 +31,7 @@ set<Node *> DfaNodeWrapper::getSupportedNfaNodes() {
 void DfaNodeWrapper::setDfaNode(DfaNode *dfaNode) {
     this->node = dfaNode;
 }
+
+void DfaNodeWrapper::setStart(bool isStart) {
+    this->node->setStart(isStart);
+}

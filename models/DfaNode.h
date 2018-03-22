@@ -14,7 +14,7 @@ private:
     string name;
     vector<DfaEdge *> edges;
     bool acceptedState;
-    set<Node *> supportingNodes;
+//    set<Node *> supportingNodes;
     bool start;
 public:
     bool isAcceptedState();
@@ -30,12 +30,6 @@ public:
     void addEdge(DfaEdge * e);
 
     DfaNode(string stateName, bool accept);
-//    void setSupportingNfaNodes(set<Node *> nodes);
-//    set<Node *> getSupportedNfaNodes();
-//    DfaNode(string stateName, bool accept, bool start);
-
-//    void setSupportingNfaNodes(set<Node *> nodes);
-//    set<Node*> getSupportedNfaNodes();
 };
 
 #endif //COMPILERS_DFANODE_H

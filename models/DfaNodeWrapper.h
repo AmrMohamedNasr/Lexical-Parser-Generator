@@ -26,6 +26,8 @@ public:
 
     void setSupportingNfaNodes(set<Node *> nodes);
     set<Node*> getSupportedNfaNodes();
+
+    void setStart(bool isStart);
 };
 
 
