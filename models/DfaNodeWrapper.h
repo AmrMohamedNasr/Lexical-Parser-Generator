@@ -1,27 +1,34 @@
-////
-//// Created by programajor on 3/21/18.
-////
 //
-//#ifndef COMPILERS_NODEWRAPPER_H
-//#define COMPILERS_NODEWRAPPER_H
+// Created by programajor on 3/21/18.
 //
-//
-//#include "Edge.h"
-//#include "DfaNode.h"
-//
-//class DfaNodeWrapper {
-//private:
-//    vector<Edge*> nfaEdges;
-//    DfaNode* node;
-//
-//public:
-//    DfaNode* getDfaNode();
-//
-//    void setNfaEdges(vector <Edge*> edges);
-//    vector <Edge*> getNfaEdges();
-//
-//    void addDfaEdge(Edge* edge);
-//};
-//
-//
-//#endif //COMPILERS_NODEWRAPPER_H
+
+#ifndef COMPILERS_NODEWRAPPER_H
+#define COMPILERS_NODEWRAPPER_H
+
+
+#include "Edge.h"
+#include "DfaNode.h"
+
+class DfaNodeWrapper {
+private:
+    vector<Edge*> nfaEdges;
+    DfaNode* node;
+    set<Node *> supportingNodes;
+
+public:
+    void setNfaEdges(vector <Edge*> edges);
+    vector <Edge*> getNfaEdges();
+
+    void addDfaEdge(DfaEdge* edge);
+
+    void setDfaNode(DfaNode* dfaNode);
+    DfaNode* getDfaNode();
+
+    void setSupportingNfaNodes(set<Node *> nodes);
+    set<Node*> getSupportedNfaNodes();
+
+    void setStart(bool isStart);
+};
+
+
+#endif //COMPILERS_NODEWRAPPER_H
