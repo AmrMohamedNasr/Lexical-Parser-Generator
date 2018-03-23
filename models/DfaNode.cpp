@@ -83,3 +83,7 @@ void DfaNode::sePrintingtName(string printingName) {
 vector<DfaEdge *> *DfaNode::getRealEdges() {
 	return &this->edges;
 }
+
+void DfaNode::setAcceptState(bool accept) {
+    this->acceptedState = accept;
+}

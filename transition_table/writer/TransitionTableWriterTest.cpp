@@ -51,7 +51,8 @@ void test_transition_table_writer_human_form(void) {
     x.addEdge(&xy);
 
     DfaMinimizer g;
-    vector<DfaNode*> result = g.getMinimizedDFA(&x);
+    vector<DfaNode*> result;
+    g.getMinimizedDFA(&result, &x);
 
     vector<char> alphabets;
     alphabets.push_back('0');
@@ -115,7 +116,8 @@ void test_transition_table_writer_readable_form(void) {
     x.addEdge(&xy);
 
     DfaMinimizer g;
-    vector<DfaNode*> result = g.getMinimizedDFA(&x);
+    vector<DfaNode*> result;
+    g.getMinimizedDFA(&result, &x);
 
     vector<char> alphabets;
     alphabets.push_back('0');
