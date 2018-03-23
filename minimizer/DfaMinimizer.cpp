@@ -12,8 +12,6 @@
 #include <algorithm>
 #include <queue>
 
-
-
 vector<DfaNode*> PartitionSet:: getElements() {
 	return this->elements;
 }
@@ -63,6 +61,24 @@ bool DfaMinimizer ::nodeExists(DfaNode *ele) {
 }
 
 
+//bool compareEdges (const DfaEdge * lhs, const DfaEdge * rhs) {
+//	if (lhs->allowing_range != rhs->allowing_range) {
+//		return lhs->allowing_range < rhs->allowing_range;
+//	}
+//	for (unsigned i = 0; i < lhs->disallowed_chars.size(); i++) {
+//			if (lhs->disallowed_chars[i] != rhs->disallowed_chars[i]) {
+//				return lhs->disallowed_chars[i] > rhs->disallowed_chars[i];
+//			}
+//	}
+//	if (lhs->first_allowed_char != rhs->first_allowed_char) {
+//		return lhs->first_allowed_char < rhs->first_allowed_char;
+//	}
+//	if (lhs->last_allowed_char != rhs->last_allowed_char) {
+//		return lhs->last_allowed_char > rhs->last_allowed_char;
+//	}
+//	return true;
+//}
+
 void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *nonMinimizedDFA) {
 	this->eles.clear();
 	this->partitionSets.clear();
@@ -78,6 +94,10 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 		}
 		nodes.pop();
 	}
+//	for(unsigned i = 0; i < this->eles.size(); i++) {
+//		sort(this->eles[i]->getEdges().begin(),
+//				this->eles[i]->getEdges().end(), compareEdges);
+//	}
 	int count = 1;
 	PartitionSet *setS = new PartitionSet(count++);
 	PartitionSet *setF = new PartitionSet(count++);
