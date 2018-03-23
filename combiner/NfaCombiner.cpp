@@ -14,14 +14,9 @@ Node * NFACombiner::getCombinedNfa(vector<Nfa * > * separatedStateAcceptors) {
             first = false;
             final = nfa;
         } else {
-        	Nfa * temp = final;
             final = nfaBuilder.construct_or_nfa(final, nfa);
-            delete temp;
         }
     }
     Node * res = final->start;
-    for (Nfa * nfa : (*separatedStateAcceptors)) {
-		delete nfa;
-	}
     return res;
 }

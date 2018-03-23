@@ -9,6 +9,7 @@
 #include "../models/DfaNode.h"
 #include "../models/DfaEdge.h"
 #include "../models/DfaNodeWrapper.h"
+#include <unordered_set>
 
 class NfaDfaConverter {
 
@@ -40,7 +41,7 @@ private:
 
     bool isFound(vector<Edge *> *vector, Edge *&edge);
 
-    void removeRedundantEdges(DfaNode *node);
+    void removeRedundantEdges(DfaNode *node, unordered_set<DfaNode *> * visited);
 };
 
 

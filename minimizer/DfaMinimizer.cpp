@@ -14,6 +14,7 @@
 #include <iterator>
 #include <queue>
 #include <string>
+#include <unordered_set>
 
 void sort_node_edges(DfaNode * node);
 bool compare_dfa_edge(DfaEdge *a, DfaEdge *b) {
@@ -33,7 +34,7 @@ bool compare_dfa_edge(DfaEdge *a, DfaEdge *b) {
 }
 
 void sort_node_edges(DfaNode * node) {
-	 std::sort( node->getRealEdges()->begin(), node->getRealEdges()->end(), &compare_dfa_edge);
+	 sort( node->getRealEdges()->begin(), node->getRealEdges()->end(), compare_dfa_edge);
 }
 
 vector<DfaNode*> PartitionSet:: getElements() {
@@ -97,9 +98,10 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 	while (!nodes.empty()) {
 		DfaNode * node = nodes.front();
 		for (unsigned j = 0; j < node->getEdges().size(); ++j) {
-			if (!nodeExists(node->getEdges()[j]->get_target_node())) {
-				nodes.push(node->getEdges()[j]->get_target_node());
-				this->eles.push_back(node->getEdges()[j]->get_target_node());
+			DfaNode * target = node->getEdges()[j]->get_target_node();
+			if (!nodeExists(target)) {
+				nodes.push(target);
+				this->eles.push_back(target);
 			}
 		}
 		sort_node_edges(node);
@@ -170,10 +172,8 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 		qTransition.push_back(
 		pair<int, DfaNode*> (this->partitionSets[i]->getNumber(),
 				this->partitionSets[i]->getElements()[0]));
-		for (unsigned j = 1; j < this->partitionSets[i]->getElements().size(); j++) {
-			delete this->partitionSets[i]->getElements()[j];
-		}
 	}
+
 	for (unsigned i = 0; i < qTransition.size(); i++) {
 		for (unsigned  j = 0; j < qTransition[i].second->getEdges().size(); j++) {
 			if (getNumByNode(qTransition[i].second->getEdges(
@@ -187,6 +187,12 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 						qTransition[index].second);
 
 			}
+		}
+	}
+	// Delete unused nodes.
+	for (unsigned i = 0; i < this->partitionSets.size(); i++) {
+		for (unsigned j = 1; j < this->partitionSets[i]->getElements().size(); j++) {
+			delete this->partitionSets[i]->getElements()[j];
 		}
 	}
 	// making nodes into list and returning it.

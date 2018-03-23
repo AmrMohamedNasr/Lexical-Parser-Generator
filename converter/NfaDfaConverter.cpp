@@ -8,6 +8,7 @@
 #include <map>
 #include <algorithm>
 #include <climits>
+#include <unordered_set>
 #include "NfaDfaConverter.h"
 #include <iostream>
 #include "../models/DfaNodeWrapper.h"
@@ -20,14 +21,14 @@ using namespace std;
 DfaNode * NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa, vector<string> *priorities) {
 	this->stateNameCounter = 1;
 	DfaNodeWrapper* start = getDfaStartState(combinedNfa, priorities);
-    start->setStart(true);
+
+	start->setStart(true);
 
     set<DfaNodeWrapper*> dfaNodes;
     queue<DfaNodeWrapper*> nonMarkedNodes;
 
     dfaNodes.insert(start);
     nonMarkedNodes.push(start);
-
     while (!nonMarkedNodes.empty()) {
         DfaNodeWrapper* node = nonMarkedNodes.front();
         nonMarkedNodes.pop();
@@ -51,7 +52,7 @@ DfaNode * NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa, vector<string> 
             DfaNodeWrapper* newDfaNode = getEpslonClosureFromSet(&nextStates, priorities);
             DfaNodeWrapper* dfaRepresenter = setContainsState(&dfaNodes, newDfaNode);
             if (dfaRepresenter == NULL) {
-                dfaNodes.insert(newDfaNode);
+            	dfaNodes.insert(newDfaNode);
                 nonMarkedNodes.push(newDfaNode);
                 DfaEdge *edge = new DfaEdge(startChar, lastChar, node->getDfaNode(), newDfaNode->getDfaNode());
                 node->addDfaEdge(edge);
@@ -62,13 +63,17 @@ DfaNode * NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa, vector<string> 
             }
         }
     }
-    removeRedundantEdges(start->getDfaNode());
+    unordered_set <DfaNode*> visited;
+    removeRedundantEdges(start->getDfaNode(), &visited);
+    DfaNode * res = start->getDfaNode();
     std::set<DfaNodeWrapper *>::iterator it;
 	for (it = dfaNodes.begin(); it != dfaNodes.end(); it++) {
 		delete (*it);
 	}
-	//Node::delete_graph(combinedNfa);
-    return start->getDfaNode();
+
+	Node::delete_graph(combinedNfa);
+
+    return res;
 }
 
 DfaNodeWrapper* NfaDfaConverter::getDfaStartState(Node *combinedNfa, vector<string> *priorities) {
@@ -215,7 +220,7 @@ bool NfaDfaConverter::isFound(vector<Edge *> *vector, Edge *&edge) {
     return false;
 }
 
-void NfaDfaConverter::removeRedundantEdges(DfaNode *node) {
+void NfaDfaConverter::removeRedundantEdges(DfaNode *node, unordered_set<DfaNode *> *visited) {
     for (unsigned i = 0; i < node->getEdges().size(); i++) {
         DfaEdge* edge = node->getEdges()[i];
         for (unsigned j = i + 1; j < node->getEdges().size(); j++) {
@@ -224,11 +229,14 @@ void NfaDfaConverter::removeRedundantEdges(DfaNode *node) {
                                               edge->get_last_allowed_char());
         }
     }
+    visited->insert(node);
     for (unsigned i = 0; i < node->getEdges().size(); i++) {
         DfaEdge* edge = node->getEdges()[i];
         DfaNode* next = edge->get_target_node();
         if (node != next) {
-        	removeRedundantEdges(next);
+        	if (visited->find(next) == visited->end()) {
+        		removeRedundantEdges(next, visited);
+        	}
             edge->set_target_node(next);
         }
     }
