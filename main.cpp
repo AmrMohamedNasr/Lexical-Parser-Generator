@@ -29,4 +29,5 @@ void run_tests() {
     test_transition_table_writer_readable_form();
 	test_transition_table_reader();
     test_transition_table_deconstructor();
+	test_tokenizer();
 }

@@ -19,6 +19,6 @@ void test_transition_table_writer_human_form(void);
 void test_transition_table_writer_readable_form(void);
 void test_transition_table_reader(void);
 void test_transition_table_deconstructor(void);
-
+void test_tokenizer();
 
 #endif /* P1_TESTS_H_ */
