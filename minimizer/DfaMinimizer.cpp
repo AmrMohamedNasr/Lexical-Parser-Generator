@@ -10,7 +10,10 @@
 #include <string.h>
 #include <iostream>
 #include <algorithm>
+#include <map>
+#include <iterator>
 #include <queue>
+#include <string>
 
 void sort_node_edges(DfaNode * node);
 bool compare_dfa_edge(DfaEdge *a, DfaEdge *b) {
@@ -67,6 +70,7 @@ void PartitionSet :: removeEle(DfaNode *ele) {
 }
 
 void PartitionSet :: addEle(DfaNode *ele) {
+	ele->setParentSet(this);
 	this->elements.push_back(ele);
 }
 
@@ -93,8 +97,10 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 				this->eles.push_back(node->getEdges()[j]->get_target_node());
 			}
 		}
-		sort_node_edges(node);
 		nodes.pop();
+	}
+	for (unsigned i = 0; i < this->eles.size(); i++) {
+		sort_node_edges(this->eles[i]);
 	}
 	int count = 1;
 	PartitionSet *setS = new PartitionSet(count++);
@@ -106,6 +112,43 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 	int max = 2;
 	while ( counter > 0) {
 		while (max > 0) {
+//			map<string, PartitionSet*> setMap;
+//			vector<int> flags;
+//			for (unsigned i = 0;
+//					i < this->partitionSets[max - 1]->getElements().size(); i++) {
+//				string key="";
+//				for (unsigned j = 0;
+//						j < this->partitionSets[max - 1]->getElements(
+//								)[i]->getEdges().size(); j++) {
+//					key += std::to_string(getNumByNode(this->partitionSets[max - 1]->getElements(
+//								)[i]->getEdges()[j]->get_target_node()));
+//					cout << key << endl;
+//				}
+//				map<string,PartitionSet*>::const_iterator it = (setMap.find(key));
+//				if ( (it) != setMap.end()) {
+//					PartitionSet *temp = new PartitionSet(
+//								this->partitionSets[max -1]->getNumber());
+//					temp->addEle(this->partitionSets[max -1]->getElements()[i]);
+//					setMap.insert(pair <string , PartitionSet*> (key, temp));
+//					flags.push_back(1);
+//				} else {
+//					(*it).second->addEle(
+//							this->partitionSets[max -1]->getElements()[i]);
+//
+//				}
+//
+//			}
+//			if (setMap.size() == 1) {
+//				(*setMap.begin()).second->setFinished(true);
+//			}
+//			map <string, PartitionSet*> :: const_iterator itr;
+//			for (itr = setMap.begin(); itr != setMap.end(); itr++) {
+//				if ((*itr).second->getElements().size() == 1) {
+//					(*itr).second->setFinished(true);
+//				}
+//				this->addSet((*itr).second);
+//			}
+//			setMap.clear();
 			while (!this->partitionSets[max -1]->getElements().empty()) {
 				DfaNode* tempNode = this->partitionSets[max -1]->getElements().back();
 				PartitionSet *temp = new PartitionSet(this->partitionSets[max -1]->getNumber());
@@ -186,20 +229,18 @@ bool DfaMinimizer :: checkSameTrans(DfaNode* ele1, DfaNode* ele2) {
 	if (ele1->getEdges().size() != ele2->getEdges().size()) {
 		return false;
 	}
+	int flag = 0;
 	for (unsigned i = 0; i < ele1->getEdges().size(); ++i) {
-		int flag = 0;
-		for (unsigned j = 0; j < ele2->getEdges().size(); ++j) {
-				if (ele1->getEdges()[i]->equals(ele2->getEdges()[j])) {
-					if (getNumByNode(ele1->getEdges()[i]->get_target_node()) ==
-							getNumByNode(ele2->getEdges()[j]->get_target_node())) {
-						flag = 1;
-					}
+		if (ele1->getEdges()[i]->equals(ele2->getEdges()[i])) {
+			if (getNumByNode(ele1->getEdges()[i]->get_target_node()) !=
+					getNumByNode(ele2->getEdges()[i]->get_target_node())) {
+				flag = 1;
+			}
 
-				}
 		}
-		if (flag == 0) {
-			return false;
-		}
+	}
+	if (flag == 1) {
+		return false;
 	}
 	return true;
 }
@@ -215,17 +256,17 @@ void DfaMinimizer :: initTwoSets(DfaNode *nonMinimizedDfa, PartitionSet *clS, Pa
 }
 
 int  DfaMinimizer :: getNumByNode(DfaNode* node) {
-	for (unsigned i = 0; i != this->partitionSets.size(); i++) {
-		for (unsigned j = 0 ; j < this->partitionSets[i]->getElements().size(); j++) {
-			if (this->partitionSets[i]->getElements()[j] == node ) {
-				return this->partitionSets[i]->getNumber();
-			}
-		}
-
-	}
-	cout << "error"<< endl;
-	// error TODO to be handled
-	return 0;
+//	for (unsigned i = 0; i != this->partitionSets.size(); i++) {
+//		for (unsigned j = 0 ; j < this->partitionSets[i]->getElements().size(); j++) {
+//			if (this->partitionSets[i]->getElements()[j] == node ) {
+//				return this->partitionSets[i]->getNumber();
+//			}
+//		}
+//
+//	}
+//	cout << "error"<< endl;
+//	// error TODO to be handled
+	return node->getParentSet()->getNumber();
 }
 vector<PartitionSet*> DfaMinimizer ::  getSet(){
 	return this->partitionSets;

@@ -7,7 +7,9 @@
 
 using namespace std;
 #include "Node.h"
+#include "../minimizer/DfaMinimizer.h"
 
+class PartitionSet;
 class DfaEdge;
 class DfaNode {
 private:
@@ -15,12 +17,16 @@ private:
     vector<DfaEdge *> edges;
     bool acceptedState;
 //    set<Node *> supportingNodes;
+    PartitionSet * parentSet;
     bool start;
 public:
     bool isAcceptedState();
 
     bool isStart();
     void setStart(bool isStart);
+
+    void setParentSet(PartitionSet * parentSet);
+    PartitionSet *getParentSet();
 
     string getName();
     void setName(string name);

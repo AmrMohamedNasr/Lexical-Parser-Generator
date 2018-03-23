@@ -59,12 +59,20 @@ void minimizer_test_3() {
 	DfaMinimizer g;
 	vector<DfaNode*> result;
 	g.getMinimizedDFA(&result, x);
-	if ((result[0]->getEdges()[0]->get_target_node()->getName()) != "Z"){
+	if ((result[0]->getEdges()[0]->get_target_node()->getName()) != "Y"){
 		cout << "error4" << endl;
 	}
-	if ((result[0]->getEdges()[1]->get_target_node()->getName()) != "Y"){
+	if ((result[0]->getEdges()[1]->get_target_node()->getName()) != "Z"){
 			cout << "error5" << endl;
 	}
+	if ((result[0]->getEdges()[1]->get_target_node(
+			)->getEdges()[1]->get_target_node()->getName()) != "U"){
+				cout << "error5" << endl;
+		}
+	if ((result[0]->getEdges()[0]->get_target_node(
+				)->getEdges()[1]->get_target_node()->getName()) != "W"){
+					cout << "error5" << endl;
+			}
 	if ((z->getEdges()[0]->get_target_node()) != result[0]){
 				cout << "error hna" << endl;
 	}
@@ -101,10 +109,10 @@ void minimizer_test_2() {
 	DfaMinimizer g;
 	vector<DfaNode*> result;
 	g.getMinimizedDFA(&result, x);
-	if ((result[0]->getEdges()[1]->get_target_node()) != result[0]){
+	if ((result[0]->getEdges()[0]->get_target_node()) != result[0]){
 		cout << "error1" << endl;
 	}
-	if ((result[0]->getEdges()[0]->get_target_node()->getName()) != "Z"){
+	if ((result[0]->getEdges()[1]->get_target_node()->getName()) != "Z"){
 			cout << "error2" << endl;
 	}
 	if ((z->getEdges()[0]->get_target_node()) != result[0]

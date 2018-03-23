@@ -8,6 +8,13 @@
 bool DfaNode::isAcceptedState() {
     return this->acceptedState;
 }
+void DfaNode::setParentSet(PartitionSet* parentSet) {
+	this->parentSet = parentSet;
+}
+
+PartitionSet *DfaNode::getParentSet() {
+	return this->parentSet;
+}
 
 DfaNode :: DfaNode(string stateName, bool accept) {
 	this->acceptedState = accept;
