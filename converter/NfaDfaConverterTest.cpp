@@ -8,17 +8,17 @@
 void test_nfa_dfa_converter() {
     Node n1 = Node("1", false);
     Node n2 = Node("2", false);
-    Node n3 = Node("3_if", true);
+    Node n3 = Node("if", true);
     Node n4 = Node("4", false);
     Node n5 = Node("5", false);
     Node n6 = Node("6", false);
     Node n7 = Node("7", false);
-    Node n8 = Node("8_then", true);
+    Node n8 = Node("then", true);
     Node n9 = Node("9", false);
     Node n10 = Node("10", false);
     Node n11 = Node("11", false);
     Node n12 = Node("12", false);
-    Node n13 = Node("13_else", true);
+    Node n13 = Node("else", true);
     Node n14 = Node("14", false);
     Node n15 = Node("15", false);
     Node n16 = Node("16", false);
@@ -28,9 +28,9 @@ void test_nfa_dfa_converter() {
     Node n20 = Node("20_operation", true);
     Node n21 = Node("21", false);
     Node n22 = Node("22", false);
-    Node n23 = Node("23_id", true);
+    Node n23 = Node("id", true);
     Node n24 = Node("24", false);
-    Node n25 = Node("25_num", true);
+    Node n25 = Node("num", true);
 
     Edge e1 = Edge('\0', '\0', &n1);
     Edge e2 = Edge('\0', '\0', &n4);

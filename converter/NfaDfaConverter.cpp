@@ -83,8 +83,8 @@ DfaNodeWrapper* NfaDfaConverter::getEpslonClosureFromSet(set<Node *> *states, ve
         }
     }
 
-    string stateName = getStateName(&initials, priorities);
     bool isAccepted = getIsAccepted(&initials);
+    string stateName = getStateName(&initials, priorities);
     vector<Edge *> edges;
     getEdges(&edges, &initials);
 
