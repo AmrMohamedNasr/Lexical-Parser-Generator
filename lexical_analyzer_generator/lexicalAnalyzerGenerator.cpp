@@ -31,9 +31,8 @@ void LexicalAnalyzerGenerator::generate_lexical_analyzer(string file_name) {
 	vector<Nfa *> nfas;
 	this->builder.get_separated_nfas(&nfas, &tokens);
 	Node * startNode = this->combiner.getCombinedNfa(&nfas);
-	cout << "HERE before conv" << endl;
 	DfaNode * dfaStartNode = this->converter.getNonMinimizedDFA(startNode, &priority);
-	cout << "HERE after conv" << endl;
+	dfaStartNode->getEdges();
 	vector<DfaNode *> finalMachine;
 	this->minimzer.getMinimizedDFA(&finalMachine, dfaStartNode);
 	TransitionTable table = this->tableBuilder.buildTransitionTable(finalMachine, &alpha);
