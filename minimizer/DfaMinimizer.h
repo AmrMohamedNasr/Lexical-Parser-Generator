@@ -49,7 +49,7 @@ class DfaMinimizer {
          * @param nonMinimizedDFA the non minimized DFA from the converter
          * @return a minimized DFA from the given non minimized one.
          */
-		vector<DfaNode*>getMinimizedDFA(DfaNode *nonMinimizedDFA);
+		void getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *nonMinimizedDFA);
 
 };
 

@@ -44,7 +44,7 @@ void DfaNode::setStart(bool isStart) {
 }
 
 bool DfaNode::valid_transition(char c) {
-    for (int i = 0; i < edges.size(); i++) {
+    for (unsigned i = 0; i < edges.size(); i++) {
         DfaEdge* e = edges[i];
         if (e->valid_transition(c)) {
             return true;
@@ -54,7 +54,7 @@ bool DfaNode::valid_transition(char c) {
 }
 
 DfaNode *DfaNode::do_transition(char c) {
-    for (int i = 0; i < edges.size(); i++) {
+    for (unsigned i = 0; i < edges.size(); i++) {
         DfaEdge* e = edges[i];
         DfaNode* destination = e->do_transition(c);
         if (destination != nullptr) {
@@ -62,4 +62,9 @@ DfaNode *DfaNode::do_transition(char c) {
         }
     }
     return nullptr;
+}
+DfaNode::~DfaNode() {
+	for (unsigned i = 0; i < this->edges.size(); i++) {
+		delete this->edges[i];
+	}
 }

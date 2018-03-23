@@ -41,7 +41,7 @@ bool Closure :: nodeExists(DfaNode *ele) {
 }
 
 void Closure :: removeEle(DfaNode *ele) {
-	for (int i = 0; i < this->elements.size(); i++) {
+	for (unsigned i = 0; i < this->elements.size(); i++) {
 			  if (this->elements[i] == ele) {
 				  this->elements.erase(this->elements.begin() +i);
 				  return;
@@ -64,28 +64,27 @@ bool DfaMinimizer ::nodeExists(DfaNode *ele) {
 }
 
 
-vector<DfaNode*>DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
+void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *nonMinimizedDFA) {
 	this->eles.clear();
 	this->closures.clear();
 	queue<DfaNode*> nodes;
 	nodes.push(nonMinimizedDFA);
 	this->eles.push_back(nonMinimizedDFA);
 	while (!nodes.empty()) {
-		for (int j = 0; j < nodes.front()->getEdges().size(); ++j) {
+		for (unsigned j = 0; j < nodes.front()->getEdges().size(); ++j) {
 			if (!nodeExists(nodes.front()->getEdges()[j]->get_target_node())) {
 				nodes.push(nodes.front()->getEdges()[j]->get_target_node());
-				//cout << "get out" << endl;
 				this->eles.push_back(nodes.front()->getEdges()[j]->get_target_node());
 			}
 		}
 		nodes.pop();
 	}
 	int count = 1;
-	Closure clS(count++);
-	Closure clF(count++);
-	this->closures.push_back(&clS);
-	this->closures.push_back(&clF);
-	initTwoClosures(nonMinimizedDFA, &clS, &clF);
+	Closure *clS = new Closure(count++);
+	Closure *clF = new Closure(count++);
+	this->closures.push_back(clS);
+	this->closures.push_back(clF);
+	initTwoClosures(nonMinimizedDFA, clS, clF);
 	int counter = getNumOfUnfinishedClos();
 	int max = 2;
 	while ( counter > 0) {
@@ -95,7 +94,7 @@ vector<DfaNode*>DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
 				Closure *temp = new Closure(this->closures[max -1]->getNumber());
 				temp->addEle(tempNode);
 				int flag = 0;
-				for (int j = 0; j < this->closures[max -1]->getElements().size() - 1;j++) {
+				for (unsigned j = 0; j < this->closures[max -1]->getElements().size() - 1;j++) {
 					DfaNode *tempNode2 = this->closures[max -1]->getElements()[j];
 					if (checkSameTrans(tempNode, tempNode2)) {
 						temp->addEle(tempNode2);
@@ -103,7 +102,7 @@ vector<DfaNode*>DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
 						flag = 1;
 					}
 				}
-				for (int i = 0; i < temp->getElements().size(); i++) {
+				for (unsigned i = 0; i < temp->getElements().size(); i++) {
 					this->closures[max - 1]->removeEle(temp->getElements()[i]);
 				}
 				if (flag == 0) {
@@ -114,7 +113,7 @@ vector<DfaNode*>DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
 			this->removeClosure(this->closures[max -1]);
 			max--;
 		}
-		for (int i = 0; i < this->closures.size(); i++) {
+		for (unsigned i = 0; i < this->closures.size(); i++) {
 			this->closures[i]->setNumber(i+1);
 		}
 		counter = getNumOfUnfinishedClos();
@@ -123,13 +122,16 @@ vector<DfaNode*>DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
 	}
 	vector<pair<int, DfaNode*>> qTransition;
 	pair<int, DfaNode*> pStart = getNodeWithNum(nonMinimizedDFA);
-	for (int i = 0; i < this->closures.size(); i++) {
+	for (unsigned i = 0; i < this->closures.size(); i++) {
 		qTransition.push_back(
 		pair<int, DfaNode*> (this->closures[i]->getNumber(),
 				this->closures[i]->getElements()[0]));
+		for (unsigned j = 1; j < this->closures[i]->getElements().size(); j++) {
+			delete this->closures[i]->getElements()[j];
+		}
 	}
-	for (int i = 0; i < qTransition.size(); i++) {
-		for (int  j = 0; j < qTransition[i].second->getEdges().size(); j++) {
+	for (unsigned i = 0; i < qTransition.size(); i++) {
+		for (unsigned  j = 0; j < qTransition[i].second->getEdges().size(); j++) {
 			if (getNumByNode(qTransition[i].second->getEdges(
 					)[j]->get_target_node()) == qTransition[i].first) {
 						qTransition[i].second->getEdges()[j]->set_target_node(
@@ -143,14 +145,11 @@ vector<DfaNode*>DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
 			}
 		}
 	}
-	vector<DfaNode*> lastNodes;
-	lastNodes.push_back(qTransition[pStart.first - 1].second);
-	for (int i = 0; i < qTransition.size(); i++) {
+	finalMachine->push_back(qTransition[pStart.first - 1].second);
+	for (int i = 0; (unsigned)i < qTransition.size(); i++) {
 		if ((pStart.first - 1) != i)
-			lastNodes.push_back(qTransition[i].second);
+			finalMachine->push_back(qTransition[i].second);
 	}
-	return lastNodes;
-
 }
 
 void DfaMinimizer :: addClosure(Closure* clo) {
@@ -161,7 +160,6 @@ bool DfaMinimizer :: removeClosure(Closure* clo) {
 	for (auto it = this->closures.begin(); it != this->closures.end(); it++) {
 				  if ((*it)->getNumber() == clo->getNumber()) {
 					  this->closures.erase(it);
-					  //delete *it;
 					  return true;
 				  }
 			}
@@ -171,9 +169,9 @@ bool DfaMinimizer :: checkSameTrans(DfaNode* ele1, DfaNode* ele2) {
 	if (ele1->getEdges().size() != ele2->getEdges().size()) {
 		return false;
 	}
-	for (int i = 0; i < ele1->getEdges().size(); ++i) {
+	for (unsigned i = 0; i < ele1->getEdges().size(); ++i) {
 		int flag = 0;
-		for (int j = 0; j < ele2->getEdges().size(); ++j) {
+		for (unsigned j = 0; j < ele2->getEdges().size(); ++j) {
 				if (ele1->getEdges()[i]->equals(ele2->getEdges()[j])) {
 					if (getNumByNode(ele1->getEdges()[i]->get_target_node()) ==
 							getNumByNode(ele2->getEdges()[j]->get_target_node())) {
@@ -200,8 +198,8 @@ void DfaMinimizer :: initTwoClosures(DfaNode *nonMinimizedDfa, Closure *clS, Clo
 }
 
 int  DfaMinimizer :: getNumByNode(DfaNode* node) {
-	for (int i = 0; i != this->closures.size(); i++) {
-		for (int j = 0 ; j < this->closures[i]->getElements().size(); j++) {
+	for (unsigned i = 0; i != this->closures.size(); i++) {
+		for (unsigned j = 0 ; j < this->closures[i]->getElements().size(); j++) {
 			if (this->closures[i]->getElements()[j] == node ) {
 				return this->closures[i]->getNumber();
 			}
@@ -218,7 +216,7 @@ vector<Closure*> DfaMinimizer ::  getClosures(){
 
 int DfaMinimizer::getNumOfUnfinishedClos() {
 	int count = 0;
-	for (int i = 0; i < this->closures.size(); i++) {
+	for (unsigned i = 0; i < this->closures.size(); i++) {
 		if (!this->closures[i]->isFinished()) {
 			count++;
 		}

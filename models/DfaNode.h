@@ -33,6 +33,7 @@ public:
 
     bool valid_transition(char c);
     DfaNode* do_transition(char c);
+    ~DfaNode();
 };
 
 #endif //COMPILERS_DFANODE_H
