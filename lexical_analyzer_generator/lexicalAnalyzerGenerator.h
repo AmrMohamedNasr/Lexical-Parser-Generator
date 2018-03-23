@@ -22,7 +22,7 @@ class LexicalAnalyzerGenerator {
 		NfaDfaConverter converter;
 		DfaMinimizer minimzer;
 	public:
-		Node *generate_lexical_analyzer(string file_name);
+		void generate_lexical_analyzer(string file_name);
 };
 
 

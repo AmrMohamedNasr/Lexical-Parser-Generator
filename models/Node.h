@@ -38,6 +38,7 @@ class Node {
 		void setSupportingNfaNodes(set<Node *> nodes);
 		set<Node*> getSupportedNfaNodes();
 		vector<Edge *> getDfaEdges();
+		static void delete_graph(Node * node);
 };
 
 

@@ -65,6 +65,8 @@ bool DfaMinimizer ::nodeExists(DfaNode *ele) {
 
 
 vector<DfaNode*>DfaMinimizer :: getMinimizedDFA(DfaNode *nonMinimizedDFA) {
+	this->eles.clear();
+	this->closures.clear();
 	queue<DfaNode*> nodes;
 	nodes.push(nonMinimizedDFA);
 	this->eles.push_back(nonMinimizedDFA);

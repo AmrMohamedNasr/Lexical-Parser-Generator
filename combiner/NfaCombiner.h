@@ -20,7 +20,7 @@ class NFACombiner {
          * @param separatedStateAcceptors the separated NFAs from the builder
          * @return a combined NFA for all the separated NFAs.
          */
-        Nfa *getCombinedNfa(vector<Nfa *> *separatedStateAcceptors);
+        Node *getCombinedNfa(vector<Nfa *> *separatedStateAcceptors);
 };
 
 

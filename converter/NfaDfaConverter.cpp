@@ -15,10 +15,11 @@
 
 using namespace std;
 
-static int stateNameCounter = 1;
 
-DfaNode *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa, vector<string> *priorities) {
-    DfaNodeWrapper* start = getDfaStartState(combinedNfa, priorities);
+
+DfaNode * NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa, vector<string> *priorities) {
+	this->stateNameCounter = 1;
+	DfaNodeWrapper* start = getDfaStartState(combinedNfa, priorities);
     start->setStart(true);
 
     set<DfaNodeWrapper*> dfaNodes;
@@ -55,13 +56,19 @@ DfaNode *NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa, vector<string> *
                 DfaEdge *edge = new DfaEdge(startChar, lastChar, node->getDfaNode(), newDfaNode->getDfaNode());
                 node->addDfaEdge(edge);
             } else {
+            	delete newDfaNode;
                 DfaEdge *edge = new DfaEdge(startChar, lastChar, node->getDfaNode(), dfaRepresenter->getDfaNode());
                 node->addDfaEdge(edge);
             }
         }
     }
-
-    return removeRedundantEdges(start->getDfaNode());
+    removeRedundantEdges(start->getDfaNode());
+    std::set<DfaNodeWrapper *>::iterator it;
+	for (it = dfaNodes.begin(); it != dfaNodes.end(); it++) {
+		delete (*it);
+	}
+	Node::delete_graph(combinedNfa);
+    return start->getDfaNode();
 }
 
 DfaNodeWrapper* NfaDfaConverter::getDfaStartState(Node *combinedNfa, vector<string> *priorities) {
@@ -208,7 +215,7 @@ bool NfaDfaConverter::isFound(vector<Edge *> *vector, Edge *&edge) {
     return false;
 }
 
-DfaNode *NfaDfaConverter::removeRedundantEdges(DfaNode *node) {
+void NfaDfaConverter::removeRedundantEdges(DfaNode *node) {
     for (unsigned i = 0; i < node->getEdges().size(); i++) {
         DfaEdge* edge = node->getEdges()[i];
         for (unsigned j = i + 1; j < node->getEdges().size(); j++) {
@@ -221,9 +228,9 @@ DfaNode *NfaDfaConverter::removeRedundantEdges(DfaNode *node) {
         DfaEdge* edge = node->getEdges()[i];
         DfaNode* next = edge->get_target_node();
         if (node != next) {
-            edge->set_target_node(removeRedundantEdges(next));
+        	removeRedundantEdges(next);
+            edge->set_target_node(next);
         }
     }
-    return node;
 }
 

@@ -9,29 +9,28 @@
 
 using namespace std;
 
-//Node * LexicalAnalyzerGenerator::generate_lexical_analyzer(string file_name) {
-//	ifstream inFile;
-//	inFile.open(file_name);
-//	if (!inFile) {
-//	    cout << "Unable to open file " << file_name << endl;
-//	    return nullptr;
-//	}
-//	vector<NfaToken> tokens;
-//	vector<string> errors = this->grammarParser.parse_grammar(&tokens, &inFile);
-//	inFile.close();
-//	if (!errors.empty()) {
-//		cout << "Couldn't build lexical analyzer! File format error :" << endl;
-//		for (unsigned i = 0; i < errors.size(); i++) {
-//			cout << errors[i] << endl;
-//		}
-//		return nullptr;
-//	}
-//	vector<Nfa> nfas = this->builder.get_separated_nfas(tokens);
-//	Node * startNode = this->combiner.getCombinedNfa(nfas).start;
-//	startNode = this->converter.getNonMinimizedDFA(startNode);
-//	startNode = this->minimzer.getMinimizedDFA(startNode);
-//	return startNode;
-//}
+void LexicalAnalyzerGenerator::generate_lexical_analyzer(string file_name) {
+	ifstream inFile;
+	inFile.open(file_name);
+	if (!inFile) {
+	    cout << "Unable to open file " << file_name << endl;
+	}
+	vector<NfaToken> tokens;
+	vector<string> priority;
+	vector<string> errors = this->grammarParser.parse_grammar(&tokens, &priority, &inFile);
+	inFile.close();
+	if (!errors.empty()) {
+		cout << "Couldn't build lexical analyzer! File format error :" << endl;
+		for (unsigned i = 0; i < errors.size(); i++) {
+			cout << errors[i] << endl;
+		}
+	}
+	vector<Nfa *> nfas;
+	this->builder.get_separated_nfas(&nfas, &tokens);
+	Node * startNode = this->combiner.getCombinedNfa(&nfas);
+	DfaNode * dfaStartNode = this->converter.getNonMinimizedDFA(startNode, &priority);
+	//startNode = this->minimzer.getMinimizedDFA(dfaStartNode);
+}
 
 
 

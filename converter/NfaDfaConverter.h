@@ -21,6 +21,7 @@ class NfaDfaConverter {
         DfaNode * getNonMinimizedDFA(Node *combinedNfa, vector<string> *priorities);
 
 private:
+    int stateNameCounter;
     void getEpslonClosure(set<Node*> * nodeSet, Node *node);
 
     string getStateName(set<Node *> *states, vector<string> *priorities);
@@ -39,7 +40,7 @@ private:
 
     bool isFound(vector<Edge *> *vector, Edge *&edge);
 
-    DfaNode *removeRedundantEdges(DfaNode *node);
+    void removeRedundantEdges(DfaNode *node);
 };
 
 

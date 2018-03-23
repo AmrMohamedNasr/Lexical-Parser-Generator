@@ -84,7 +84,7 @@ void test_nfa_builder() {
     	correctTokensPnt.push_back(&correctTokens[i]);
     }
     vector<Nfa *> nfas;
-	nfaBuilder.get_separated_nfas(&nfas, &correctTokensPnt);
+	nfaBuilder.get_separated_nfas(&nfas, &correctTokens);
     // size of nfas should be 18
     bool error = false;
     if (nfas.size() != 18) {

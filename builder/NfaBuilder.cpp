@@ -108,9 +108,9 @@ Nfa * NfaBuilder::construct_positive_closure_nfa(Nfa * a) {
     return nfa;
 }
 
-void NfaBuilder::get_separated_nfas(vector<Nfa *> *nfas,vector<NfaToken *> *nfa_tokens) {
-    for (NfaToken*& nfaToken : (*nfa_tokens)) {
-        nfas->push_back(build_graph(nfaToken));
+void NfaBuilder::get_separated_nfas(vector<Nfa *> *nfas,vector<NfaToken> *nfa_tokens) {
+    for (NfaToken& nfaToken : (*nfa_tokens)) {
+        nfas->push_back(build_graph(&nfaToken));
     }
 }
 
