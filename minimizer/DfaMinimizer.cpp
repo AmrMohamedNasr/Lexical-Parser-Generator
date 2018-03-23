@@ -112,64 +112,42 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 	int max = 2;
 	while ( counter > 0) {
 		while (max > 0) {
-//			map<string, PartitionSet*> setMap;
-//			vector<int> flags;
-//			for (unsigned i = 0;
-//					i < this->partitionSets[max - 1]->getElements().size(); i++) {
-//				string key="";
-//				for (unsigned j = 0;
-//						j < this->partitionSets[max - 1]->getElements(
-//								)[i]->getEdges().size(); j++) {
-//					key += std::to_string(getNumByNode(this->partitionSets[max - 1]->getElements(
-//								)[i]->getEdges()[j]->get_target_node()));
-//					cout << key << endl;
-//				}
-//				map<string,PartitionSet*>::const_iterator it = (setMap.find(key));
-//				if ( (it) != setMap.end()) {
-//					PartitionSet *temp = new PartitionSet(
-//								this->partitionSets[max -1]->getNumber());
-//					temp->addEle(this->partitionSets[max -1]->getElements()[i]);
-//					setMap.insert(pair <string , PartitionSet*> (key, temp));
-//					flags.push_back(1);
-//				} else {
-//					(*it).second->addEle(
-//							this->partitionSets[max -1]->getElements()[i]);
-//
-//				}
-//
-//			}
-//			if (setMap.size() == 1) {
-//				(*setMap.begin()).second->setFinished(true);
-//			}
-//			map <string, PartitionSet*> :: const_iterator itr;
-//			for (itr = setMap.begin(); itr != setMap.end(); itr++) {
-//				if ((*itr).second->getElements().size() == 1) {
-//					(*itr).second->setFinished(true);
-//				}
-//				this->addSet((*itr).second);
-//			}
-//			setMap.clear();
-			while (!this->partitionSets[max -1]->getElements().empty()) {
-				DfaNode* tempNode = this->partitionSets[max -1]->getElements().back();
-				PartitionSet *temp = new PartitionSet(this->partitionSets[max -1]->getNumber());
-				temp->addEle(tempNode);
-				int flag = 0;
-				for (unsigned j = 0; j < this->partitionSets[max -1]->getElements().size() - 1;j++) {
-					DfaNode *tempNode2 = this->partitionSets[max -1]->getElements()[j];
-					if (checkSameTrans(tempNode, tempNode2)) {
-						temp->addEle(tempNode2);
-					} else {
-						flag = 1;
-					}
+			map<string, PartitionSet*> setMap;
+			vector<int> flags;
+			for (unsigned i = 0;
+					i < this->partitionSets[max - 1]->getElements().size(); i++) {
+				string key="";
+				for (unsigned j = 0;
+						j < this->partitionSets[max - 1]->getElements(
+								)[i]->getEdges().size(); j++) {
+					key += std::to_string(getNumByNode(this->partitionSets[max - 1]->getElements(
+								)[i]->getEdges()[j]->get_target_node()));
 				}
-				for (unsigned i = 0; i < temp->getElements().size(); i++) {
-					this->partitionSets[max - 1]->removeEle(temp->getElements()[i]);
+				map<string,PartitionSet*>::const_iterator it = (setMap.find(key));
+				if ( (it) == setMap.end()) {
+					PartitionSet *temp = new PartitionSet(
+								this->partitionSets[max -1]->getNumber());
+					temp->addEle(this->partitionSets[max -1]->getElements()[i]);
+					setMap.insert(pair <string , PartitionSet*> (key, temp));
+					flags.push_back(1);
+				} else {
+					(*it).second->addEle(
+							this->partitionSets[max -1]->getElements()[i]);
+
 				}
-				if (flag == 0) {
-					temp->setFinished(true);
-				}
-				this->partitionSets.push_back(temp);
+
 			}
+			if (setMap.size() == 1) {
+				(*setMap.begin()).second->setFinished(true);
+			}
+			map <string, PartitionSet*> :: const_iterator itr;
+			for (itr = setMap.begin(); itr != setMap.end(); itr++) {
+				if ((*itr).second->getElements().size() == 1) {
+					(*itr).second->setFinished(true);
+				}
+				this->addSet((*itr).second);
+			}
+			setMap.clear();
 			this->removeSet(this->partitionSets[max -1]);
 			max--;
 		}
@@ -256,16 +234,6 @@ void DfaMinimizer :: initTwoSets(DfaNode *nonMinimizedDfa, PartitionSet *clS, Pa
 }
 
 int  DfaMinimizer :: getNumByNode(DfaNode* node) {
-//	for (unsigned i = 0; i != this->partitionSets.size(); i++) {
-//		for (unsigned j = 0 ; j < this->partitionSets[i]->getElements().size(); j++) {
-//			if (this->partitionSets[i]->getElements()[j] == node ) {
-//				return this->partitionSets[i]->getNumber();
-//			}
-//		}
-//
-//	}
-//	cout << "error"<< endl;
-//	// error TODO to be handled
 	return node->getParentSet()->getNumber();
 }
 vector<PartitionSet*> DfaMinimizer ::  getSet(){

@@ -68,11 +68,27 @@ void minimizer_test_3() {
 	if ((result[0]->getEdges()[1]->get_target_node(
 			)->getEdges()[1]->get_target_node()->getName()) != "U"){
 				cout << "error5" << endl;
-		}
+	}
 	if ((result[0]->getEdges()[0]->get_target_node(
 				)->getEdges()[1]->get_target_node()->getName()) != "W"){
 					cout << "error5" << endl;
-			}
+	}
+
+	if ((result[0]->getEdges()[0]->get_target_node(
+					)->getEdges()[1]->get_target_node()->getEdges()[1]->
+					get_target_node()->getName()) != "V"){
+						cout << "error5" << endl;
+	}
+
+	if ((result[0]->getEdges()[0]->get_target_node(
+						)->getEdges()[1]->get_target_node()->getEdges()[1]->
+						get_target_node()->getEdges()[0]->get_target_node()->getName()) != "Y" &&
+			(result[0]->getEdges()[0]->get_target_node(
+				)->getEdges()[1]->get_target_node()->getEdges()[1]->
+				get_target_node()->getEdges()[1]->get_target_node()->getName()) != "Y"){
+							cout << "error5" << endl;
+		}
+
 	if ((z->getEdges()[0]->get_target_node()) != result[0]){
 				cout << "error hna" << endl;
 	}
