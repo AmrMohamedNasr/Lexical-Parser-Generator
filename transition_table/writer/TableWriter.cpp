@@ -5,9 +5,7 @@
 #include <iostream>
 #include "TableWriter.h"
 
-void TableWriter::writeTransitionTableInHumanReadableFormat(TransitionTable table, ostream stream) {
-    string toBeWritten = "";
-
+void TableWriter::writeTransitionTableInHumanReadableFormat(TransitionTable table, ostream* stream) {
     vector<DfaNode *> nodes = table.getNodes();
     vector<string> input = table.getInputs();
     vector<vector<DfaNode *>> transitions = table.getTransitions();
@@ -16,27 +14,31 @@ void TableWriter::writeTransitionTableInHumanReadableFormat(TransitionTable tabl
     }
     nodes[nodes.size() - 1]->sePrintingtName("phi");
 
-    toBeWritten += "states\\input\t\t";
+    *stream << "states\\input\t\t";
     for (int i = 0; i < input.size(); ++i) {
-        toBeWritten += (input[i] + "\t");
+        *stream << (input[i] + "\t");
     }
-    toBeWritten += "isAccepted\tAcceptanceName\tisStart";
+    *stream << "isAccepted\tAcceptanceName\tisStart\n";
     for (int i = 0; i < transitions.size(); ++i) {
-        toBeWritten += nodes[i]->getPrintingName() + "\t\t";
+        *stream << nodes[i]->getPrintingName() + "\t\t";
         for (int j = 0; j < input.size(); ++j) {
-            toBeWritten += transitions[i][j]->getPrintingName() + "\t";
+            *stream << transitions[i][j]->getPrintingName() + "\t";
         }
-        toBeWritten += nodes[i]->isAcceptedState() ? "YES\t" + nodes[i]->getName() + "\t" : "NO\tNONE\t";
-        toBeWritten += nodes[i]->isStart() ? "YES" : "NO";
-        toBeWritten += '\n';
+        if (nodes[i]->isAcceptedState() ) {
+            *stream << "YES\t" + nodes[i]->getName() + "\t";
+        } else {
+            *stream << "NO\tNONE\t";
+        }
+        if (nodes[i]->isStart() ) {
+            *stream << "YES";
+        } else {
+            *stream << "NO";
+        }
+        *stream << '\n';
     }
-
-    stream << toBeWritten;
 }
 
-void TableWriter::writeTransitionTableInReadableForamt(TransitionTable table, ostream stream) {
-    string toBeWritten = "";
-
+void TableWriter::writeTransitionTableInReadableForamt(TransitionTable table, ostream* stream) {
     vector<DfaNode *> nodes = table.getNodes();
     vector<string> input = table.getInputs();
     vector<vector<DfaNode *>> transitions = table.getTransitions();
@@ -45,31 +47,29 @@ void TableWriter::writeTransitionTableInReadableForamt(TransitionTable table, os
     }
     nodes[nodes.size() - 1]->sePrintingtName("phi");
 
-    toBeWritten += std::to_string(nodes.size()) + "\n";
+    *stream << std::to_string(nodes.size()) + "\n";
     for (int i = 0; i < nodes.size(); ++i) {
-        toBeWritten += nodes[i]->isAcceptedState() ? "1 " : "0 ";
+        *stream << nodes[i]->isAcceptedState() ? "1 " : "0 ";
     }
-    toBeWritten += "\n";
+    *stream << "\n";
 
     for (int i = 0; i < nodes.size(); ++i) {
-        toBeWritten += nodes[i]->isStart() ? "1 " : "0 ";
+        *stream << nodes[i]->isStart() ? "1 " : "0 ";
     }
-    toBeWritten += "\n";
+    *stream << "\n";
 
     for (int i = 0; i < nodes.size(); ++i) {
-        toBeWritten += nodes[i]->getName() + "\n";
+        *stream << nodes[i]->getName() + "\n";
     }
-    toBeWritten += "\n";
 
-    toBeWritten += std::to_string(input.size()) + "\n";
+    *stream << std::to_string(input.size()) + "\n";
     for (int i = 0; i < input.size(); ++i) {
-        toBeWritten += input[i] + "\n";
+        *stream << input[i] + "\n";
     }
-    toBeWritten += "\n";
+
     for (int i = 0; i < transitions.size(); ++i) {
         for (int j = 0; j < transitions[i].size(); ++j) {
-            toBeWritten += transitions[i][j]->getPrintingName() + "\n";
+            *stream << transitions[i][j]->getPrintingName() + "\n";
         }
     }
-
 }

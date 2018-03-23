@@ -7,6 +7,7 @@
 
 TransitionTable TableBuilder::buildTransitionTable(vector<DfaNode *> nodes, vector<char> alphabets) {
     DfaNode* phi = new DfaNode("Phi", false);
+    phi->sePrintingtName("Phi");
     nodes.push_back(phi);
 
     vector<vector<DfaNode*>> transitions;
@@ -19,7 +20,7 @@ TransitionTable TableBuilder::buildTransitionTable(vector<DfaNode *> nodes, vect
         transitions[transitions.size() - 1].push_back(phi); // under any input phi goes to itself
     }
 
-    for (int i = 0; i < transitions.size(); i++) {
+    for (int i = 0; i < transitions.size() - 1; i++) {
         for (int j = 0; j < alphabets.size(); j++) {
             char input = alphabets[j];
             if (nodes[i]->valid_transition(input)) {
@@ -31,7 +32,8 @@ TransitionTable TableBuilder::buildTransitionTable(vector<DfaNode *> nodes, vect
     }
     vector<string> alphaStrings;
     for (int k = 0; k < alphabets.size(); ++k) {
-        alphaStrings.push_back(alphabets[k] + "-" + alphabets[k]);
+        char c = alphabets[k];
+        alphaStrings.push_back(string(1, c) + "-" + string(1, c));
     }
 
     vector<string> newInputs;
@@ -51,7 +53,7 @@ void TableBuilder::minimizeTable(vector<vector<DfaNode *>> transtions, vector<st
         if (find(removed.begin(), removed.end(), i) != removed.end()) break;
         for (int j = i + 1; j < alphabets.size(); ++j) {
             bool flag = true;
-            for (int k = 0; k < transtions.size() - 1; ++k) {
+            for (int k = 0; k < transtions.size(); ++k) {
                 if (transtions[k][i] != transtions[k][j]) {
                     flag = false;
                     break;
@@ -72,16 +74,13 @@ void TableBuilder::minimizeTable(vector<vector<DfaNode *>> transtions, vector<st
         newInputs->push_back(input);
     }
 
-    for (int i = 0; i < transtions.size() - 1; i++) {
+    for (int i = 0; i < transtions.size() ; i++) {
         vector<DfaNode *> vec;
         newTransitions->push_back(vec);
         for (int j = 0; j < alphabets.size(); j++) {
             if (find(removed.begin(), removed.end(), j) != removed.end()) break;
             (*newTransitions)[i].push_back(transtions[i][j]);
         }
-    }
-    for (int i = 0; i < newInputs->size(); ++i) {
-        (*newTransitions)[(*newTransitions).size() - 1].push_back(transtions[transtions.size() - 1][0]);
     }
 }
 

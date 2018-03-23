@@ -10,6 +10,7 @@ vector<DfaNode *> TableDeconstructor::deconstructGraph(TransitionTable table) {
     vector<string> input;
     vector<vector<DfaNode * >> transitions;
 
+    DfaNode* phi = nodes[nodes.size() - 1];
     for (int i = 0; i < input.size(); ++i) {
         string singleInput = input[i];
         for (int j = 0; j < singleInput.length(); j += 3) {
@@ -18,11 +19,12 @@ vector<DfaNode *> TableDeconstructor::deconstructGraph(TransitionTable table) {
                 DfaNode* target = transitions[k][i];
                 char s = singleInput[j];
                 char t = singleInput[j + 2];
-                DfaEdge* edge = new DfaEdge(s, t, start, target);
-                start->addEdge(edge);
+                if (target != phi && start != phi) {
+                    DfaEdge* edge = new DfaEdge(s, t, start, target);
+                    start->addEdge(edge);
+                }
             }
         }
     }
-
     return nodes;
 }
