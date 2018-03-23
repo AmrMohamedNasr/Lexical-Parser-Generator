@@ -13,7 +13,12 @@ void test_node(void);
 void test_grammar_parser(void);
 void test_minimizer(void);
 void test_nfa_builder(void);
-void test_nfa_dfa_converter();
+void test_nfa_dfa_converter(void);
+void test_transition_table_builder(void);
+void test_transition_table_writer_human_form(void);
+void test_transition_table_writer_readable_form(void);
+void test_transition_table_reader(void);
+void test_transition_table_deconstructor(void);
 
 
 #endif /* P1_TESTS_H_ */

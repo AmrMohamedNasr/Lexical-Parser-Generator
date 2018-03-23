@@ -5,13 +5,17 @@
 #ifndef COMPILERS_TABLEBUILDER_H
 #define COMPILERS_TABLEBUILDER_H
 
-
 #include "../model/TransitionTable.h"
 #include "../../models/DfaNode.h"
 
 class TableBuilder {
 public:
-    TransotionTable buildTransitionTable(vector<DfaNode *> nodes, vector <char> alphabets);
+    TransitionTable buildTransitionTable(vector<DfaNode *> nodes, vector <char> alphabets);
+
+    void minimizeTable(vector<vector<DfaNode *>> nodes, vector<string> alphabets, vector<string> *pVector,
+                           vector<vector<DfaNode *>> *pVector1);
+
+    string mergeInputs(string s1, string s2);
 };
 
 
