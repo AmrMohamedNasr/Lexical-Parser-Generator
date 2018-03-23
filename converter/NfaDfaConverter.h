@@ -18,26 +18,26 @@ class NfaDfaConverter {
          * @param combinedNfa the combined NFA from the combiner
          * @return a non minimized DFA from the given NFA.
          */
-        DfaNode * getNonMinimizedDFA(Node *combinedNfa, vector<string> priorities);
+        DfaNode * getNonMinimizedDFA(Node *combinedNfa, vector<string> *priorities);
 
 private:
-    set<Node*> getEpslonClosure(Node *node);
+    void getEpslonClosure(set<Node*> * nodeSet, Node *node);
 
-    string getStateName(set<Node *> states, vector<string> priorities);
+    string getStateName(set<Node *> *states, vector<string> *priorities);
 
-    bool getIsAccepted(set<Node *> states);
+    bool getIsAccepted(set<Node *> *states);
 
-    vector<Edge *> getEdges(set<Node *> states);
+    void getEdges(vector<Edge *> *edgeSet, set<Node *> *states);
 
-    DfaNodeWrapper * getDfaStartState(Node *combinedNfa, vector<string> priorities);
+    DfaNodeWrapper * getDfaStartState(Node *combinedNfa, vector<string> *priorities);
 
-    DfaNodeWrapper * getEpslonClosureFromSet(set<Node *> states, vector<string> priorities);
+    DfaNodeWrapper * getEpslonClosureFromSet(set<Node *> *states, vector<string> *priorities);
 
-    DfaNodeWrapper* setContainsState(set<DfaNodeWrapper *> states, DfaNodeWrapper *node);
+    DfaNodeWrapper* setContainsState(set<DfaNodeWrapper *> *states, DfaNodeWrapper *node);
 
     bool representingSameNfa(DfaNodeWrapper *n1, DfaNodeWrapper *n2);
 
-    bool isFound(vector<Edge *> vector, Edge *&edge);
+    bool isFound(vector<Edge *> *vector, Edge *&edge);
 
     DfaNode *removeRedundantEdges(DfaNode *node);
 };

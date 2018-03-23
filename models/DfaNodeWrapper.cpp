@@ -8,8 +8,8 @@ DfaNode * DfaNodeWrapper::getDfaNode() {
     return this->node;
 }
 
-void DfaNodeWrapper::setNfaEdges(vector<Edge *> edges) {
-    this->nfaEdges = edges;
+void DfaNodeWrapper::setNfaEdges(vector<Edge *> *edges) {
+    this->nfaEdges = *edges;
 }
 
 vector<Edge *> DfaNodeWrapper::getNfaEdges() {
@@ -20,8 +20,8 @@ void DfaNodeWrapper::addDfaEdge(DfaEdge *edge) {
     this->node->addEdge(edge);
 }
 
-void DfaNodeWrapper::setSupportingNfaNodes(set<Node *> nodes) {
-    this->supportingNodes = nodes;
+void DfaNodeWrapper::setSupportingNfaNodes(set<Node *> *nodes) {
+    this->supportingNodes = *nodes;
 }
 
 set<Node *> DfaNodeWrapper::getSupportedNfaNodes() {

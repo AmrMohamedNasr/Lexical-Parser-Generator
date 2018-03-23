@@ -16,7 +16,7 @@ private:
     set<Node *> supportingNodes;
 
 public:
-    void setNfaEdges(vector <Edge*> edges);
+    void setNfaEdges(vector <Edge*> *edges);
     vector <Edge*> getNfaEdges();
 
     void addDfaEdge(DfaEdge* edge);
@@ -24,7 +24,7 @@ public:
     void setDfaNode(DfaNode* dfaNode);
     DfaNode* getDfaNode();
 
-    void setSupportingNfaNodes(set<Node *> nodes);
+    void setSupportingNfaNodes(set<Node *> *nodes);
     set<Node*> getSupportedNfaNodes();
 
     void setStart(bool isStart);

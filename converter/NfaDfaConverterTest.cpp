@@ -110,8 +110,12 @@ void test_nfa_dfa_converter() {
     n25.addEdge(&e28);
 
     NfaDfaConverter converter;
-//    DfaNode* node = converter.getNonMinimizedDFA(&n16);
-//    node->getEdges();
+    vector<string> correctPriority = {
+    		";", ",", "(", ")", "{", "}", "boolean", "int", "float", "if" , "else", "while", "id", "num",
+    		"relop", "assign", "addop", "mulop"
+    };
+    DfaNode* node = converter.getNonMinimizedDFA(&n16, &correctPriority);
+    node->getEdges();
 
 }
 
