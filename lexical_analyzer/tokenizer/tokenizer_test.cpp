@@ -58,7 +58,7 @@ void tokenizer_test_1() {
 
 
     string s1 = "";
-    string s2 = "10101010";
+    string s2 = "1010101 10101110";
     string s3 = "10101110";
     tokenizer->tokenize(s1);
     int i = 0;
@@ -78,17 +78,21 @@ void tokenizer_test_1() {
     }
 
     int i2 = 0;
-    string expectedClasses2[] = {"n7-end", "n5-end", "n1-end"};
-    string expectedLexemes2[] = {"10", "01", "110"};
-    TOKEN_TYPE expectedTypes2[] = {REAL_TOKEN, ERROR_TOKEN, REAL_TOKEN};
+    string expectedClasses2[] = {"n7-end", "n1-end"};
+    string expectedLexemes2[] = {"1010101", "10101110"};
+    TOKEN_TYPE expectedTypes2[] = {REAL_TOKEN, REAL_TOKEN};
 
     tokenizer->tokenize(s2);
     while (tokenizer->hasNext()) {
         Token t = tokenizer->nextToken();
 
-        if (t.lexme != expectedLexemes2[i] || t.token_class != expectedClasses2[i]
-            || t.type != expectedTypes2[i]) {
-            cout << "Tokenizer: test 2 error: " << i;
+        if (t.lexme != expectedLexemes2[i2] || t.token_class != expectedClasses2[i2]
+            || t.type != expectedTypes2[i2]) {
+            cout << "Tokenizer: test 2 error: " << i2 << endl;
+            cout << "Lexeme:\n Expected: " << expectedLexemes2[i2] << ", Actual: " << t.lexme << endl;
+            cout << "Class:\n Expected: " << expectedClasses2[i2] << ", Actual: " << t.token_class << endl;
+            cout << "Type:\n Expected: " << expectedTypes2[i2] << ", Actual: " << t.type << endl;
+
             error = true;
         }
 

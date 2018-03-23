@@ -48,7 +48,7 @@ void Tokenizer::tokenize(string str) {
 				error_routine = true;
 				err_buf += buf.empty() ? temp:buf.at(0);
 			}
-			i -= last_accept_inc;
+			i -= last_accept_inc + 1;
 			lastAccepted = nullptr;
 			cur = this->machine;
 			buf = "";
