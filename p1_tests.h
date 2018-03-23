@@ -17,6 +17,8 @@ void test_nfa_dfa_converter(void);
 void test_transition_table_builder(void);
 void test_transition_table_writer_human_form(void);
 void test_transition_table_writer_readable_form(void);
+void test_transition_table_reader(void);
+void test_transition_table_deconstructor(void);
 
 
 #endif /* P1_TESTS_H_ */

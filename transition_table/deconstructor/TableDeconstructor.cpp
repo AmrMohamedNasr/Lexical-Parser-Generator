@@ -6,9 +6,9 @@
 #include "../../models/DfaEdge.h"
 
 vector<DfaNode *> TableDeconstructor::deconstructGraph(TransitionTable table) {
-    vector<DfaNode * > nodes;
-    vector<string> input;
-    vector<vector<DfaNode * >> transitions;
+    vector<DfaNode * > nodes = table.getNodes();
+    vector<string> input = table.getInputs();
+    vector<vector<DfaNode * >> transitions = table.getTransitions();
 
     DfaNode* phi = nodes[nodes.size() - 1];
     for (int i = 0; i < input.size(); ++i) {

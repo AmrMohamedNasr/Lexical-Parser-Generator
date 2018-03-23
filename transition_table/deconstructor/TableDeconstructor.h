@@ -10,6 +10,7 @@
 #include "../model/TransitionTable.h"
 
 class TableDeconstructor {
+public:
     vector<DfaNode *> deconstructGraph(TransitionTable table);
 };
 

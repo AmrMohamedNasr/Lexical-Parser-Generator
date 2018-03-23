@@ -66,14 +66,13 @@ void test_transition_table_writer_human_form(void) {
 
     std::streambuf * buf;
     std::ofstream of;
-//    of.open("file.txt");
-//    buf = of.rdbuf();
-    buf = std::cout.rdbuf();
+    of.open("file1.txt");
+    buf = of.rdbuf();
+//    buf = std::cout.rdbuf();
     std::ostream out(buf);
 
     TableWriter writer;
     writer.writeTransitionTableInHumanReadableFormat(table, &out);
-//    cout << s;
 }
 
 void test_transition_table_writer_readable_form(void) {
@@ -131,12 +130,11 @@ void test_transition_table_writer_readable_form(void) {
 
     std::streambuf * buf;
     std::ofstream of;
-//    of.open("file.txt");
-//    buf = of.rdbuf();
-    buf = std::cout.rdbuf();
+    of.open("file2.txt");
+    buf = of.rdbuf();
+//    buf = std::cout.rdbuf();
     std::ostream out(buf);
 
     TableWriter writer;
     writer.writeTransitionTableInReadableForamt(table, &out);
-//    cout << s;
 }

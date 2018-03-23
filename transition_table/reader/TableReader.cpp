@@ -38,8 +38,8 @@ TransitionTable* TableReader::readTransitionTable(ifstream *stream) {
 
         for (int i = 0; i < nodes.size(); i++) {
             if (i < line.length()) {
-                if (line[i] == 0) nodes[i]->setAcceptState(false);
-                else if (line[i] == 1) nodes[i]->setAcceptState(true);
+                if (line[i] == '0') nodes[i]->setAcceptState(false);
+                else if (line[i] == '1') nodes[i]->setAcceptState(true);
             } else {
                 cout << "ERROR: In Line 2" << endl;
                 return nullptr;
@@ -53,8 +53,8 @@ TransitionTable* TableReader::readTransitionTable(ifstream *stream) {
 
         for (int i = 0; i < nodes.size(); i++) {
             if (i < line.length()) {
-                if (line[i] == 0) nodes[i]->setStart(false);
-                else if (line[i] == 1) nodes[i]->setStart(true);
+                if (line[i] == '0') nodes[i]->setStart(false);
+                else if (line[i] == '1') nodes[i]->setStart(true);
             } else {
                 cout << "ERROR: In Line 3" << endl;
                 return nullptr;
