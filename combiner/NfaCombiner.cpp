@@ -14,9 +14,10 @@ Node * NFACombiner::getCombinedNfa(vector<Nfa * > * separatedStateAcceptors) {
             first = false;
             final = nfa;
         } else {
-            final = nfaBuilder.construct_or_nfa(final, nfa);
+            final = nfaBuilder.combine_nfa(final, nfa);
         }
     }
     Node * res = final->start;
+    delete final;
     return res;
 }

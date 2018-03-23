@@ -62,6 +62,23 @@ Nfa * NfaBuilder::construct_or_nfa(Nfa * a, Nfa * b) {
     return nfa;
 }
 
+Nfa* NfaBuilder::combine_nfa(Nfa *a, Nfa *b) {
+	Node* oldAStart = a->start;
+	Node* oldBStart = b->start;
+
+	auto newStart = new Node(!ACCEPT_STATE);
+	newStart->addEdge(new Edge(EPS, EPS, oldAStart));
+	newStart->addEdge(new Edge(EPS, EPS, oldBStart));
+
+	auto nfa = new Nfa();
+	nfa->start = newStart;
+
+	delete a;
+	delete b;
+
+	return nfa;
+}
+
 Nfa * NfaBuilder::construct_and_nfa(Nfa * a, Nfa * b) {
     Node* oldAStart = a->start;
     Node* oldAEnd = a->end;
