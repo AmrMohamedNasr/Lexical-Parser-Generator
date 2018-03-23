@@ -21,4 +21,9 @@ void run_tests() {
 	test_minimizer();
 	test_nfa_builder();
     test_nfa_dfa_converter();
+	test_transition_table_builder();
+    test_transition_table_writer_human_form();
+    test_transition_table_writer_readable_form();
+	test_transition_table_reader();
+    test_transition_table_deconstructor();
 }

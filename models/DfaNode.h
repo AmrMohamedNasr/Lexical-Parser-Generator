@@ -14,6 +14,7 @@ class DfaEdge;
 class DfaNode {
 private:
     string name;
+    string printingName;
     vector<DfaEdge *> edges;
     bool acceptedState;
 //    set<Node *> supportingNodes;
@@ -21,6 +22,7 @@ private:
     bool start;
 public:
     bool isAcceptedState();
+    void setAcceptState(bool accept);
 
     bool isStart();
     void setStart(bool isStart);
@@ -30,6 +32,9 @@ public:
 
     string getName();
     void setName(string name);
+
+    string getPrintingName();
+    void sePrintingtName(string printingName);
 
     vector<DfaEdge *> getEdges();
     void addEdge(DfaEdge * e);

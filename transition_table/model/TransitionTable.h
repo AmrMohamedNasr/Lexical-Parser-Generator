@@ -6,8 +6,20 @@
 #define COMPILERS_TRANSOTIONTABLE_H
 
 
-class TransotionTable {
+#include "../../models/DfaNode.h"
 
+class TransitionTable {
+private:
+    vector<DfaNode *> nodes;
+    vector<string> inputs;
+    vector<vector<DfaNode*>> transitions;
+
+public:
+    TransitionTable(vector<DfaNode *> nodes, vector<string> inputs,
+                                            vector<vector<DfaNode *>> transitions);
+    vector<DfaNode *> getNodes();
+    vector<string> getInputs();
+    vector<vector<DfaNode*>> getTransitions();
 };
 
 
