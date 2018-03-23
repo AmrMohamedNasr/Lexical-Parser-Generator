@@ -56,6 +56,9 @@ Nfa * NfaBuilder::construct_or_nfa(Nfa * a, Nfa * b) {
     nfa->start = newStart;
     nfa->end = newEnd;
 
+    delete a;
+    delete b;
+
     return nfa;
 }
 
@@ -80,6 +83,9 @@ Nfa * NfaBuilder::construct_and_nfa(Nfa * a, Nfa * b) {
     auto nfa = new Nfa();
     nfa->start = newStart;
     nfa->end = newEnd;
+
+    delete a;
+    delete b;
 
     return nfa;
 }

@@ -21,4 +21,5 @@ void run_tests() {
 	test_minimizer();
 	test_nfa_builder();
     test_nfa_dfa_converter();
+	test_tokenizer();
 }
