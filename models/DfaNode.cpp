@@ -63,3 +63,11 @@ DfaNode *DfaNode::do_transition(char c) {
     }
     return nullptr;
 }
+
+string DfaNode::getPrintingName() {
+    return this->printingName;
+}
+
+void DfaNode::sePrintingtName(string printingName) {
+    this->printingName = printingName;
+}

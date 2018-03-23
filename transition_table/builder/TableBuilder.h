@@ -10,11 +10,11 @@
 
 class TableBuilder {
 public:
-    TransotionTable buildTransitionTable(vector<DfaNode *> nodes, vector <char> alphabets);
+    TransitionTable buildTransitionTable(vector<DfaNode *> nodes, vector <char> alphabets);
 
-    void minimizeTable(vector<vector<DfaNode *>> nodes, vector <string> alphabets);
+    void minimizeTable(vector<vector<DfaNode *>> nodes, vector<string> alphabets, vector<string> *pVector,
+                           vector<vector<DfaNode *>> *pVector1);
 
-private:
     string mergeInputs(string s1, string s2);
 };
 

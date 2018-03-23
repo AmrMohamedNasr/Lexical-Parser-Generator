@@ -5,7 +5,7 @@
 #include <algorithm>
 #include "TableBuilder.h"
 
-TransotionTable TableBuilder::buildTransitionTable(vector<DfaNode *> nodes, vector<char> alphabets) {
+TransitionTable TableBuilder::buildTransitionTable(vector<DfaNode *> nodes, vector<char> alphabets) {
     DfaNode* phi = new DfaNode("Phi", false);
     nodes.push_back(phi);
 
@@ -33,14 +33,18 @@ TransotionTable TableBuilder::buildTransitionTable(vector<DfaNode *> nodes, vect
     for (int k = 0; k < alphabets.size(); ++k) {
         alphaStrings.push_back(alphabets[k] + "-" + alphabets[k]);
     }
-    minimizeTable(transitions, alphaStrings);
-    return TransotionTable();
+
+    vector<string> newInputs;
+    vector<vector<DfaNode*>> newTransitions;
+
+    minimizeTable(transitions, alphaStrings, &newInputs, &newTransitions);
+    return TransitionTable(nodes, newInputs, newTransitions);
 }
 
-void TableBuilder::minimizeTable(vector<vector<DfaNode *>> transtions, vector<string> alphabets) {
+void TableBuilder::minimizeTable(vector<vector<DfaNode *>> transtions, vector<string> alphabets,
+                                 vector<string> *newInputs, vector<vector<DfaNode *>> *newTransitions) {
     vector<int> removed;
     vector<vector<int>> depend;
-    vector<string> newInputs;
     for (int i = 0; i < alphabets.size(); ++i) {
         vector<int> vec;
         depend.push_back(vec);
@@ -55,6 +59,7 @@ void TableBuilder::minimizeTable(vector<vector<DfaNode *>> transtions, vector<st
             }
             if (flag) {
                 depend[i].push_back(j);
+                removed.push_back(j);
             }
         }
     }
@@ -62,12 +67,30 @@ void TableBuilder::minimizeTable(vector<vector<DfaNode *>> transtions, vector<st
     for (int i = 0; i < depend.size(); ++i) {
         string input = alphabets[i];
         for (int j = 0; j < depend[i].size(); ++j) {
-//            input = mergeInputs(input, alphabets[depend[i][j]]);
+            input = mergeInputs(input, alphabets[depend[i][j]]);
         }
-        newInputs.push_back(input);
+        newInputs->push_back(input);
+    }
+
+    for (int i = 0; i < transtions.size() - 1; i++) {
+        vector<DfaNode *> vec;
+        newTransitions->push_back(vec);
+        for (int j = 0; j < alphabets.size(); j++) {
+            if (find(removed.begin(), removed.end(), j) != removed.end()) break;
+            (*newTransitions)[i].push_back(transtions[i][j]);
+        }
+    }
+    for (int i = 0; i < newInputs->size(); ++i) {
+        (*newTransitions)[(*newTransitions).size() - 1].push_back(transtions[transtions.size() - 1][0]);
     }
 }
 
-string mergeInputs(string s1, string s2) {
-
+string TableBuilder::mergeInputs(string s1, string s2) {
+    char c2 = s2[0];
+    if (c2 == (s1[s1.length() - 1] + 1)) {
+        s1[s1.length() - 1] = c2;
+    } else {
+        s1 += s2;
+    }
+    return s1;
 }

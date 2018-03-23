@@ -6,8 +6,12 @@
 #define COMPILERS_TABLEWRITER_H
 
 
-class TableWriter {
+#include <fstream>
+#include "../model/TransitionTable.h"
 
+class TableWriter {
+public:
+    void writeTransitionTable(TransitionTable table, ostream stream);
 };
 
 
