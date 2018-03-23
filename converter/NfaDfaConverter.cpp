@@ -67,7 +67,7 @@ DfaNode * NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa, vector<string> 
 	for (it = dfaNodes.begin(); it != dfaNodes.end(); it++) {
 		delete (*it);
 	}
-	Node::delete_graph(combinedNfa);
+	//Node::delete_graph(combinedNfa);
     return start->getDfaNode();
 }
 

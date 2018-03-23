@@ -97,6 +97,7 @@ void test_grammar_parser(void) {
 	GrammarParser gp;
 	vector<NfaToken> regTokens;
 	vector<string> priorites;
+	set<char> alpha;
 	bool error = false;
 	ifstream infile;
 	infile.open("./test_files/grammar_parser/correct_rules.txt");
@@ -104,7 +105,7 @@ void test_grammar_parser(void) {
 		cout << "GRAMMAR PARSER TEST : COULDN\"T OPEN WANTED FILE" << endl;
 		return;
 	}
-	if (!gp.parse_grammar(&regTokens, &priorites, &infile).empty()) {
+	if (!gp.parse_grammar(&regTokens, &priorites, &infile, &alpha).empty()) {
 		cout << "ERROR DETECTED IN RIGHT PROGRAM!!" << endl;
 		error = true;
 	}
@@ -136,7 +137,7 @@ void test_grammar_parser(void) {
 			cout << "GRAMMAR PARSER TEST : COULDN\"T OPEN WANTED FILE" << endl;
 			return;
 		}
-		vector<string> errors = gp.parse_grammar(&regTokens, &priorites, &infile);
+		vector<string> errors = gp.parse_grammar(&regTokens, &priorites, &infile, &alpha);
 		if (errors.empty()) {
 			cout << "NO ERROR DETECTED IN WRONG PROGRAM!!" << endl;
 			error = true;

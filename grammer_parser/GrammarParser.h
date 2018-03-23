@@ -13,6 +13,7 @@
 #include <fstream>
 #include <regex>
 #include <string>
+#include <set>
 #include "../models/NfaToken.h"
 
 using namespace std;
@@ -24,7 +25,7 @@ class GrammarParser {
 		static const regex keyWordRegex;
 		static const regex punctRegex;
 	public:
-		vector<string> parse_grammar(vector<NfaToken> *tokens , vector<string> * priorites, ifstream * grammar_stream);
+		vector<string> parse_grammar(vector<NfaToken> *tokens , vector<string> * priorites, ifstream * grammar_stream, set<char> *alphabet);
 };
 
 

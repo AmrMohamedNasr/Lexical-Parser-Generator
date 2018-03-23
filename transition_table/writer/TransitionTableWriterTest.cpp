@@ -54,12 +54,12 @@ void test_transition_table_writer_human_form(void) {
     vector<DfaNode*> result;
     g.getMinimizedDFA(&result, x);
 
-    vector<char> alphabets;
-    alphabets.push_back('0');
-    alphabets.push_back('1');
+    set<char> alphabets;
+    alphabets.insert('0');
+    alphabets.insert('1');
 
     TableBuilder builder;
-    TransitionTable table = builder.buildTransitionTable(result, alphabets);
+    TransitionTable table = builder.buildTransitionTable(result, &alphabets);
 
     vector<DfaNode *> nodes = table.getNodes();
     vector<string> input = table.getInputs();
@@ -119,12 +119,12 @@ void test_transition_table_writer_readable_form(void) {
     vector<DfaNode*> result;
     g.getMinimizedDFA(&result, x);
 
-    vector<char> alphabets;
-    alphabets.push_back('0');
-    alphabets.push_back('1');
+    set<char> alphabets;
+    alphabets.insert('0');
+    alphabets.insert('1');
 
     TableBuilder builder;
-    TransitionTable table = builder.buildTransitionTable(result, alphabets);
+    TransitionTable table = builder.buildTransitionTable(result, &alphabets);
 
     vector<DfaNode *> nodes = table.getNodes();
     vector<string> input = table.getInputs();

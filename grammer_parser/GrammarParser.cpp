@@ -10,6 +10,7 @@
 #include <regex>
 #include <stack>
 #include <list>
+#include <set>
 #include "../string_utils/StringUtils.h"
 
 const regex GrammarParser::regDefRegex = regex("\\s*([A-Za-z][A-Za-z0-9_]*)\\s*=\\s*(.*)$");
@@ -20,7 +21,7 @@ const regex GrammarParser::punctRegex = regex("\\s*\\[((?:\\s*[^\\s]*\\s*)*)]\\s
 string filter_string(string str);
 bool isReservedSymbol(char c);
 bool escapeReserved(string str, bool regOps, vector<string> *errors, unsigned line_n);
-vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniToken>> mapOfDefinitions);
+vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniToken>> mapOfDefinitions, set<char> * alphabet);
 vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool * error,  vector<string> *errors, unsigned line_n);
 bool valid_postfix(vector<MiniToken> tokens, vector<string>* errors, unsigned line_n);
 bool is_operation_char(char c);
@@ -28,8 +29,24 @@ char nonspacechar_before(string str, unsigned i);
 char nonspacechar_after(string str, unsigned i);
 bool is_parenthesis(char c);
 void add_error(unsigned line_n, string error, vector<string> *errors);
+void add_to_alphabet(set<char> * alphabet, MiniToken *token);
 
-vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, vector<string> *priorities, ifstream * grammar_stream) {
+void add_to_alphabet(set<char> * alphabet, MiniToken *token) {
+	if (token->type == CHAR_GROUP) {
+		char strt = token->tok[0];
+		char endt = token->tok[2];
+		for (char i = strt; i <= endt; i++) {
+			alphabet->insert(i);
+		}
+	} else if (token->type == WORD) {
+		string str = token->tok;
+		for (unsigned i = 0; i < str.size(); i++) {
+			alphabet->insert(str.at(i));
+		}
+	}
+}
+
+vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, vector<string> *priorities, ifstream * grammar_stream, set<char> *alphabet) {
 	string line;
 	vector<string> errors;
 	map<string, vector<MiniToken>> mapOfDefinitions;
@@ -52,6 +69,7 @@ vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, vector<str
 					for (unsigned i = 0; i < tokens.size(); i++) {
 						NfaToken token (PUNCTUATION, tokens[i]);
 						MiniToken mtoken (WORD, tokens[i]);
+						add_to_alphabet(alphabet, &mtoken);
 						token.tokens.push_back(mtoken);
 						punctPr.push_back(token.tokenName);
 						result->push_back(token);
@@ -68,6 +86,7 @@ vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, vector<str
 					for (unsigned i = 0; i < tokens.size(); i++) {
 						NfaToken token (KEYWORD, tokens[i]);
 						MiniToken mtoken (WORD, tokens[i]);
+						add_to_alphabet(alphabet, &mtoken);
 						token.tokens.push_back(mtoken);
 						keyPr.push_back(token.tokenName);
 						result->push_back(token);
@@ -81,7 +100,7 @@ vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, vector<str
 				if (!escapeReserved(tokenRegex, true, &errors, line_number)) {
 					continue;
 				} else {
-					vector<MiniToken> tokens = regular_expression_split(tokenRegex, mapOfDefinitions);
+					vector<MiniToken> tokens = regular_expression_split(tokenRegex, mapOfDefinitions, alphabet);
 					bool error = false;
 					regular_expression_postfix(tokens, &error, &errors, line_number);
 					if (error) {
@@ -99,7 +118,7 @@ vector<string> GrammarParser::parse_grammar(vector<NfaToken> *result, vector<str
 					continue;
 				} else {
 					bool error = false;
-					vector<MiniToken> tokens = regular_expression_postfix(regular_expression_split(tokenRegex, mapOfDefinitions), &error, &errors, line_number);
+					vector<MiniToken> tokens = regular_expression_postfix(regular_expression_split(tokenRegex, mapOfDefinitions, alphabet), &error, &errors, line_number);
 					if (error) {
 						continue;
 					}
@@ -228,7 +247,7 @@ bool isReservedSymbol(char c) {
 					  || c == '(' || c == ')' || c == ':');
 }
 
-vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniToken>> mapOfDefinitions) {
+vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniToken>> mapOfDefinitions, set<char> * alphabet) {
 	vector<MiniToken> res;
 	for (unsigned i = 0; i < str.length(); i++) {
 		string k = "";
@@ -249,7 +268,9 @@ vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniTo
 			char temp = nonspacechar_after(str, i + 1);
 			k += temp;
 			i = str.find(temp, i);
-			res.push_back(MiniToken(CHAR_GROUP, k));
+			MiniToken mtoken(CHAR_GROUP, k);
+			res.push_back(mtoken);
+			add_to_alphabet(alphabet, &mtoken);
 		} else {
 			bool collecting_token = true;
 			bool add_eps = false;
@@ -288,7 +309,9 @@ vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniTo
 					}
 					res.push_back(MiniToken(PARENTHESES, ")"));
 				} else {
-					res.push_back(MiniToken(WORD, k));
+					MiniToken mtoken (WORD,k);
+					add_to_alphabet(alphabet, &mtoken);
+					res.push_back(mtoken);
 				}
 			}
 			if (add_eps) {

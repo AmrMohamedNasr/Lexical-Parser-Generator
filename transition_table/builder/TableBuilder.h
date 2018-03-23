@@ -10,7 +10,7 @@
 
 class TableBuilder {
 public:
-    TransitionTable buildTransitionTable(vector<DfaNode *> nodes, vector <char> alphabets);
+    TransitionTable buildTransitionTable(vector<DfaNode *> nodes, set <char> *alphabets);
 
     void minimizeTable(vector<vector<DfaNode *>> nodes, vector<string> alphabets, vector<string> *pVector,
                            vector<vector<DfaNode *>> *pVector1);
