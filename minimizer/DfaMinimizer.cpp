@@ -12,6 +12,25 @@
 #include <algorithm>
 #include <queue>
 
+void sort_node_edges(DfaNode * node);
+bool compare_dfa_edge(DfaEdge *a, DfaEdge *b) {
+	if (a->get_first_allowed_char() < b->get_first_allowed_char()) {
+		return true;
+	} else if (a->get_first_allowed_char() == b->get_first_allowed_char()) {
+		if (a->get_last_allowed_char() < b->get_last_allowed_char()) {
+			return true;
+		} else if (a->get_last_allowed_char() == b->get_last_allowed_char()) {
+			return a->get_disallowed_chars().size() <= b->get_disallowed_chars().size();
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+}
+void sort_node_edges(DfaNode * node) {
+	 std::sort( node->getRealEdges()->begin(), node->getRealEdges()->end(), &compare_dfa_edge);
+}
 vector<DfaNode*> PartitionSet:: getElements() {
 	return this->elements;
 }
@@ -60,25 +79,6 @@ bool DfaMinimizer ::nodeExists(DfaNode *ele) {
 	return false;
 }
 
-
-//bool compareEdges (const DfaEdge * lhs, const DfaEdge * rhs) {
-//	if (lhs->allowing_range != rhs->allowing_range) {
-//		return lhs->allowing_range < rhs->allowing_range;
-//	}
-//	for (unsigned i = 0; i < lhs->disallowed_chars.size(); i++) {
-//			if (lhs->disallowed_chars[i] != rhs->disallowed_chars[i]) {
-//				return lhs->disallowed_chars[i] > rhs->disallowed_chars[i];
-//			}
-//	}
-//	if (lhs->first_allowed_char != rhs->first_allowed_char) {
-//		return lhs->first_allowed_char < rhs->first_allowed_char;
-//	}
-//	if (lhs->last_allowed_char != rhs->last_allowed_char) {
-//		return lhs->last_allowed_char > rhs->last_allowed_char;
-//	}
-//	return true;
-//}
-
 void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *nonMinimizedDFA) {
 	this->eles.clear();
 	this->partitionSets.clear();
@@ -86,18 +86,16 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 	nodes.push(nonMinimizedDFA);
 	this->eles.push_back(nonMinimizedDFA);
 	while (!nodes.empty()) {
-		for (unsigned j = 0; j < nodes.front()->getEdges().size(); ++j) {
-			if (!nodeExists(nodes.front()->getEdges()[j]->get_target_node())) {
-				nodes.push(nodes.front()->getEdges()[j]->get_target_node());
-				this->eles.push_back(nodes.front()->getEdges()[j]->get_target_node());
+		DfaNode * node = nodes.front();
+		for (unsigned j = 0; j < node->getEdges().size(); ++j) {
+			if (!nodeExists(node->getEdges()[j]->get_target_node())) {
+				nodes.push(node->getEdges()[j]->get_target_node());
+				this->eles.push_back(node->getEdges()[j]->get_target_node());
 			}
 		}
+		sort_node_edges(node);
 		nodes.pop();
 	}
-//	for(unsigned i = 0; i < this->eles.size(); i++) {
-//		sort(this->eles[i]->getEdges().begin(),
-//				this->eles[i]->getEdges().end(), compareEdges);
-//	}
 	int count = 1;
 	PartitionSet *setS = new PartitionSet(count++);
 	PartitionSet *setF = new PartitionSet(count++);

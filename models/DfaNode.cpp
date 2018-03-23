@@ -64,3 +64,7 @@ DfaNode::~DfaNode() {
 		delete this->edges[i];
 	}
 }
+
+vector<DfaEdge *> *DfaNode::getRealEdges() {
+	return &this->edges;
+}
