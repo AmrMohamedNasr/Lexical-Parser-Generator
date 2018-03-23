@@ -9,10 +9,6 @@ bool DfaNode::isAcceptedState() {
     return this->acceptedState;
 }
 
-void DfaNode::setAcceptState(bool newState) {
-    this->acceptedState = newState;
-}
-
 DfaNode :: DfaNode(string stateName, bool accept) {
 	this->acceptedState = accept;
 	this->name = stateName;

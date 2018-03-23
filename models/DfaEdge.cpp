@@ -50,14 +50,6 @@ DfaNode* DfaEdge::do_transition(char c) {
     }
 }
 
-bool DfaEdge::is_eps_transition() {
-    return this->first_allowed_char == '\0' && this->last_allowed_char == '\0';
-}
-
-int DfaEdge::getAllowedRange() {
-    return this->allowing_range;
-}
-
 bool DfaEdge::valid_transition(char c) {
 //    if (find(this->disallowed_chars.begin(), this->disallowed_chars.end(), c) != this->disallowed_chars.end()) {
 //        return false;

@@ -18,7 +18,6 @@ private:
     bool start;
 public:
     bool isAcceptedState();
-    void setAcceptState(bool newState);
 
     bool isStart();
     void setStart(bool isStart);

@@ -22,27 +22,14 @@ vector<Edge *> Node::getEdges() {
 	return this->edges;
 }
 
-vector<Edge *> Node::getDfaEdges() {
-	return this->dfaEdges;
-}
 
 void Node::addEdge(Edge * e) {
 	this->edges.push_back(e);
 }
 
-void Node::addDfaEdge(Edge * e) {
-	this->dfaEdges.push_back(e);
-}
-
 Node::Node(string stateName, bool accept) {
 	this->acceptedState = accept;
 	this->name = stateName;
-}
-
-Node::Node(string stateName, bool accept, vector<Edge *> edges) {
-	this->acceptedState = accept;
-	this->name = stateName;
-	this->edges = edges;
 }
 
 
@@ -52,14 +39,6 @@ Node::Node(bool accept) {
 
 void Node::setAcceptState(bool newState) {
 	this->acceptedState = newState;
-}
-
-void Node::setSupportingNfaNodes(set<Node *> nodes) {
-	this->supportingNodes = nodes;
-}
-
-set<Node *> Node::getSupportedNfaNodes() {
-	return this->supportingNodes;
 }
 
 void Node::delete_graph(Node * node) {

@@ -82,8 +82,5 @@ bool  Edge :: equals(Edge* edge) {
 			(this->get_last_allowed_char() == edge->get_last_allowed_char());
 }
 
-void Edge :: set_target_node(Node * node) {
-	this->target_node = node;
-}
 
 

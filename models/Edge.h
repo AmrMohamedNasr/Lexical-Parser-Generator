@@ -20,7 +20,6 @@ class Edge {
     public:
         Node * do_transition(char c);
         Node *get_target_node();
-        void set_target_node(Node * node);
         char get_first_allowed_char();
         char get_last_allowed_char();
         vector<char> get_disallowed_chars();

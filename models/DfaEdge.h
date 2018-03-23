@@ -23,10 +23,8 @@ public:
     char get_first_allowed_char();
     char get_last_allowed_char();
     vector<char> get_disallowed_chars();
-    bool is_eps_transition(void);
     bool valid_transition(char c);
     void disallow_character_sequence(char s, char t);
-    int getAllowedRange();
     bool equals(DfaEdge* edge);
     DfaEdge(char start, char end, DfaNode* source, DfaNode* target);
 
