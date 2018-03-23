@@ -49,6 +49,7 @@ void Tokenizer::tokenize(string str) {
 				err_buf += temp;
 			}
 			i -= last_accept_inc;
+			lastAccepted = nullptr;
 			cur = this->machine;
 			buf = "";
 		}
