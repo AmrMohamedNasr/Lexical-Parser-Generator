@@ -12,7 +12,7 @@ class TableBuilder {
 public:
     TransitionTable buildTransitionTable(vector<DfaNode *> nodes, set <char> *alphabets);
 
-    void minimizeTable(vector<vector<DfaNode *>> nodes, vector<string> alphabets, vector<string> *pVector,
+    void minimizeTable(vector<vector<DfaNode *>> *nodes, set<char> *alphabets, vector<string> *pVector,
                            vector<vector<DfaNode *>> *pVector1);
 
     string mergeInputs(string s1, string s2);

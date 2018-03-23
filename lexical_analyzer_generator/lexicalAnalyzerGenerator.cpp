@@ -37,9 +37,11 @@ void LexicalAnalyzerGenerator::generate_lexical_analyzer(string file_name) {
 	this->minimzer.getMinimizedDFA(&finalMachine, dfaStartNode);
 	TransitionTable table = this->tableBuilder.buildTransitionTable(finalMachine, &alpha);
 	streambuf *buf;
-	ofstream of;
-	of.open(handle_file_name_extension(file_name));
-	if (!of) {
+	ofstream of, of2;
+	string fileName = handle_file_name_extension(file_name);
+	of.open(fileName);
+	of2.open("H_" + fileName);
+	if (!of || !of2) {
 		cout << "Couldn't write in output file \"" + handle_file_name_extension(file_name) + "\"" << endl;
 	} else {
 		buf = of.rdbuf();
@@ -47,13 +49,16 @@ void LexicalAnalyzerGenerator::generate_lexical_analyzer(string file_name) {
 		streambuf *cbuf;
 		cbuf = cout.rdbuf();
 		ostream cons (cbuf);
+		streambuf *f2buf;
+		f2buf = of2.rdbuf();
+		ostream outFileH(f2buf);
 		this->tableWriter.writeTransitionTableInHumanReadableFormat(table, &cons);
+		this->tableWriter.writeTransitionTableInHumanReadableFormat(table, &outFileH);
 		this->tableWriter.writeTransitionTableInReadableForamt(table, &outFile);
 	}
 	vector<DfaNode *> rem_nodes = table.getNodes();
 	for (auto i = rem_nodes.begin(); i != rem_nodes.end(); i++) {
 		delete (*i);
-		i = rem_nodes.erase(i);
 	}
 }
 
