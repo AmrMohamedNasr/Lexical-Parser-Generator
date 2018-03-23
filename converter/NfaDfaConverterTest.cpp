@@ -25,7 +25,7 @@ void test_nfa_dfa_converter() {
     Node n17 = Node("17", false);
     Node n18 = Node("18", false);
     Node n19 = Node("19", false);
-    Node n20 = Node("20_operation", true);
+    Node n20 = Node("relop", true);
     Node n21 = Node("21", false);
     Node n22 = Node("22", false);
     Node n23 = Node("id", true);
@@ -111,8 +111,7 @@ void test_nfa_dfa_converter() {
 
     NfaDfaConverter converter;
     vector<string> correctPriority = {
-    		";", ",", "(", ")", "{", "}", "boolean", "int", "float", "if" , "else", "while", "id", "num",
-    		"relop", "assign", "addop", "mulop"
+    		"if", "then", "else", "relop", "id", "num"
     };
     DfaNode* node = converter.getNonMinimizedDFA(&n16, &correctPriority);
     node->getEdges();
