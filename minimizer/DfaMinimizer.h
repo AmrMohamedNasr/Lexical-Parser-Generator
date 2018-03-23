@@ -11,7 +11,7 @@
 #include "../models/DfaNode.h"
 
 
-
+class DfaNode;
 class PartitionSet {
 	private:
 		vector<DfaNode*> elements;

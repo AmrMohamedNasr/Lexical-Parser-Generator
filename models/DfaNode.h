@@ -7,23 +7,34 @@
 
 using namespace std;
 #include "Node.h"
+#include "../minimizer/DfaMinimizer.h"
 
+class PartitionSet;
 class DfaEdge;
 class DfaNode {
 private:
     string name;
+    string printingName;
     vector<DfaEdge *> edges;
     bool acceptedState;
 //    set<Node *> supportingNodes;
+    PartitionSet * parentSet;
     bool start;
 public:
     bool isAcceptedState();
+    void setAcceptState(bool accept);
 
     bool isStart();
     void setStart(bool isStart);
 
+    void setParentSet(PartitionSet * parentSet);
+    PartitionSet *getParentSet();
+
     string getName();
     void setName(string name);
+
+    string getPrintingName();
+    void sePrintingtName(string printingName);
 
     vector<DfaEdge *> getEdges();
     void addEdge(DfaEdge * e);

@@ -10,6 +10,7 @@
 #include <regex>
 #include <stack>
 #include <list>
+#include "../string_utils/StringUtils.h"
 
 const regex GrammarParser::regDefRegex = regex("\\s*([A-Za-z][A-Za-z0-9_]*)\\s*=\\s*(.*)$");
 const regex GrammarParser::regExpRegex = regex("\\s*([A-Za-z][A-Za-z0-9_]*)\\s*:\\s*(.*)$");
@@ -19,7 +20,6 @@ const regex GrammarParser::punctRegex = regex("\\s*\\[((?:\\s*[^\\s]*\\s*)*)]\\s
 string filter_string(string str);
 bool isReservedSymbol(char c);
 bool escapeReserved(string str, bool regOps, vector<string> *errors, unsigned line_n);
-vector<string> split_spaces(string str);
 vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniToken>> mapOfDefinitions);
 vector<MiniToken> regular_expression_postfix(vector<MiniToken> regexp, bool * error,  vector<string> *errors, unsigned line_n);
 bool valid_postfix(vector<MiniToken> tokens, vector<string>* errors, unsigned line_n);
@@ -226,16 +226,6 @@ bool escapeReserved(string str, bool regOps, vector<string> *errors, unsigned in
 bool isReservedSymbol(char c) {
 	return (c == '+' || c == '-' || c == '|' || c == '=' || c == '*'
 					  || c == '(' || c == ')' || c == ':');
-}
-
-vector<string> split_spaces(string str) {
-	string buf;
-	stringstream ss(str);
-	vector<string> tokens;
-	while (ss >> buf) {
-		tokens.push_back(buf);
-	}
-	return tokens;
 }
 
 vector<MiniToken> regular_expression_split(string str, map<string, vector<MiniToken>> mapOfDefinitions) {

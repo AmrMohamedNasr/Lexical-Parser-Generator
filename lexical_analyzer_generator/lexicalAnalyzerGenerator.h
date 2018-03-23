@@ -13,6 +13,8 @@
 #include "../combiner/NfaCombiner.h"
 #include "../converter/NfaDfaConverter.h"
 #include "../minimizer/DfaMinimizer.h"
+#include "../transition_table/builder/TableBuilder.h"
+#include "../transition_table/writer/TableWriter.h"
 
 class LexicalAnalyzerGenerator {
 	private:
@@ -21,6 +23,8 @@ class LexicalAnalyzerGenerator {
 		NFACombiner combiner;
 		NfaDfaConverter converter;
 		DfaMinimizer minimzer;
+		TableBuilder tableBuilder;
+		TableWriter tableWriter;
 	public:
 		void generate_lexical_analyzer(string file_name);
 };
