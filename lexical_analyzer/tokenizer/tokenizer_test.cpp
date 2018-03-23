@@ -60,8 +60,8 @@ void tokenizer_test_1() {
 
 
     string s1 = "";
-    string s2 = "1010101 10101110";
-    string s3 = "10101110";
+    string s2 = "xx1010101x10101110";
+    string s3 = "xx1010101x10101110ss";
     tokenizer->tokenize(s1);
     int i = 0;
     string expectedClasses[] = {"n1-end"};
@@ -80,9 +80,9 @@ void tokenizer_test_1() {
     }
 
     int i2 = 0;
-    string expectedClasses2[] = {"n7-end", "n1-end"};
-    string expectedLexemes2[] = {"1010101", "10101110"};
-    TOKEN_TYPE expectedTypes2[] = {REAL_TOKEN, REAL_TOKEN};
+    string expectedClasses2[] = {"", "n7-end", "" , "n1-end"};
+    string expectedLexemes2[] = {"xx", "1010101", "x", "10101110"};
+    TOKEN_TYPE expectedTypes2[] = {ERROR_TOKEN, REAL_TOKEN, ERROR_TOKEN, REAL_TOKEN};
 
     tokenizer->tokenize(s2);
     while (tokenizer->hasNext()) {
@@ -91,9 +91,9 @@ void tokenizer_test_1() {
         if (t.lexme != expectedLexemes2[i2] || t.token_class != expectedClasses2[i2]
             || t.type != expectedTypes2[i2]) {
             cout << "Tokenizer: test 2 error: " << i2 << endl;
-            cout << "Lexeme:\n Expected: " << expectedLexemes2[i2] << ", Actual: " << t.lexme << endl;
-            cout << "Class:\n Expected: " << expectedClasses2[i2] << ", Actual: " << t.token_class << endl;
-            cout << "Type:\n Expected: " << expectedTypes2[i2] << ", Actual: " << t.type << endl;
+            cout << "Lexeme:\nExpected: " << expectedLexemes2[i2] << ", Actual: " << t.lexme << endl;
+            cout << "Class:\nExpected: " << expectedClasses2[i2] << ", Actual: " << t.token_class << endl;
+            cout << "Type:\nExpected: " << expectedTypes2[i2] << ", Actual: " << t.type << endl;
 
             error = true;
         }
@@ -101,6 +101,27 @@ void tokenizer_test_1() {
         i2++;
     }
 
+    int i3 = 0;
+    string expectedClasses3[] = {"", "n7-end", "" , "n1-end", ""};
+    string expectedLexemes3[] = {"xx", "1010101", "x", "10101110", "ss"};
+    TOKEN_TYPE expectedTypes3[] = {ERROR_TOKEN, REAL_TOKEN, ERROR_TOKEN, REAL_TOKEN, ERROR_TOKEN};
+
+    tokenizer->tokenize(s3);
+    while (tokenizer->hasNext()) {
+        Token t = tokenizer->nextToken();
+
+        if (t.lexme != expectedLexemes3[i3] || t.token_class != expectedClasses3[i3]
+            || t.type != expectedTypes3[i3]) {
+            cout << "Tokenizer: test 3 error: " << i3 << endl;
+            cout << "Lexeme:\nExpected: " << expectedLexemes2[i3] << ", Actual: " << t.lexme << endl;
+            cout << "Class:\nExpected: " << expectedClasses2[i3] << ", Actual: " << t.token_class << endl;
+            cout << "Type:\nExpected: " << expectedTypes2[i3] << ", Actual: " << t.type << endl;
+
+            error = true;
+        }
+
+        i3++;
+    }
 
     if (!error) {
         cout << "Tokenizer Success..." << endl;

@@ -17,48 +17,66 @@ Token Tokenizer::nextToken() {
 }
 
 void Tokenizer::tokenize(string str) {
-	string buf = "";
-	string accepted_buf = "";
-	unsigned last_accept_inc = 0;
-	bool error_routine = false;
-	string err_buf = "";
 	DfaNode * lastAccepted = nullptr;
-	DfaNode * cur = this->machine;
-	char temp;
+	DfaNode * curNode = this->machine;
+	string lastAcceptedBuffer;
+	string errorBuffer;
+	string currentBuffer;
+	unsigned lastAcceptanceEnd = 0;
+	bool isFirstChar = true;
+	bool trackingError = false;
 	for (unsigned i = 0; i < str.length(); i++) {
-		temp = str.at(i);
-		if (cur->valid_transition(temp)) {
-			buf += temp;
-			cur = cur->do_transition(temp);
-			if (cur->isAcceptedState()) {
-				accepted_buf = buf;
-				lastAccepted = cur;
-				last_accept_inc = 0;
+		char c = str.at(i);
+		if (curNode->valid_transition(c)) {
+			isFirstChar = false;
+			if (trackingError) {
+				trackingError = false;
+				this->tokens.push(Token(ERROR_TOKEN, errorBuffer, ""));
+				errorBuffer = "";
 			}
-			last_accept_inc++;
+
+			curNode = curNode->do_transition(c);
+			currentBuffer += c;
+			if (curNode->isAcceptedState()) {
+				lastAccepted = curNode;
+				lastAcceptedBuffer = currentBuffer;
+				lastAcceptanceEnd = i;
+			}
 		} else {
-			if (lastAccepted != nullptr) {
-				if (error_routine) {
-					this->tokens.push(Token(ERROR_TOKEN, err_buf, ""));
-					err_buf = "";
-					error_routine = false;
-				}
-				this->tokens.push(Token(REAL_TOKEN, accepted_buf, lastAccepted->getName()));
+			if (trackingError) { // append to current detected error
+				errorBuffer += c;
 			} else {
-				error_routine = true;
-				err_buf += buf.empty() ? temp:buf.at(0);
+				trackingError = true;
+				if (isFirstChar || i == lastAcceptanceEnd + 1) { // error with first character, remove it and restart
+					errorBuffer += c;
+					curNode = this->machine;
+
+					// if there is a previous acceptance
+					if (!lastAcceptedBuffer.empty()) { // add last valid acceptance
+						this->tokens.push(Token(REAL_TOKEN, lastAcceptedBuffer, lastAccepted->getName()));
+						lastAcceptedBuffer = "";
+						currentBuffer = "";
+					}
+
+				} else {
+					// add last accepted token
+					this->tokens.push(Token(REAL_TOKEN, lastAcceptedBuffer, lastAccepted->getName()));
+					lastAcceptedBuffer = "";
+					currentBuffer = "";
+					// backtrack to start after last valid token
+					i = lastAcceptanceEnd;
+					trackingError = false;
+				}
 			}
-			i -= last_accept_inc + 1;
-			lastAccepted = nullptr;
-			cur = this->machine;
-			buf = "";
 		}
 	}
-	if (error_routine) {
-		this->tokens.push(Token(ERROR_TOKEN, err_buf, ""));
+
+	if (trackingError) {
+		this->tokens.push(Token(ERROR_TOKEN, errorBuffer, ""));
 	}
-	if (lastAccepted != nullptr) {
-		this->tokens.push(Token(REAL_TOKEN, accepted_buf, lastAccepted->getName()));
+
+	if (!lastAcceptedBuffer.empty()) {
+		this->tokens.push(Token(REAL_TOKEN, lastAcceptedBuffer, lastAccepted->getName()));
 	}
 }
 
