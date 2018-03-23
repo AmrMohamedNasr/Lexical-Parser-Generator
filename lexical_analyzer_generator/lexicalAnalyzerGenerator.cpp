@@ -31,6 +31,8 @@ void LexicalAnalyzerGenerator::generate_lexical_analyzer(string file_name) {
 	DfaNode * dfaStartNode = this->converter.getNonMinimizedDFA(startNode, &priority);
 	vector<DfaNode *> finalMachine;
 	this->minimzer.getMinimizedDFA(&finalMachine, dfaStartNode);
+	//TransitionTable table = this->tableBuilder.buildTransitionTable(finalMachine);
+	//this->tableWriter.writeTransitionTableInHumanReadableFormat()
 }
 
 
