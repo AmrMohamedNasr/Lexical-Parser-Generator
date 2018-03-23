@@ -11,7 +11,8 @@
 
 class TableWriter {
 public:
-    void writeTransitionTable(TransitionTable table, ostream stream);
+    void writeTransitionTableInHumanReadableFormat(TransitionTable table, ostream stream);
+    void writeTransitionTableInReadableForamt(TransitionTable table, ostream stream);
 };
 
 

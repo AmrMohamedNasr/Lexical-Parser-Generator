@@ -6,8 +6,11 @@
 #define COMPILERS_TABLEDECONSTRUCTOR_H
 
 
-class TableDeconstructor {
+#include "../../models/DfaNode.h"
+#include "../model/TransitionTable.h"
 
+class TableDeconstructor {
+    vector<DfaNode *> deconstructGraph(TransitionTable table);
 };
 
 
