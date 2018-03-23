@@ -21,6 +21,7 @@ class Tokenizer {
 		Token nextToken();
 		void tokenize(string str);
 		void reset();
+		void setStart(DfaNode * newStart);
 		Tokenizer(DfaNode * start);
 };
 

@@ -57,6 +57,9 @@ void Tokenizer::tokenize(string str) {
 	if (error_routine) {
 		this->tokens.push(Token(ERROR_TOKEN, err_buf, ""));
 	}
+	if (lastAccepted != nullptr) {
+		this->tokens.push(Token(REAL_TOKEN, accepted_buf, lastAccepted->getName()));
+	}
 }
 
 void Tokenizer::reset() {
@@ -67,3 +70,7 @@ Tokenizer::Tokenizer(DfaNode * start) {
 	this->machine = start;
 }
 
+void Tokenizer::setStart(DfaNode * newStart) {
+	this->machine = newStart;
+	this->reset();
+}
