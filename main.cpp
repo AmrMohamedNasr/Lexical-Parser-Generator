@@ -3,12 +3,15 @@
 #include "p1_tests.h"
 #include "models/Node.h"
 #include "converter/NfaDfaConverter.h"
+#include "lexical_analyzer_generator/lexicalAnalyzerGenerator.h"
 
 using namespace std;
 
 void run_tests(void);
 
 int main() {
+	LexicalAnalyzerGenerator generator;
+	generator.generate_lexical_analyzer("rules.txt");
 	run_tests();
     return 0;
 }

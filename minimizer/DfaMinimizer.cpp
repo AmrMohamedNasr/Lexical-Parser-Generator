@@ -65,6 +65,7 @@ bool PartitionSet :: nodeExists(DfaNode *ele) {
 void PartitionSet :: removeEle(DfaNode *ele) {
 	for (unsigned i = 0; i < this->elements.size(); i++) {
 			  if (this->elements[i] == ele) {
+				  delete *(this->elements.begin() + i);
 				  this->elements.erase(this->elements.begin() +i);
 				  return;
 			  }
