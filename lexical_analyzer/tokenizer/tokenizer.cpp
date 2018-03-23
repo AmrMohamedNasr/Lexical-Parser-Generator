@@ -46,7 +46,7 @@ void Tokenizer::tokenize(string str) {
 				this->tokens.push(Token(REAL_TOKEN, accepted_buf, lastAccepted->getName()));
 			} else {
 				error_routine = true;
-				err_buf += temp;
+				err_buf += buf.empty() ? temp:buf.at(0);
 			}
 			i -= last_accept_inc;
 			lastAccepted = nullptr;
