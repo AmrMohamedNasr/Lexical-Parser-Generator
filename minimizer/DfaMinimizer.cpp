@@ -9,29 +9,28 @@
 #include <utility>
 #include <string.h>
 #include <iostream>
+#include <algorithm>
 #include <queue>
 
 
 
-
-
-vector<DfaNode*> Closure:: getElements() {
+vector<DfaNode*> PartitionSet:: getElements() {
 	return this->elements;
 }
 
-int Closure:: getNumber() {
+int PartitionSet:: getNumber() {
 	return this->number;
 }
 
-void Closure :: setNumber(int number) {
+void PartitionSet :: setNumber(int number) {
 	this->number = number;
 }
-Closure ::Closure(int number) {
+PartitionSet ::PartitionSet(int number) {
 	this->number = number;
 	this->finished = false;
 }
 
-bool Closure :: nodeExists(DfaNode *ele) {
+bool PartitionSet :: nodeExists(DfaNode *ele) {
 	for (auto it = this->elements.begin(); it != this->elements.end(); it++) {
 		  if ((*it) == ele) {
 			  return true;
@@ -40,7 +39,7 @@ bool Closure :: nodeExists(DfaNode *ele) {
 	return false;
 }
 
-void Closure :: removeEle(DfaNode *ele) {
+void PartitionSet :: removeEle(DfaNode *ele) {
 	for (unsigned i = 0; i < this->elements.size(); i++) {
 			  if (this->elements[i] == ele) {
 				  this->elements.erase(this->elements.begin() +i);
@@ -50,7 +49,7 @@ void Closure :: removeEle(DfaNode *ele) {
 
 }
 
-void Closure :: addEle(DfaNode *ele) {
+void PartitionSet :: addEle(DfaNode *ele) {
 	this->elements.push_back(ele);
 }
 
@@ -66,7 +65,7 @@ bool DfaMinimizer ::nodeExists(DfaNode *ele) {
 
 void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *nonMinimizedDFA) {
 	this->eles.clear();
-	this->closures.clear();
+	this->partitionSets.clear();
 	queue<DfaNode*> nodes;
 	nodes.push(nonMinimizedDFA);
 	this->eles.push_back(nonMinimizedDFA);
@@ -80,22 +79,22 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 		nodes.pop();
 	}
 	int count = 1;
-	Closure *clS = new Closure(count++);
-	Closure *clF = new Closure(count++);
-	this->closures.push_back(clS);
-	this->closures.push_back(clF);
-	initTwoClosures(nonMinimizedDFA, clS, clF);
-	int counter = getNumOfUnfinishedClos();
+	PartitionSet *setS = new PartitionSet(count++);
+	PartitionSet *setF = new PartitionSet(count++);
+	this->partitionSets.push_back(setS);
+	this->partitionSets.push_back(setF);
+	initTwoSets(nonMinimizedDFA, setS, setF);
+	int counter = getNumOfUnfinishedSet();
 	int max = 2;
 	while ( counter > 0) {
 		while (max > 0) {
-			while (!this->closures[max -1]->getElements().empty()) {
-				DfaNode* tempNode = this->closures[max -1]->getElements().back();
-				Closure *temp = new Closure(this->closures[max -1]->getNumber());
+			while (!this->partitionSets[max -1]->getElements().empty()) {
+				DfaNode* tempNode = this->partitionSets[max -1]->getElements().back();
+				PartitionSet *temp = new PartitionSet(this->partitionSets[max -1]->getNumber());
 				temp->addEle(tempNode);
 				int flag = 0;
-				for (unsigned j = 0; j < this->closures[max -1]->getElements().size() - 1;j++) {
-					DfaNode *tempNode2 = this->closures[max -1]->getElements()[j];
+				for (unsigned j = 0; j < this->partitionSets[max -1]->getElements().size() - 1;j++) {
+					DfaNode *tempNode2 = this->partitionSets[max -1]->getElements()[j];
 					if (checkSameTrans(tempNode, tempNode2)) {
 						temp->addEle(tempNode2);
 					} else {
@@ -103,31 +102,31 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 					}
 				}
 				for (unsigned i = 0; i < temp->getElements().size(); i++) {
-					this->closures[max - 1]->removeEle(temp->getElements()[i]);
+					this->partitionSets[max - 1]->removeEle(temp->getElements()[i]);
 				}
 				if (flag == 0) {
 					temp->setFinished(true);
 				}
-				this->closures.push_back(temp);
+				this->partitionSets.push_back(temp);
 			}
-			this->removeClosure(this->closures[max -1]);
+			this->removeSet(this->partitionSets[max -1]);
 			max--;
 		}
-		for (unsigned i = 0; i < this->closures.size(); i++) {
-			this->closures[i]->setNumber(i+1);
+		for (unsigned i = 0; i < this->partitionSets.size(); i++) {
+			this->partitionSets[i]->setNumber(i+1);
 		}
-		counter = getNumOfUnfinishedClos();
-		max = this->closures.size();
+		counter = getNumOfUnfinishedSet();
+		max = this->partitionSets.size();
 
 	}
 	vector<pair<int, DfaNode*>> qTransition;
 	pair<int, DfaNode*> pStart = getNodeWithNum(nonMinimizedDFA);
-	for (unsigned i = 0; i < this->closures.size(); i++) {
+	for (unsigned i = 0; i < this->partitionSets.size(); i++) {
 		qTransition.push_back(
-		pair<int, DfaNode*> (this->closures[i]->getNumber(),
-				this->closures[i]->getElements()[0]));
-		for (unsigned j = 1; j < this->closures[i]->getElements().size(); j++) {
-			delete this->closures[i]->getElements()[j];
+		pair<int, DfaNode*> (this->partitionSets[i]->getNumber(),
+				this->partitionSets[i]->getElements()[0]));
+		for (unsigned j = 1; j < this->partitionSets[i]->getElements().size(); j++) {
+			delete this->partitionSets[i]->getElements()[j];
 		}
 	}
 	for (unsigned i = 0; i < qTransition.size(); i++) {
@@ -152,14 +151,14 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 	}
 }
 
-void DfaMinimizer :: addClosure(Closure* clo) {
-	this->closures.push_back(clo);
+void DfaMinimizer :: addSet(PartitionSet* clo) {
+	this->partitionSets.push_back(clo);
 }
 
-bool DfaMinimizer :: removeClosure(Closure* clo) {
-	for (auto it = this->closures.begin(); it != this->closures.end(); it++) {
+bool DfaMinimizer :: removeSet(PartitionSet* clo) {
+	for (auto it = this->partitionSets.begin(); it != this->partitionSets.end(); it++) {
 				  if ((*it)->getNumber() == clo->getNumber()) {
-					  this->closures.erase(it);
+					  this->partitionSets.erase(it);
 					  return true;
 				  }
 			}
@@ -186,7 +185,7 @@ bool DfaMinimizer :: checkSameTrans(DfaNode* ele1, DfaNode* ele2) {
 	}
 	return true;
 }
-void DfaMinimizer :: initTwoClosures(DfaNode *nonMinimizedDfa, Closure *clS, Closure *clF) {
+void DfaMinimizer :: initTwoSets(DfaNode *nonMinimizedDfa, PartitionSet *clS, PartitionSet *clF) {
 	for (auto it = this->eles.begin(); it!= this->eles.end(); ++it) {
 		if ((*it)->isAcceptedState()) {
 			clF->addEle(*it);
@@ -198,10 +197,10 @@ void DfaMinimizer :: initTwoClosures(DfaNode *nonMinimizedDfa, Closure *clS, Clo
 }
 
 int  DfaMinimizer :: getNumByNode(DfaNode* node) {
-	for (unsigned i = 0; i != this->closures.size(); i++) {
-		for (unsigned j = 0 ; j < this->closures[i]->getElements().size(); j++) {
-			if (this->closures[i]->getElements()[j] == node ) {
-				return this->closures[i]->getNumber();
+	for (unsigned i = 0; i != this->partitionSets.size(); i++) {
+		for (unsigned j = 0 ; j < this->partitionSets[i]->getElements().size(); j++) {
+			if (this->partitionSets[i]->getElements()[j] == node ) {
+				return this->partitionSets[i]->getNumber();
 			}
 		}
 
@@ -210,14 +209,14 @@ int  DfaMinimizer :: getNumByNode(DfaNode* node) {
 	// error TODO to be handled
 	return 0;
 }
-vector<Closure*> DfaMinimizer ::  getClosures(){
-	return this->closures;
+vector<PartitionSet*> DfaMinimizer ::  getSet(){
+	return this->partitionSets;
 }
 
-int DfaMinimizer::getNumOfUnfinishedClos() {
+int DfaMinimizer::getNumOfUnfinishedSet() {
 	int count = 0;
-	for (unsigned i = 0; i < this->closures.size(); i++) {
-		if (!this->closures[i]->isFinished()) {
+	for (unsigned i = 0; i < this->partitionSets.size(); i++) {
+		if (!this->partitionSets[i]->isFinished()) {
 			count++;
 		}
 	}
@@ -225,10 +224,10 @@ int DfaMinimizer::getNumOfUnfinishedClos() {
 }
 
 
-bool Closure:: isFinished() {
+bool PartitionSet:: isFinished() {
 	return this->finished;
 }
-void Closure::setFinished(bool finish) {
+void PartitionSet::setFinished(bool finish) {
   this->finished = finish;
 }
 

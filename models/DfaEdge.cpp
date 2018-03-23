@@ -98,6 +98,10 @@ void DfaEdge :: set_target_node(DfaNode* node) {
     this->target_node = node;
 }
 
+int DfaEdge:: get_allowing_range(){
+	return this->allowing_range;
+}
+
 //void DfaEdge::splitEdge(char c) {
 //    if (c > this->last_allowed_char || c < this->first_allowed_char) {
 //        return;

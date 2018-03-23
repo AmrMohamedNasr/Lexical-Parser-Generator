@@ -22,6 +22,7 @@ public:
     void set_target_node(DfaNode* node);
     char get_first_allowed_char();
     char get_last_allowed_char();
+    int get_allowing_range();
     vector<char> get_disallowed_chars();
     bool valid_transition(char c);
     void disallow_character_sequence(char s, char t);

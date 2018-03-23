@@ -12,7 +12,7 @@
 
 
 
-class Closure {
+class PartitionSet {
 	private:
 		vector<DfaNode*> elements;
 		int number;
@@ -23,7 +23,7 @@ class Closure {
 		bool isFinished();
 		void setFinished(bool finish);
 		void setNumber(int number);
-		Closure(int number);
+		PartitionSet(int number);
 		bool nodeExists(DfaNode *ele);
 		void removeEle(DfaNode *ele);
 		void addEle(DfaNode *ele);
@@ -33,13 +33,13 @@ class DfaMinimizer {
 
 	private:
 	    vector<DfaNode*> eles;
-		vector<Closure*> closures;
-		vector<Closure*>  getClosures();
-		void addClosure(Closure* clo);
-		bool removeClosure(Closure* clo);
+		vector<PartitionSet*> partitionSets;
+		vector<PartitionSet*>  getSet();
+		void addSet(PartitionSet* clo);
+		bool removeSet(PartitionSet* clo);
 		bool checkSameTrans(DfaNode* ele1, DfaNode* ele2);
-		void initTwoClosures(DfaNode *nonMinimizedDfa, Closure *clS, Closure *clF);
-		int getNumOfUnfinishedClos();
+		void initTwoSets(DfaNode *nonMinimizedDfa, PartitionSet *setS, PartitionSet *setF);
+		int getNumOfUnfinishedSet();
 		int getNumByNode(DfaNode* node);
 		pair<int, DfaNode*> getNodeWithNum(DfaNode *node);
 		bool nodeExists(DfaNode *node);

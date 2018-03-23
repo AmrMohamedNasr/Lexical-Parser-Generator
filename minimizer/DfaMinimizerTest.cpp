@@ -162,7 +162,7 @@ void test_minimizer(void) {
 	x->addEdge(xy);
 	x->addEdge(xe);
 	DfaMinimizer g;
-	Closure cl(1);
+	PartitionSet cl(1);
 	vector<DfaNode*> result;
 	g.getMinimizedDFA(&result, x);
 
