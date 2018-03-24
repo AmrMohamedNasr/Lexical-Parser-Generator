@@ -4,18 +4,20 @@
 #include "models/Node.h"
 #include "converter/NfaDfaConverter.h"
 #include "lexical_analyzer_generator/lexicalAnalyzerGenerator.h"
+#include "tokens_generator/tokensGenerator.h"
 
 using namespace std;
 
 void run_tests(void);
 
 int main() {
-	LexicalAnalyzerGenerator generator;
-	generator.generate_lexical_analyzer("rules.txt");
-	run_tests();
+//	LexicalAnalyzerGenerator generator;
+//	generator.generate_lexical_analyzer("rules.txt");
+	TokensGenerator tokensGenerator;
+	tokensGenerator.generateTokens("rules.trnstb", "test.txt");
+//	run_tests();
     return 0;
 }
-
 
 void run_tests() {
 	test_edge();

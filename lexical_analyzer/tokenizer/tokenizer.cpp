@@ -59,13 +59,21 @@ void Tokenizer::tokenize(string str) {
 					}
 
 				} else {
-					// add last accepted token
-					this->tokens.push(Token(REAL_TOKEN, lastAcceptedBuffer, lastAccepted->getName()));
-					lastAcceptedBuffer = "";
-					currentBuffer = "";
-					// backtrack to start after last valid token
-					i = lastAcceptanceEnd;
-					trackingError = false;
+					// check if there is an acceptance state
+					if (!lastAcceptedBuffer.empty()) {
+						// add last accepted token
+						this->tokens.push(Token(REAL_TOKEN, lastAcceptedBuffer, lastAccepted->getName()));
+						lastAcceptedBuffer = "";
+						currentBuffer = "";
+						// backtrack to start after last valid token
+						i = lastAcceptanceEnd;
+						trackingError = false;
+					} else { // previous input correct with no acceptance state
+						errorBuffer += currentBuffer;
+						errorBuffer += c;
+						curNode = this->machine;
+					}
+
 				}
 			}
 		}
@@ -87,6 +95,8 @@ void Tokenizer::reset() {
 Tokenizer::Tokenizer(DfaNode * start) {
 	this->machine = start;
 }
+
+Tokenizer::Tokenizer() = default;
 
 void Tokenizer::setStart(DfaNode * newStart) {
 	this->machine = newStart;

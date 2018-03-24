@@ -22,7 +22,8 @@ class Tokenizer {
 		void tokenize(string str);
 		void reset();
 		void setStart(DfaNode * newStart);
-		Tokenizer(DfaNode * start);
+		explicit Tokenizer(DfaNode * start);
+		Tokenizer();
 };
 
 
