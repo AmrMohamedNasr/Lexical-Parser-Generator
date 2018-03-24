@@ -8,6 +8,9 @@
 #include "../transition_table/reader/TableReader.h"
 #include "../transition_table/deconstructor/TableDeconstructor.h"
 #include "../transition_table/writer/TableWriter.h"
+#include "../transition_table/builder/TableBuilder.h"
+#include "../grammer_parser/GrammarParser.h"
+#include "../models/NfaToken.h"
 
 Token LexicalAnalyzer::next_token() {
 	return this->tokenizer.nextToken();
@@ -38,14 +41,11 @@ bool LexicalAnalyzer::read_transition_table(string file_name) {
 		return false;
 	}
 	TransitionTable * table = reader.readTransitionTable(&infile);
-	TableWriter tableWriter;
-	ofstream oy;
-	oy.open("equal");
-	streambuf *f2buf;
-	f2buf = oy.rdbuf();
-	ostream outFileH(f2buf);
-	tableWriter.writeTransitionTableInHumanReadableFormat(*table, &outFileH);
+	if (table == nullptr) {
+		return false;
+	}
 	TableDeconstructor converter;
 	this->tokenizer.setStart(converter.deconstructGraph(*table)[0]);
+	delete table;
 	return true;
 }
