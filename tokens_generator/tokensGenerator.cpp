@@ -7,6 +7,7 @@
 #include "tokensGenerator.h"
 #include "../lexical_analyzer/symbol_table_writer/SymbolTableWriter.h"
 #include "../lexical_analyzer/token_writer/TokenWriter.h"
+#include "../string_utils/StringUtils.h"
 
 using namespace std;
 
@@ -25,14 +26,15 @@ void TokensGenerator::generateTokens(string transitionTableFilePath, string sour
 
     vector<Token> tokens;
     this->fillTokensVector(&tokens);
-
+    string sysName = handle_file_name_extension(sourceProgramFilePath, "sym");
+    string tokName = handle_file_name_extension(sourceProgramFilePath, "token");
     ofstream symbolStreamFile;
-    symbolStreamFile.open("symbols.koko");
+    symbolStreamFile.open(sysName);
     streambuf *buf1 = symbolStreamFile.rdbuf();
     ostream symbolsOut(buf1);
 
     ofstream tokenStream;
-    tokenStream.open("tokens.koko");
+    tokenStream.open(tokName);
     streambuf *buf2 = tokenStream.rdbuf();
     ostream tokensOut(buf2);
 

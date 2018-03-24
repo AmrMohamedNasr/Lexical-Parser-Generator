@@ -7,10 +7,6 @@
 #include "LexicalAnalyzer.h"
 #include "../transition_table/reader/TableReader.h"
 #include "../transition_table/deconstructor/TableDeconstructor.h"
-#include "../transition_table/writer/TableWriter.h"
-#include "../transition_table/builder/TableBuilder.h"
-#include "../grammer_parser/GrammarParser.h"
-#include "../models/NfaToken.h"
 
 Token LexicalAnalyzer::next_token() {
 	return this->tokenizer.nextToken();

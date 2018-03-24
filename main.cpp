@@ -9,12 +9,7 @@
 using namespace std;
 
 void run_tests(void);
-
 int main() {
-	LexicalAnalyzerGenerator generator;
-	generator.generate_lexical_analyzer("rules.txt");
-	TokensGenerator tokensGenerator;
-	tokensGenerator.generateTokens("rules.trnstb", "test.txt");
 	run_tests();
     return 0;
 }
