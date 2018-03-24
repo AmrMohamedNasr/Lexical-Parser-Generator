@@ -15,29 +15,35 @@ void TableWriter::writeTransitionTableInHumanReadableFormat(TransitionTable tabl
     }
     nodes[nodes.size() - 1]->sePrintingtName("phi");
 
-    *stream << setw(20) << "states\\input";
+    *stream << left << setw(20) << "states\\input";
+    *stream << "|";
     for (unsigned i = 0; i < input.size(); ++i) {
         *stream << setw(12) << input[i];
+        *stream << "|";
     }
-    *stream << setw(12) << "isAccepted" << setw(12) << "AcceptanceName" << setw(12) << "isStart\n";
+    *stream << setw(15) << "isAccepted" << "|" << setw(20) << "AcceptanceName" << "|" << setw(7) << "isStart" << "|" << endl;
     for (unsigned i = 0; i < transitions.size(); ++i) {
-        *stream << setw(20) << nodes[i]->getPrintingName();
+        *stream << left << setw(20) << nodes[i]->getPrintingName() << "|";
         for (unsigned j = 0; j < input.size(); ++j) {
-            *stream << setw(12) << transitions[i][j]->getPrintingName();
+        	string temp = transitions[i][j]->getPrintingName();
+        	if (temp == "phi") {
+        		temp = "";
+        	}
+            *stream << setw(12) << temp << "|";
         }
 
         if (nodes[i]->isAcceptedState() ) {
-            *stream << setw(12) << "YES" << setw(12) << nodes[i]->getName();
+            *stream << setw(15) << "YES" << "|"<< setw(20) << nodes[i]->getName()<< "|";
         } else {
-            *stream << setw(12) << "NO" << setw(12) << "NONE";
+            *stream << setw(15) << "NO" << "|" << setw(20) << "NONE" << "|";
         }
 
         if (nodes[i]->isStart() ) {
-            *stream << setw(12) << "YES";
+            *stream << setw(7) << "YES" << "|";
         } else {
-            *stream << setw(12) << "NO";
+            *stream << setw(7) << "NO" << "|";
         }
-        *stream << '\n';
+        *stream << endl;
     }
 }
 
