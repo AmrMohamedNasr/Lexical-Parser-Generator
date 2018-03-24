@@ -137,13 +137,7 @@ string TableReader::getName(string line) {
     string name = "";
     int i = 0;
     while (i < line.length() && line[i] != ' ') {
-        if ((line[i] >= '0' && line[i] <= '9') ||
-            (line[i] >= 'a' && line[i] <= 'z') ||
-            (line[i] >= 'A' && line[i] <= 'Z')) {
-            name += line[i];
-        } else {
-            return nullptr;
-        }
+        name += line[i];
         i++;
     }
     return name;
