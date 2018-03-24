@@ -21,6 +21,9 @@ void test_transition_table_writer_human_form(void) {
     DfaNode * u = new DfaNode("U",true);
     DfaNode * v = new DfaNode("V",true);
     DfaNode * q = new DfaNode("Q",true);
+    vector<string> pri = {
+    		"Y","W","T","U","V", "Q"
+    };
     DfaEdge * xy = new DfaEdge('0', '0', x, y);
     DfaEdge * yz = new DfaEdge('0', '0', y, z);
     DfaEdge * yw = new DfaEdge('1', '1', y, w);
@@ -52,7 +55,7 @@ void test_transition_table_writer_human_form(void) {
 
     DfaMinimizer g;
     vector<DfaNode*> result;
-    g.getMinimizedDFA(&result, x);
+    g.getMinimizedDFA(&result, x, &pri);
 
     set<char> alphabets;
     alphabets.insert('0');
@@ -117,7 +120,10 @@ void test_transition_table_writer_readable_form(void) {
 
     DfaMinimizer g;
     vector<DfaNode*> result;
-    g.getMinimizedDFA(&result, x);
+    vector<string> pri = {
+			"Y","W","T","U","V", "Q"
+	};
+    g.getMinimizedDFA(&result, x, &pri);
 
     set<char> alphabets;
     alphabets.insert('0');
