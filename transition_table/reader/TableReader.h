@@ -12,12 +12,6 @@ class TableReader {
 public:
     TransitionTable * readTransitionTable(ifstream* stream);
 
-    int readInt(string line);
-
-    string getName(string line);
-
-    string getInput(string line);
-
     DfaNode *getNodeFromPrintingName(string name, vector<DfaNode *> nodes);
 };
 

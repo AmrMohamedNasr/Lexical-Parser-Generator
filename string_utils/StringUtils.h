@@ -14,6 +14,6 @@
 using namespace std;
 
 vector<string> split_spaces(string str);
-
+string handle_file_name_extension(string file_name, string ext);
 
 #endif /* STRING_UTILS_STRINGUTILS_H_ */

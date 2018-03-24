@@ -111,12 +111,12 @@ void test_nfa_dfa_converter() {
     n23->addEdge(e26);
     n24->addEdge(e27);
     n25->addEdge(e28);
-
+    set<char> alpha;
     NfaDfaConverter converter;
     vector<string> correctPriority = {
     		"if", "then", "else", "relop", "id", "num"
     };
-    DfaNode* node = converter.getNonMinimizedDFA(n16, &correctPriority);
+    DfaNode* node = converter.getNonMinimizedDFA(n16, &correctPriority, &alpha);
     node->getEdges();
     cout << "Converter Sucess..." << endl;
 }

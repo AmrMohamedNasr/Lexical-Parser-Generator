@@ -37,7 +37,11 @@ bool LexicalAnalyzer::read_transition_table(string file_name) {
 		return false;
 	}
 	TransitionTable * table = reader.readTransitionTable(&infile);
+	if (table == nullptr) {
+		return false;
+	}
 	TableDeconstructor converter;
 	this->tokenizer.setStart(converter.deconstructGraph(*table)[0]);
+	delete table;
 	return true;
 }
