@@ -19,71 +19,47 @@ Token Tokenizer::nextToken() {
 void Tokenizer::tokenize(string str) {
 	DfaNode * lastAccepted = nullptr;
 	DfaNode * curNode = this->machine;
-	string lastAcceptedBuffer;
-	string errorBuffer;
-	string currentBuffer;
+	string lastAcceptedBuffer = "";
+	string errorBuffer = "";
+	string currentBuffer = "";
 	unsigned lastAcceptanceEnd = 0;
-	bool isFirstChar = true;
-	bool trackingError = false;
 	for (unsigned i = 0; i < str.length(); i++) {
 		char c = str.at(i);
 		if (curNode->valid_transition(c)) {
-			isFirstChar = false;
-			if (trackingError) {
-				trackingError = false;
-				this->tokens.push(Token(ERROR_TOKEN, errorBuffer, ""));
-				errorBuffer = "";
-			}
-
 			curNode = curNode->do_transition(c);
 			currentBuffer += c;
 			if (curNode->isAcceptedState()) {
+				lastAcceptanceEnd = i;
 				lastAccepted = curNode;
 				lastAcceptedBuffer = currentBuffer;
-				lastAcceptanceEnd = i;
 			}
 		} else {
-			if (trackingError) { // append to current detected error
-				errorBuffer += c;
+			if (lastAccepted != nullptr) {
+				if (!errorBuffer.empty()) {
+					this->tokens.push(Token(ERROR_TOKEN, errorBuffer, ""));
+					errorBuffer = "";
+				}
+				this->tokens.push(Token(REAL_TOKEN, lastAcceptedBuffer, lastAccepted->getName()));
 			} else {
-				trackingError = true;
-				if (isFirstChar || i == lastAcceptanceEnd + 1) { // error with first character, remove it and restart
+				if (currentBuffer.empty()) {
 					errorBuffer += c;
-					curNode = this->machine;
-
-					// if there is a previous acceptance
-					if (!lastAcceptedBuffer.empty()) { // add last valid acceptance
-						this->tokens.push(Token(REAL_TOKEN, lastAcceptedBuffer, lastAccepted->getName()));
-						lastAcceptedBuffer = "";
-						currentBuffer = "";
-					}
-
+					lastAcceptanceEnd = i;
 				} else {
-					// check if there is an acceptance state
-					if (!lastAcceptedBuffer.empty()) {
-						// add last accepted token
-						this->tokens.push(Token(REAL_TOKEN, lastAcceptedBuffer, lastAccepted->getName()));
-						lastAcceptedBuffer = "";
-						currentBuffer = "";
-						// backtrack to start after last valid token
-						i = lastAcceptanceEnd;
-						trackingError = false;
-					} else { // previous input correct with no acceptance state
-						errorBuffer += currentBuffer;
-						errorBuffer += c;
-						curNode = this->machine;
-					}
-
+					errorBuffer += currentBuffer.at(0);
 				}
 			}
+			i = lastAcceptanceEnd;
+			lastAccepted = nullptr;
+			currentBuffer = "";
+			lastAcceptedBuffer = "";
+			curNode = this->machine;
 		}
 	}
 
-	if (trackingError) {
+	if (!errorBuffer.empty()) {
 		this->tokens.push(Token(ERROR_TOKEN, errorBuffer, ""));
 	}
-
-	if (!lastAcceptedBuffer.empty()) {
+	if (lastAccepted != nullptr) {
 		this->tokens.push(Token(REAL_TOKEN, lastAcceptedBuffer, lastAccepted->getName()));
 	}
 }
