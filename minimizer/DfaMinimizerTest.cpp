@@ -23,6 +23,9 @@ void minimizer_test_3() {
 	DfaNode * u = new DfaNode("U",true);
 	DfaNode * v = new DfaNode("V",true);
 	DfaNode * phi = new DfaNode("", true);
+	vector<string> pri = {
+	    		"Z","U","V",""
+	    };
 	DfaEdge * xy = new DfaEdge('0', '0', x, y);
 	DfaEdge * xz = new DfaEdge('1', '1', x, z);
 	DfaEdge * yy = new DfaEdge('0', '0', y, y);
@@ -58,7 +61,7 @@ void minimizer_test_3() {
 
 	DfaMinimizer g;
 	vector<DfaNode*> result;
-	g.getMinimizedDFA(&result, x);
+	g.getMinimizedDFA(&result, x, &pri);
 	if ((result[0]->getEdges()[0]->get_target_node()->getName()) != "Y"){
 		cout << "error4" << endl;
 	}
@@ -102,6 +105,9 @@ void minimizer_test_2() {
 	DfaNode * z = new DfaNode("Z",true);
 	DfaNode * w = new DfaNode("W",false);
 	DfaNode * t = new DfaNode("T",false);
+	vector<string> pri = {
+	    		"Z"
+	    };
 	DfaEdge * xy = new DfaEdge('0', '0', x, y);
 	DfaEdge * xz = new DfaEdge('1', '1', x, z);
 	DfaEdge * yx = new DfaEdge('0', '0', y, x);
@@ -124,7 +130,7 @@ void minimizer_test_2() {
 	x->addEdge(xz);
 	DfaMinimizer g;
 	vector<DfaNode*> result;
-	g.getMinimizedDFA(&result, x);
+	g.getMinimizedDFA(&result, x,&pri);
 	if ((result[0]->getEdges()[0]->get_target_node()) != result[0]){
 		cout << "error1" << endl;
 	}
@@ -148,6 +154,9 @@ void test_minimizer(void) {
 	DfaNode * u = new DfaNode("U",true);
 	DfaNode * v = new DfaNode("V",true);
 	DfaNode * q = new DfaNode("Q",true);
+	vector<string> pri = {
+	    		"Y","W","T","U","V", "Q"
+	    };
 	DfaNode * e = new DfaNode("\0", false);
 	DfaEdge * xy = new DfaEdge('0', '0', x, y);
 	DfaEdge * xe = new DfaEdge('1', '1', x, e);
@@ -188,7 +197,7 @@ void test_minimizer(void) {
 	DfaMinimizer g;
 	PartitionSet cl(1);
 	vector<DfaNode*> result;
-	g.getMinimizedDFA(&result, x);
+	g.getMinimizedDFA(&result, x,&pri);
 
 	minimizer_test_2();
 

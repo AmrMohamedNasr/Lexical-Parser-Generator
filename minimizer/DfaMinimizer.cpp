@@ -88,7 +88,7 @@ bool DfaMinimizer ::nodeExists(DfaNode *ele) {
 	return false;
 }
 
-void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *nonMinimizedDFA) {
+void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *nonMinimizedDFA, vector<string> *priority) {
 	this->eles.clear();
 	this->partitionSets.clear();
 	queue<DfaNode*> nodes;
@@ -110,12 +110,17 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 
 	int count = 1;
 	PartitionSet *setS = new PartitionSet(count++);
-	PartitionSet *setF = new PartitionSet(count++);
+	vector<PartitionSet *> setsF;
+	for (unsigned i = 0; i < priority->size(); i++) {
+		PartitionSet *setF = new PartitionSet(count++);
+		this->partitionSets.push_back(setF);
+		setsF.push_back(setF);
+	}
+
 	this->partitionSets.push_back(setS);
-	this->partitionSets.push_back(setF);
-	initTwoSets(nonMinimizedDFA, setS, setF);
+	initSets(nonMinimizedDFA, setS, &setsF, priority);
 	int counter = getNumOfUnfinishedSet();
-	int max = 2;
+	int max = 1 + priority->size();
 	// partitioning into sets.
 	while ( counter > 0) {
 		while (max > 0) {
@@ -237,10 +242,14 @@ bool DfaMinimizer :: checkSameTrans(DfaNode* ele1, DfaNode* ele2) {
 	return true;
 }
 
-void DfaMinimizer :: initTwoSets(DfaNode *nonMinimizedDfa, PartitionSet *clS, PartitionSet *clF) {
+void DfaMinimizer :: initSets(DfaNode *nonMinimizedDfa, PartitionSet *clS, vector<PartitionSet *> *clF, vector<string> * priority) {
 	for (auto it = this->eles.begin(); it!= this->eles.end(); ++it) {
 		if ((*it)->isAcceptedState()) {
-			clF->addEle(*it);
+			for (unsigned i = 0; i < priority->size(); i++) {
+				if ((*it)->getName() == priority->at(i)) {
+					(*clF)[i]->addEle(*it);
+				}
+			}
 		} else {
 			clS->addEle(*it);
 		}

@@ -38,7 +38,7 @@ class DfaMinimizer {
 		void addSet(PartitionSet* clo);
 		bool removeSet(PartitionSet* clo);
 		bool checkSameTrans(DfaNode* ele1, DfaNode* ele2);
-		void initTwoSets(DfaNode *nonMinimizedDfa, PartitionSet *setS, PartitionSet *setF);
+		void initSets(DfaNode *nonMinimizedDfa, PartitionSet *setS, vector<PartitionSet *> *setF, vector<string> * priority);
 		int getNumOfUnfinishedSet();
 		int getNumByNode(DfaNode* node);
 		pair<int, DfaNode*> getNodeWithNum(DfaNode *node);
@@ -49,7 +49,7 @@ class DfaMinimizer {
          * @param nonMinimizedDFA the non minimized DFA from the converter
          * @return a minimized DFA from the given non minimized one.
          */
-		void getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *nonMinimizedDFA);
+		void getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *nonMinimizedDFA, vector<string> *priority);
 
 };
 
