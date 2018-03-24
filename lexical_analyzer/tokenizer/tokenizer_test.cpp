@@ -183,9 +183,9 @@ void tokenizer_test_2() {
     }
 
     int i2 = 0;
-    string expectedClasses2[] = {"n3-end", "n4-end"};
-    string expectedLexemes2[] = {"1010101", "111010"};
-    TOKEN_TYPE expectedTypes2[] = {REAL_TOKEN, REAL_TOKEN};
+    string expectedClasses2[] = {"n5-end", "","n4-end", "n2-end"};
+    string expectedLexemes2[] = {"1010101", " ","11101", "0"};
+    TOKEN_TYPE expectedTypes2[] = {REAL_TOKEN, ERROR_TOKEN, REAL_TOKEN, REAL_TOKEN};
 
     tokenizer->tokenize(s2);
     while (tokenizer->hasNext()) {
