@@ -31,7 +31,7 @@ void LexicalAnalyzerGenerator::generate_lexical_analyzer(string file_name) {
 	vector<Nfa *> nfas;
 	this->builder.get_separated_nfas(&nfas, &tokens);
 	Node * startNode = this->combiner.getCombinedNfa(&nfas);
-	DfaNode * dfaStartNode = this->converter.getNonMinimizedDFA(startNode, &priority);
+	DfaNode * dfaStartNode = this->converter.getNonMinimizedDFA(startNode, &priority, &alpha);
 	vector<DfaNode *> finalMachine;
 	this->minimzer.getMinimizedDFA(&finalMachine, dfaStartNode, &priority);
 	TransitionTable table = this->tableBuilder.buildTransitionTable(finalMachine, &alpha);

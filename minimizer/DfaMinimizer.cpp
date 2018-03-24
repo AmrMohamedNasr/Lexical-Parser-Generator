@@ -107,7 +107,6 @@ void DfaMinimizer :: getMinimizedDFA(vector<DfaNode*> * finalMachine, DfaNode *n
 		sort_node_edges(node);
 		nodes.pop();
 	}
-
 	int count = 1;
 	PartitionSet *setS = new PartitionSet(count++);
 	vector<PartitionSet *> setsF;

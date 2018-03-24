@@ -19,7 +19,7 @@ class NfaDfaConverter {
          * @param combinedNfa the combined NFA from the combiner
          * @return a non minimized DFA from the given NFA.
          */
-        DfaNode * getNonMinimizedDFA(Node *combinedNfa, vector<string> *priorities);
+        DfaNode * getNonMinimizedDFA(Node *combinedNfa, vector<string> *priorities, set<char> * alphabet);
 
 private:
     int stateNameCounter;

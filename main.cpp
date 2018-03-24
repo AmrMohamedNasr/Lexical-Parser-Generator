@@ -15,7 +15,7 @@ int main() {
 	generator.generate_lexical_analyzer("rules.txt");
 	TokensGenerator tokensGenerator;
 	tokensGenerator.generateTokens("rules.trnstb", "test.txt");
-//	run_tests();
+	run_tests();
     return 0;
 }
 

@@ -18,7 +18,7 @@ using namespace std;
 
 
 
-DfaNode * NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa, vector<string> *priorities) {
+DfaNode * NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa, vector<string> *priorities, set<char> *alphabet) {
 	this->stateNameCounter = 1;
 	DfaNodeWrapper* start = getDfaStartState(combinedNfa, priorities);
 
@@ -34,33 +34,50 @@ DfaNode * NfaDfaConverter::getNonMinimizedDFA(Node *combinedNfa, vector<string> 
         nonMarkedNodes.pop();
 
         // for every input symbol
-        for (unsigned i = 0; i < node->getNfaEdges().size(); i++) {
-            set<Node*> nextStates;
-            if (node->getNfaEdges()[i]->is_eps_transition()) {
-                continue;
-            }
-            char startChar = node->getNfaEdges()[i]->get_first_allowed_char();
-            char lastChar = node->getNfaEdges()[i]->get_last_allowed_char();
-
-            nextStates.insert(node->getNfaEdges()[i]->do_transition(startChar));
-            for (unsigned j = i + 1; j < node->getNfaEdges().size(); j++) {
-                Edge* e = node->getNfaEdges()[j];
-                if (startChar >= e->get_first_allowed_char() && lastChar <= e->get_last_allowed_char()) {
-                    nextStates.insert(node->getNfaEdges()[j]->do_transition(startChar));
-                }
-            }
-            DfaNodeWrapper* newDfaNode = getEpslonClosureFromSet(&nextStates, priorities);
-            DfaNodeWrapper* dfaRepresenter = setContainsState(&dfaNodes, newDfaNode);
-            if (dfaRepresenter == NULL) {
-            	dfaNodes.insert(newDfaNode);
-                nonMarkedNodes.push(newDfaNode);
-                DfaEdge *edge = new DfaEdge(startChar, lastChar, node->getDfaNode(), newDfaNode->getDfaNode());
-                node->addDfaEdge(edge);
-            } else {
-            	delete newDfaNode;
-                DfaEdge *edge = new DfaEdge(startChar, lastChar, node->getDfaNode(), dfaRepresenter->getDfaNode());
-                node->addDfaEdge(edge);
-            }
+        for (auto cur_in = alphabet->begin(); cur_in != alphabet->end(); cur_in++) {
+			char cur = (*cur_in);
+			set<Node*> nextStates;
+			vector<Edge *> tempEdges = node->getNfaEdges();
+			char end_c = cur;
+        	for (unsigned i = 0; i < tempEdges.size(); i++) {
+				Edge * e = tempEdges[i];
+        		if (e->is_eps_transition()) {
+					continue;
+				}
+				if (e->valid_transition(cur) && nextStates.find(e->do_transition(cur)) == nextStates.end()) {
+					nextStates.insert(e->do_transition(cur));
+				}
+			}
+        	if (nextStates.empty()) {
+        		continue;
+        	}
+        	set<Node*> modifiedState = nextStates;
+        	while(nextStates == modifiedState && end_c >= cur) {
+        		end_c++;
+        		modifiedState.clear();
+        		for (unsigned i = 0; i < tempEdges.size(); i++) {
+					Edge * e = tempEdges[i];
+					if (e->is_eps_transition()) {
+						continue;
+					}
+					if (e->valid_transition(end_c) && modifiedState.find(e->do_transition(end_c)) == modifiedState.end()) {
+						modifiedState.insert(e->do_transition(end_c));
+					}
+				}
+        	}
+        	end_c--;
+        	DfaNodeWrapper* newDfaNode = getEpslonClosureFromSet(&nextStates, priorities);
+			DfaNodeWrapper* dfaRepresenter = setContainsState(&dfaNodes, newDfaNode);
+			if (dfaRepresenter == NULL) {
+				dfaNodes.insert(newDfaNode);
+				nonMarkedNodes.push(newDfaNode);
+				DfaEdge *edge = new DfaEdge(cur, end_c, node->getDfaNode(), newDfaNode->getDfaNode());
+				node->addDfaEdge(edge);
+			} else {
+				delete newDfaNode;
+				DfaEdge *edge = new DfaEdge(cur, end_c, node->getDfaNode(), dfaRepresenter->getDfaNode());
+				node->addDfaEdge(edge);
+			}
         }
     }
     unordered_set <DfaNode*> visited;
@@ -225,8 +242,13 @@ void NfaDfaConverter::removeRedundantEdges(DfaNode *node, unordered_set<DfaNode 
         DfaEdge* edge = node->getEdges()[i];
         for (unsigned j = i + 1; j < node->getEdges().size(); j++) {
             DfaEdge* curr = node->getEdges()[j];
-            curr->disallow_character_sequence(edge->get_first_allowed_char(),
-                                              edge->get_last_allowed_char());
+            if (edge->get_allowing_range() < curr->get_allowing_range()) {
+				curr->disallow_character_sequence(edge->get_first_allowed_char(),
+					  edge->get_last_allowed_char());
+            } else {
+            	edge->disallow_character_sequence(curr->get_first_allowed_char(),
+            						  curr->get_last_allowed_char());
+            }
         }
     }
     visited->insert(node);
