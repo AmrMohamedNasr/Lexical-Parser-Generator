@@ -9,10 +9,10 @@
 using namespace std;
 
 void run_tests(void);
-int main() {
-	run_tests();
-    return 0;
-}
+//int main() {
+//	run_tests();
+//    return 0;
+//}
 
 void run_tests() {
 	test_edge();
