@@ -9,7 +9,7 @@
 #define LEXICAL_ANALYZER_TOKENIZER_TOKENIZER_H_
 
 #include <queue>
-#include "../models/token.h"
+#include "../../../models/lexical/token.h"
 #include "../../transition_table/model/DfaNode.h"
 
 class Tokenizer {

@@ -10,7 +10,7 @@
 
 #include <ostream>
 #include <vector>
-#include "../models/token.h"
+#include "../../../models/lexical/token.h"
 
 void write_tokens(vector<Token> tokens, ostream * outStream);
 

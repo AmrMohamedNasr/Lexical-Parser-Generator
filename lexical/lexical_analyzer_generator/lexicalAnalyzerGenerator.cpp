@@ -20,7 +20,7 @@ void LexicalAnalyzerGenerator::generate_lexical_analyzer(string file_name, bool 
 	vector<NfaToken> tokens;
 	vector<string> priority;
 	set<char> alpha;
-	vector<string> errors = this->grammarParser.parse_grammar(&tokens, &priority, &inFile, &alpha);
+	vector<string> errors = this->grammarParser.parse_lexical_file(&tokens, &priority, &inFile, &alpha);
 	inFile.close();
 	if (!errors.empty()) {
 		cout << "Couldn't build lexical analyzer! File format error :" << endl;

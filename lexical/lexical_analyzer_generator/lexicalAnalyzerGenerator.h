@@ -8,17 +8,17 @@
 #ifndef LEXICAL_ANALYZER_GENERATOR_LEXICALANALYZERGENERATOR_H_
 #define LEXICAL_ANALYZER_GENERATOR_LEXICALANALYZERGENERATOR_H_
 
-#include "grammer_parser/GrammarParser.h"
 #include "builder/NfaBuilder.h"
 #include "combiner/NfaCombiner.h"
 #include "converter/NfaDfaConverter.h"
 #include "minimizer/DfaMinimizer.h"
 #include "../transition_table/builder/TableBuilder.h"
 #include "../transition_table/writer/TableWriter.h"
+#include "file_parser/LexicalFileParser.h"
 
 class LexicalAnalyzerGenerator {
 	private:
-		GrammarParser grammarParser;
+		LexicalFileParser grammarParser;
 		NfaBuilder builder;
 		NFACombiner combiner;
 		NfaDfaConverter converter;

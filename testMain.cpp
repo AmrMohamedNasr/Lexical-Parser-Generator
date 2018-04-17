@@ -1,18 +1,26 @@
 
 #include <iostream>
 #include "test_headers/p1_tests.h"
+#include "test_headers/p2_tests.h"
 #include <ctime>
 #include <chrono>
 using namespace std;
 using namespace std::chrono;
 
-void run_tests(void);
+void run_tests_p1(void);
+void run_tests_p2(void);
+
 int main() {
-	run_tests();
+	run_tests_p1();
+	run_tests_p2();
     return 0;
 }
 
-void run_tests() {
+void run_tests_p2() {
+
+}
+
+void run_tests_p1() {
 	test_edge();
 	test_node();
 	test_grammar_parser();

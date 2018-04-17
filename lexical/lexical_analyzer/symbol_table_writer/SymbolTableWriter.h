@@ -10,7 +10,7 @@
 
 #include <ostream>
 #include <vector>
-#include "../models/token.h"
+#include "../../../models/lexical/token.h"
 
 using namespace std;
 
