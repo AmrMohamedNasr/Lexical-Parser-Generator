@@ -194,3 +194,8 @@ CMakeLists\.txt
 
 \.idea/
 /.cproject
+/generatorMain.cpp/
+/analyzerMain.cpp/
+/Testing/
+/Generator/
+/Analyzer/
