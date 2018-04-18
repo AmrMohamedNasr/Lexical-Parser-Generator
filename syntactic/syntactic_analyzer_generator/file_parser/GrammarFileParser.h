@@ -17,12 +17,20 @@
 #include "../models/GrammarElement.h"
 #include "../models/GrammarExpression.h"
 
+using namespace std;
+
 class GrammarFileParser {
 	public:
 		// Will return vector of errors, empty if no errors.
 		vector<string> parse_grammar_file(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions,
 				ifstream * lexical_file_stream, unordered_set<string> *terminals,
 				unordered_set<string> *non_terminals, GrammarElement * startRule);
+
+    private:
+    static const regex startExpressionLine;
+    static const regex continueExpressionLine;
+
+    void addError(vector<string> *errors, string error, int lineNumber);
 };
 
 
