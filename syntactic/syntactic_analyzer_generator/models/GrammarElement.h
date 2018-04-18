@@ -22,16 +22,6 @@ class GrammarElement {
 	public:
 		string name;
 		ElementType type;
-		bool eps;
-		bool start;
-		vector<GrammarExpression *> leads_to;
-		vector<GrammarExpression *> referenced_in;
-		unordered_set<GrammarElement *> first_elements;
-		unordered_set<string> first_strings;
-		bool first_contains_eps;
-		unordered_set<GrammarElement *> follow_elements_follow;
-		unordered_set<GrammarElement *> follow_elements_first;
-		unordered_set<string> follow_strings;
 };
 
 

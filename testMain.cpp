@@ -17,7 +17,16 @@ int main() {
 }
 
 void run_tests_p2() {
-
+	test_grammar_table();
+	test_grammar_table_reader();
+	test_grammar_table_writer();
+	test_grammar_file_parser();
+	test_first_calculator();
+	test_follow_calculator();
+	test_ll_converter();
+	test_grammar_table_builder();
+	test_syntactic_analyzer_generator();
+	test_parser();
 }
 
 void run_tests_p1() {

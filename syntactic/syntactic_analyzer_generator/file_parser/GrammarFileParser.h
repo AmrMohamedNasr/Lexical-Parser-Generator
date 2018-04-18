@@ -21,7 +21,8 @@ class GrammarFileParser {
 	public:
 		// Will return vector of errors, empty if no errors.
 		vector<string> parse_grammar_file(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions,
-				ifstream * lexical_file_stream, unordered_set<string> *terminals, unordered_set<string> *non_terminals);
+				ifstream * lexical_file_stream, unordered_set<string> *terminals,
+				unordered_set<string> *non_terminals, GrammarElement * startRule);
 };
 
 

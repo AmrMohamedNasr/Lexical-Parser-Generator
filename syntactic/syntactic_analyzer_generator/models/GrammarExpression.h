@@ -20,7 +20,7 @@ class GrammarExpression {
 	public:
 		vector<GrammarElement *> expression;
 		GrammarElement * belongs_to;
-		unordered_set<GrammarElement *> first_elements;
+		bool eps;
 		unordered_set<string> first_strings;
 };
 
