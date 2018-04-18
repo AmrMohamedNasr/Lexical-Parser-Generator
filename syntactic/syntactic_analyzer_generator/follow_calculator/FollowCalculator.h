@@ -15,7 +15,7 @@
 using namespace std;
 
 class FollowCalculator {
-	void get_follow_sets(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions);
+	void set_follow_sets(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions);
 };
 
 

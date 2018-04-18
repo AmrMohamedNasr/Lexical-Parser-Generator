@@ -16,7 +16,7 @@ using namespace std;
 
 class FirstCalculator {
 	public:
-		void get_first_sets(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions);
+		void set_first_sets(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions);
 };
 
 
