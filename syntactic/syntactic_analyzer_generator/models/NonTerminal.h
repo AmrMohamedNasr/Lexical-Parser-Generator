@@ -9,6 +9,9 @@
 #define SYNTACTIC_SYNTACTIC_ANALYZER_GENERATOR_MODELS_NONTERMINAL_H_
 
 #include "GrammarElement.h"
+#include "GrammarExpression.h"
+
+class GrammarExpression;
 
 class NonTerminal : public GrammarElement {
 	public:

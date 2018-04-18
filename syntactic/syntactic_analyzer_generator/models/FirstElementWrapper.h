@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include "NonTerminal.h"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ class FirstExpressionWrapper;
 
 class FirstElementWrapper {
 	public:
-		GrammarElement * core;
+		NonTerminal * core;
 		set<FirstElementWrapper *> first_elements;
 		set<string> first_strings;
 };

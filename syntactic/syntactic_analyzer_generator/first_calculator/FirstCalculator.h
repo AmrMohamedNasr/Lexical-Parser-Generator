@@ -11,6 +11,7 @@
 #include <vector>
 #include <unordered_set>
 #include "../models/GrammarElement.h"
+#include "../models/GrammarExpression.h"
 
 using namespace std;
 

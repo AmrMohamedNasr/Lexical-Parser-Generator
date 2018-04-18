@@ -11,12 +11,13 @@
 #include "GrammarElement.h"
 #include <unordered_set>
 #include <string>
+#include "NonTerminal.h"
 
 using namespace std;
 
 class FollowElementWrapper {
 	public:
-		GrammarElement * core;
+		NonTerminal * core;
 		unordered_set<FollowElementWrapper *> follow_elements_follow;
 		unordered_set<FollowElementWrapper *> follow_elements_first;
 		unordered_set<string> follow_strings;
