@@ -41,7 +41,7 @@ void test_first_calculator() {
 }
 
 void build_test_graph1(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions,
-		unordered_map<GrammarExpression *, unordered_set<string>> *exp_ans) {
+	unordered_map<GrammarExpression *, unordered_set<string>> *exp_ans) {
 	NonTerminal *e = new NonTerminal();
 	NonTerminal *e1 = new NonTerminal();
 	NonTerminal *t = new NonTerminal();

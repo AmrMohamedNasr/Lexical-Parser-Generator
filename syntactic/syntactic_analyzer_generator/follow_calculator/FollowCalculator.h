@@ -11,11 +11,13 @@
 #include <vector>
 #include <unordered_set>
 #include "../models/GrammarElement.h"
+#include "../models/GrammarExpression.h"
 
 using namespace std;
 
 class FollowCalculator {
-	void set_follow_sets(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions);
+	public:
+		void set_follow_sets(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions);
 };
 
 

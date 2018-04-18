@@ -18,8 +18,7 @@ using namespace std;
 class FollowElementWrapper {
 	public:
 		NonTerminal * core;
-		unordered_set<FollowElementWrapper *> follow_elements_follow;
-		unordered_set<FollowElementWrapper *> follow_elements_first;
+		unordered_set<FollowElementWrapper *> follow_elements;
 		unordered_set<string> follow_strings;
 };
 
