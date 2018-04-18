@@ -18,7 +18,9 @@ class GrammarElement;
 
 class GrammarExpression {
 	public:
-		vector<GrammarElement *> expression;
+	GrammarExpression(GrammarElement *element);
+
+	vector<GrammarElement *> expression;
 		GrammarElement * belongs_to;
 		bool eps;
 		unordered_set<string> first_strings;

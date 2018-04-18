@@ -19,9 +19,14 @@ class GrammarExpression;
 enum ElementType {TERMINAL, NON_TERMINAL};
 
 class GrammarElement {
-	public:
-		string name;
-		ElementType type;
+
+    public:
+    GrammarElement(string name, ElementType type);
+
+    private:
+    string name;
+    ElementType type;
+
 };
 
 

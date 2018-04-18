@@ -16,13 +16,14 @@
 #include <unordered_set>
 #include "../models/GrammarElement.h"
 #include "../models/GrammarExpression.h"
+#include "../models/NonTerminal.h"
 
 using namespace std;
 
 class GrammarFileParser {
 	public:
 		// Will return vector of errors, empty if no errors.
-		vector<string> parse_grammar_file(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions,
+		vector<string> parse_grammar_file(vector<GrammarElement *> *rules, unordered_set<GrammarExpression *> * expressions,
 				ifstream * lexical_file_stream, unordered_set<string> *terminals,
 				unordered_set<string> *non_terminals, GrammarElement * startRule);
 
@@ -31,6 +32,21 @@ class GrammarFileParser {
     static const regex continueExpressionLine;
 
     void addError(vector<string> *errors, string error, int lineNumber);
+
+    GrammarElement *
+    insertNonTerminal(string line, regex pattern, map<string, NonTerminal *> nameToExpression, smatch matcher,
+                          vector<GrammarElement *> *rules, GrammarElement *pElement, GrammarElement *pGrammarElement,
+                          unordered_set<string> *pSet);
+
+    void parseRightHandSide(string rightHandSide, unordered_set<string> *terminals, unordered_set<string> *non_terminals,
+                                map<string, NonTerminal *> nameToExpression, vector<GrammarElement *> *rules,
+                                GrammarElement *prevGrammarElement, vector<string> *pVector);
+
+    bool isValidatRightHandSide(string match, vector<string> *errors, int lineNumber);
+
+    bool isQuote(char c);
+
+    vector<vector<string>> splitOrs(vector<string> strings, vector<string> *errors);
 };
 
 

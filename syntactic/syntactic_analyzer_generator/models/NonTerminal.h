@@ -11,7 +11,10 @@
 #include "GrammarElement.h"
 
 class NonTerminal : public GrammarElement {
-	public:
+public:
+	NonTerminal(const string &name, ElementType type) : GrammarElement(name, type) {}
+
+public:
 		bool eps;
 		vector<GrammarExpression *> leads_to;
 		vector<GrammarExpression *> referenced_in;
