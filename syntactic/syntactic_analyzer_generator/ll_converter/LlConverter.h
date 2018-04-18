@@ -16,6 +16,11 @@
 using namespace std;
 
 class LlConverter {
+	private:
+		bool check_direct_left_recursion(GrammarElement *rule);
+		void remove_direct_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions);
+		void remove_indirect_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions);
+		bool check_indirect_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions, int index);
 	public:
 		void remove_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions);
 		void left_factor(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions);
