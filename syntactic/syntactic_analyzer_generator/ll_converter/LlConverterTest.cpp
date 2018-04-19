@@ -11,6 +11,7 @@
 #include "../../../test_headers/p2_tests.h"
 
 void test_left_recursion();
+void test_indirect_left_recursion();
 void test_ll_converter() {
 	test_left_recursion();
 }
@@ -77,7 +78,7 @@ void test_left_recursion() {
 	exp31->first_strings = {"not"};
 	GrammarExpression* exp32 = new GrammarExpression();
 	exp32->belongs_to = bfactor;
-	exp32->expression = { closeBracket };
+	exp32->expression = { openBracket, bexpr, closeBracket };
 	exp32->first_strings = {"("};
 	GrammarExpression* exp33 = new GrammarExpression();
 	exp33->belongs_to = bfactor;
@@ -101,7 +102,21 @@ void test_left_recursion() {
 	converter.remove_left_recursion(&set, &set2);
 	// if pass integration test passed
 
+	if (set[0]->name == "bexpr") {
+		NonTerminal * temp = dynamic_cast<NonTerminal *>(set[0]);
+		if (temp->leads_to[0]->expression[0] != set[1]) {
+			cout << "Error in Left recursion" << "Expected reference to \" bterm \" " <<endl;
+		}
+		if (temp->leads_to[0]->expression[1] != set[10]) {
+			cout << "Error in Left recursion" << "Expected reference to \" bterm \" " <<endl;
+		}
+	} else {
+		cout << "Error in Referencing sets" << endl;
+	}
+	cout << "Eliminating left recursion success" << endl;
 
 }
+void test_indirect_left_recursion() {
 
+}
 
