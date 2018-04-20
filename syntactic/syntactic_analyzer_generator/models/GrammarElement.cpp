@@ -8,3 +8,11 @@ GrammarElement::GrammarElement(string name, ElementType type) {
     this->name = name;
     this->type = type;
 }
+
+string GrammarElement::getName() {
+    return this->name;
+}
+
+ElementType GrammarElement::getType() {
+    return this->type;
+}

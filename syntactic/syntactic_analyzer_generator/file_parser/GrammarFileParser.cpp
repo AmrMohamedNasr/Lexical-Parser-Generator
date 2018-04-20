@@ -27,12 +27,13 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
     string line;
     vector<string> lines;
     vector<string> errors;
-    map<string, NonTerminal*> nameToExpression;
+    map<string, NonTerminal*> nameToNonTerminal;
+    map<string, GrammarElement*> nameToTerminal;
     if (lexical_file_stream->is_open()) {
         LineType prevLineType = FULL;
         GrammarElement* prevGrammarElement = nullptr;
         string rightHandSide = "";
-        while (getline (*lexical_file_stream, line) ) {
+        while (getline (*lexical_file_stream, line)) {
             smatch matcher;
             lines.push_back(line);
             if (line.empty()) {
@@ -41,10 +42,10 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
                 if (prevLineType == LEFT_MIDDLE || prevLineType == MIDDLE) {
                     addError(&errors , "Multiple Equal Signs", lines.size());
                 }
-                parseRightHandSide(rightHandSide, terminals, non_terminals, nameToExpression, rules, prevGrammarElement,
-                                   &errors);
+                parseRightHandSide(rightHandSide, terminals, non_terminals, &nameToNonTerminal, &nameToTerminal, rules, prevGrammarElement,
+                                   &errors, lines.size());
                 rightHandSide = "";
-                prevGrammarElement = insertNonTerminal(line, fullExpressionLine, nameToExpression,
+                prevGrammarElement = insertNonTerminal(line, fullExpressionLine, &nameToNonTerminal,
                                          matcher, rules, prevGrammarElement, startRule, non_terminals);
                 regex_search(line, matcher, fullExpressionLine);
                 bool error = isValidatRightHandSide(matcher[2], &errors, lines.size());
@@ -56,10 +57,10 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
                 if (prevLineType == LEFT_MIDDLE || prevLineType == MIDDLE) {
                     addError(&errors, "Multiple Equal Signs", lines.size());
                 }
-                parseRightHandSide(rightHandSide, terminals, non_terminals, nameToExpression, rules, prevGrammarElement,
-                                   &errors);
+                parseRightHandSide(rightHandSide, terminals, non_terminals, &nameToNonTerminal, &nameToTerminal, rules, prevGrammarElement,
+                                   &errors, lines.size());
                 rightHandSide = "";
-                prevGrammarElement = insertNonTerminal(line, leftAndEqualExpressionLine, nameToExpression,
+                prevGrammarElement = insertNonTerminal(line, leftAndEqualExpressionLine, &nameToNonTerminal,
                                                        matcher, rules, prevGrammarElement, startRule, non_terminals);
                 prevLineType = LEFT_MIDDLE;
             } else if (regex_match(line, rightAndEqualExpressionLine)) {
@@ -78,10 +79,10 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
                 if (prevLineType == LEFT || prevLineType == LEFT_MIDDLE) {
                     addError(&errors, "No RHS for non terminal", lines.size() - 1);
                 }
-                parseRightHandSide(rightHandSide, terminals, non_terminals, nameToExpression, rules, prevGrammarElement,
-                                   &errors);
+                parseRightHandSide(rightHandSide, terminals, non_terminals, &nameToNonTerminal, &nameToTerminal, rules, prevGrammarElement,
+                                   &errors, lines.size());
                 rightHandSide = "";
-                prevGrammarElement = insertNonTerminal(line, leftPartExpressionLine, nameToExpression,
+                prevGrammarElement = insertNonTerminal(line, leftPartExpressionLine, &nameToNonTerminal,
                                                        matcher, rules, prevGrammarElement, startRule, non_terminals);
                 prevLineType = LEFT;
             } else if (regex_match(line, rightPartExpressionLine)) {
@@ -105,20 +106,24 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
                 addError(&errors, "Invalid Line Syntax", lines.size());
             }
         }
+        if (!rightHandSide.empty()) {
+            parseRightHandSide(rightHandSide, terminals, non_terminals,
+                               &nameToNonTerminal, &nameToTerminal, rules, prevGrammarElement, &errors, lines.size());
+        }
     } else {
         errors.push_back("Input Stream is Closed");
     }
     return errors;
 }
 
-GrammarElement * GrammarFileParser::insertNonTerminal(string line, const regex pattern, map<string, NonTerminal *> nameToExpression, smatch matcher,
+GrammarElement * GrammarFileParser::insertNonTerminal(string line, const regex pattern, map<string, NonTerminal *> *nameToNonTerminal, smatch matcher,
                                                       vector<GrammarElement *> *rules, GrammarElement *prevGrammarElement, GrammarElement *startRule,
                                                       unordered_set<string> *non_terminals) {
     regex_search(line, matcher, pattern);
     string name = matcher[1];
-    if (nameToExpression.find(name) == nameToExpression.end()) {
+    if (nameToNonTerminal->find(name) == nameToNonTerminal->end()) {
         GrammarElement* element = new NonTerminal(name, NON_TERMINAL);
-        nameToExpression[name] = static_cast<NonTerminal*> (element);
+        (*nameToNonTerminal)[name] = static_cast<NonTerminal*> (element);
         rules->push_back(element);
         non_terminals->insert(name);
         if (prevGrammarElement == nullptr) {
@@ -126,7 +131,7 @@ GrammarElement * GrammarFileParser::insertNonTerminal(string line, const regex p
         }
         return element;
     } else {
-        return nameToExpression[name];
+        return (*nameToNonTerminal)[name];
     }
 }
 
@@ -135,27 +140,38 @@ void GrammarFileParser::addError(vector<string> *errors, string error, int lineN
 }
 
 void GrammarFileParser::parseRightHandSide(string rightHandSide, unordered_set<string> *terminals, unordered_set<string> *non_terminals,
-                                           map<string, NonTerminal *> nameToExpression, vector<GrammarElement *> *rules,
-                                           GrammarElement *prevGrammarElement, vector<string> *errors) {
-    vector<string> strings = split_spaces(rightHandSide);
+                                           map<string, NonTerminal *> *nameToNonTerminal, map<string, GrammarElement *> *nameToTerminal, vector<GrammarElement *> *rules,
+                                           GrammarElement *prevGrammarElement, vector<string> *errors, int lineMum) {
+    vector<string> strings = splitOrs(rightHandSide, errors);
     if (strings.size() != 0) {
-        vector<vector<string>> terminalsAndNonTerminals = splitOrs(strings, errors);
-        for (int i = 0; i < terminalsAndNonTerminals.size(); i++) {
+        for (int i = 0; i < strings.size(); i++) {
             GrammarExpression* expression = new GrammarExpression(prevGrammarElement);
-            for (int j = 0; j < terminalsAndNonTerminals[i].size(); ++j) {
-                string curr = terminalsAndNonTerminals[i][j];
+            vector<string> terminalsAndNonTerminals = split_spaces(strings[i]);
+            bool isEpslon = false;
+            for (int j = 0; j < terminalsAndNonTerminals.size(); ++j) {
+                string curr = terminalsAndNonTerminals[j];
                 bool quoteFound = false;
                 string temp = "";
                 for (int k = 0; k < curr.length(); ++k) {
                     if (isQuote(curr[k])) {
                         if (quoteFound) {
-                            if (!temp.empty()) {
-                                errors->push_back("Empty Terminal");
+                            if (temp.empty()) {
+                                continue;
+//                                errors->push_back("Empty Terminal");
                             } else {
-                                GrammarElement* element = new GrammarElement(temp, TERMINAL);
-                                terminals->insert(temp);
-                                expression->expression.push_back(element);
-                                temp = "";
+                                if (temp == "\\L" && expression->expression.size() == 0
+                                        && prevGrammarElement != nullptr) {
+                                    isEpslon = true;
+                                } else {
+                                    isEpslon = false;
+                                    if (nameToTerminal->find(temp) == nameToTerminal->end()) {
+                                        GrammarElement* element = new GrammarElement(temp, TERMINAL);
+                                        terminals->insert(temp);
+                                        (*nameToTerminal)[temp] = element;
+                                    }
+                                    expression->expression.push_back((*nameToTerminal)[temp]);
+                                    temp = "";
+                                }
                             }
                             quoteFound = false;
                         } else {
@@ -165,24 +181,27 @@ void GrammarFileParser::parseRightHandSide(string rightHandSide, unordered_set<s
                         temp += curr[k];
                     }
                 }
-                if (!temp.empty()) {
-                    if (nameToExpression.find(temp) == nameToExpression.end()) {
+                if (quoteFound) {
+                    addError(errors, "Terminals Cannot have spaces", lineMum);
+                } else if (!temp.empty() && temp != "\\L") {
+                    if (nameToNonTerminal->find(temp) == nameToNonTerminal->end()) {
                         GrammarElement* element = new NonTerminal(temp, NON_TERMINAL);
-                        nameToExpression[temp] = static_cast<NonTerminal *>(element);
+                        (*nameToNonTerminal)[temp] = static_cast<NonTerminal *>(element);
                         rules->push_back(element);
                         non_terminals->insert(temp);
                     }
-                    expression->expression.push_back(static_cast<GrammarElement *> (nameToExpression[temp]));
-                    nameToExpression[temp]->referenced_in.push_back(expression);
+                    expression->expression.push_back(static_cast<GrammarElement *> ((*nameToNonTerminal)[temp]));
+                    (*nameToNonTerminal)[temp]->referenced_in.push_back(expression);
                     temp = "";
                 }
             }
-            if (prevGrammarElement != nullptr) {
+            if (isEpslon && expression->expression.size() == 0 && prevGrammarElement != nullptr) {
+                static_cast<NonTerminal*> (prevGrammarElement)->eps = true;
+                delete expression;
+            } else if (prevGrammarElement != nullptr) {
                 static_cast<NonTerminal*> (prevGrammarElement)->leads_to.push_back(expression);
             }
         }
-    } else {
-        errors->push_back("Empty RHS, Cannot parse grammar ");
     }
 }
 
@@ -202,40 +221,29 @@ bool GrammarFileParser::isValidatRightHandSide(string rightHandSide, vector<stri
 }
 
 bool GrammarFileParser::isQuote(char c) {
-    return c == '\'' || c == '’' || c == '‘';
+    return c == '\'';
 }
 
-vector<vector<string>> GrammarFileParser::splitOrs(vector<string> strings, vector<string> *errors) {
-    vector<vector<string>> ret;
+vector<string> GrammarFileParser::splitOrs(string curr, vector<string> *errors) {
+    vector<string> ret;
     string temp = "";
-    for (int i = 0; i < strings.size(); ++i) {
-        string curr = strings[i];
-        if (curr.length() == 0) continue;
-        if (i == 0 && curr[0] == '|') {
-            errors->push_back("Cannot start RHS with |");
-        } else if (i == strings.size() - 1 && curr[curr.length() - 1] == '|') {
-            errors->push_back("Cannot end RHS with |");
-        } else {
-            for (int j = 0; j < curr.length(); ++j) {
-                if (curr[j] == '|') {
-                    ret[ret.size() - 1].push_back(temp);
-                    temp = "";
-                } else {
-                    if (temp.empty()) {
-                        vector<string> vec;
-                        ret.push_back(vec);
-                    }
-                    temp += curr[j];
-                }
-            }
-            if (!temp.empty()) {
-                if (ret.size() == 0) {
-                    vector<string> vec;
-                    ret.push_back(vec);
-                }
-                ret[ret.size() - 1].push_back(temp);
+    if (curr.length() == 0) return ret;
+    if (curr[0] == '|') {
+        errors->push_back("Cannot start RHS with |");
+    } else if (curr[curr.length() - 1] == '|') {
+        errors->push_back("Cannot end RHS with |");
+    } else {
+        for (int j = 0; j < curr.length(); ++j) {
+            if (j > 0 && curr[j] != '\\' && curr[j] == '|') {
+                ret.push_back(temp);
                 temp = "";
+            } else {
+                temp += curr[j];
             }
+        }
+        if (!temp.empty()) {
+            ret.push_back(temp);
+            temp = "";
         }
     }
     return ret;

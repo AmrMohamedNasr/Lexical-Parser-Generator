@@ -22,11 +22,12 @@ class GrammarElement {
 
     public:
     GrammarElement(string name, ElementType type);
+    string getName();
+    ElementType getType();
 
     private:
     string name;
     ElementType type;
-
 };
 
 
