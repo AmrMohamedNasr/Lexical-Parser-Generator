@@ -8,8 +8,9 @@
 #ifndef SYNTACTIC_SYNTACTIC_ANALYZER_GENERATOR_MODELS_NONTERMINAL_H_
 #define SYNTACTIC_SYNTACTIC_ANALYZER_GENERATOR_MODELS_NONTERMINAL_H_
 
-#include "GrammarElement.h"
+//#include "GrammarElement.h"
 #include "GrammarExpression.h"
+#include <unordered_set>
 
 class GrammarExpression;
 

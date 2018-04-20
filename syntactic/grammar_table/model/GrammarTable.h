@@ -13,16 +13,25 @@
 #include <string>
 #include <vector>
 
+struct pair_hash {
+	template <class T1, class T2>
+	std::size_t operator () (const std::pair<T1,T2> &p) const {
+		auto h1 = std::hash<T1>{}(p.first);
+		auto h2 = std::hash<T2>{}(p.second);
+
+		return h1 ^ h2;
+	}
+};
+
 using namespace std;
 
 class GrammarTable {
 	private:
-		unordered_map<pair<string, string>, vector<string>> table;
-		unordered_set<pair<string, string>> synchronizing;
-		unordered_set<string> nonterminals, terminals;
+		unordered_map<pair<string, string>, vector<string>, pair_hash> table;
+		unordered_set<pair<string, string>, pair_hash> synchronizing;
+		unordered_set<string> non_terminals, terminals;
 		string start_rule;
 	public:
-		GrammarTable();
 		bool add_entry(string non_terminal, string terminal, vector<string> rules);
 		bool has_entry(string non_terminal, string terminal);
 		vector<string> get_entry(string non_terminal, string terminal);
