@@ -33,6 +33,7 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
         LineType prevLineType = FULL;
         GrammarElement* prevGrammarElement = nullptr;
         string rightHandSide = "";
+        bool leftDefineFound = false;
         while (getline (*lexical_file_stream, line)) {
             smatch matcher;
             lines.push_back(line);
@@ -53,6 +54,7 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
                     rightHandSide += matcher[2];
                 }
                 prevLineType = FULL;
+                leftDefineFound = true;
             } else if (regex_match(line, leftAndEqualExpressionLine)) {
                 if (prevLineType == LEFT_MIDDLE || prevLineType == MIDDLE) {
                     addError(&errors, "Multiple Equal Signs", lines.size());
@@ -63,6 +65,7 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
                 prevGrammarElement = insertNonTerminal(line, leftAndEqualExpressionLine, &nameToNonTerminal,
                                                        matcher, rules, prevGrammarElement, startRule, non_terminals);
                 prevLineType = LEFT_MIDDLE;
+                leftDefineFound = true;
             } else if (regex_match(line, rightAndEqualExpressionLine)) {
                 if (prevLineType == LEFT_MIDDLE) {
                     addError(&errors, "Multiple Equal Signs", lines.size());
@@ -85,8 +88,11 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
                 prevGrammarElement = insertNonTerminal(line, leftPartExpressionLine, &nameToNonTerminal,
                                                        matcher, rules, prevGrammarElement, startRule, non_terminals);
                 prevLineType = LEFT;
+                leftDefineFound = true;
             } else if (regex_match(line, rightPartExpressionLine)) {
-                if (prevLineType == LEFT || rules->size() == 0) {
+                if (!leftDefineFound) {
+                    addError(&errors, "No Definition for RHS found transition should start with #", lines.size() );
+                } else if (prevLineType == LEFT || rules->size() == 0) {
                     addError(&errors, "No EQUAL sign for non terminal", lines.size() - 1);
                 }
                 regex_search(line, matcher, rightPartExpressionLine);
@@ -154,6 +160,19 @@ void GrammarFileParser::parseRightHandSide(string rightHandSide, unordered_set<s
                 string temp = "";
                 for (int k = 0; k < curr.length(); ++k) {
                     if (isQuote(curr[k])) {
+                        if (!quoteFound && !temp.empty()) {
+                            if (nameToNonTerminal->find(temp) == nameToNonTerminal->end()) {
+                                GrammarElement* element = new NonTerminal(temp, NON_TERMINAL);
+                                (*nameToNonTerminal)[temp] = static_cast<NonTerminal *>(element);
+                                rules->push_back(element);
+                                non_terminals->insert(temp);
+                            }
+                            expression->expression.push_back(static_cast<GrammarElement *> ((*nameToNonTerminal)[temp]));
+                            (*nameToNonTerminal)[temp]->referenced_in.push_back(expression);
+                            temp = "";
+                            quoteFound = true;
+                            continue;
+                        }
                         if (quoteFound) {
                             if (temp.empty()) {
                                 continue;

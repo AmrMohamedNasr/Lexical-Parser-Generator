@@ -16,11 +16,106 @@
 
 void projectPdfTestCase();
 
+void sheetThreeProblemFourTestCase();
+
 using namespace std;
 
 void test_grammar_file_parser() {
     projectPdfTestCase();
+    sheetThreeProblemFourTestCase();
+}
 
+void sheetThreeProblemFourTestCase() {
+    GrammarFileParser fileParser;
+    ifstream infile;
+    infile.open("./test_files/syntatic_grammar_parser/sheet_3_problem_4.txt");
+    if (!infile) {
+        cout << "GRAMMAR PARSER TEST : COULDN\"T OPEN WANTED FILE" << endl;
+        return;
+    }
+    vector<GrammarElement *> rules;
+    unordered_set<GrammarExpression *> expressions;
+    unordered_set<string> terminals;
+    unordered_set<string> non_terminals;
+    GrammarElement *startRule;
+    vector<string> errors = fileParser.parse_grammar_file(&rules, &expressions, &infile,
+                                                          &terminals, &non_terminals, startRule);
+    if (!errors.size() == 0) {
+        cout << "Syntactic Grammar Parser Errors: " + to_string(errors.size()) + " errors detected" << endl;
+        for (int i = 0; i < errors.size(); ++i) {
+            cout << errors[i] << endl;
+        }
+    }
+
+    if (non_terminals.size() != 5) {
+        cout << "Syntactic Grammar Parser Errors: Non terminals found " + to_string(non_terminals.size())
+                + " instead of 5" << endl;
+        for (auto it = non_terminals.begin(); it != non_terminals.end(); it++) {
+            cout << (*it) << endl;
+        }
+    }
+
+    if (rules.size() != 5) {
+        cout << "Syntactic Grammar Parser Errors: Rules found " + to_string(rules.size())
+                + " instead of 13" << endl;
+        for (int i = 0; i < rules.size(); ++i) {
+            cout << rules[i]->getName() << endl;
+        }
+    }
+
+    if (rules.size() == 5) {
+        int expectedSizes[] = {1, 1, 1, 1, 1};
+        bool error = false;
+        for (int i = 0; i < 5; ++i) {
+            NonTerminal *nonTerminal = static_cast<NonTerminal *>(rules[i]);
+            if (static_cast<NonTerminal *>(rules[i])->leads_to.size() != expectedSizes[i]) {
+                string name = rules[i]->getName();
+                cout << "Grammar Rule with name " << name << " has "
+                     << to_string(static_cast<NonTerminal *>(rules[i])->leads_to.size())
+                     << " rules instead of " << to_string(expectedSizes[i]) << endl;
+                error = true;
+            }
+        }
+        if (!error) {
+            NonTerminal* S = static_cast<NonTerminal *>(rules[0]);
+            if (S->leads_to[0]->expression.size() != 2 || S->eps ||
+                S->leads_to[0]->expression[0]->getName() != "R" ||
+                S->leads_to[0]->expression[1]->getName() != "T") {
+                cout << "Error in expression 1 in S" << endl;
+            }
+
+            NonTerminal* R = static_cast<NonTerminal *>(rules[1]);
+            if (R->leads_to[0]->expression.size() != 4 || !R->eps ||
+                R->leads_to[0]->expression[0]->getName() != "s" ||
+                R->leads_to[0]->expression[1]->getName() != "U" ||
+                R->leads_to[0]->expression[2]->getName() != "R" ||
+                R->leads_to[0]->expression[3]->getName() != "b") {
+                cout << "Error in expression 1 in R" << endl;
+            }
+
+            NonTerminal* T = static_cast<NonTerminal *>(rules[2]);
+            if (T->leads_to[0]->expression.size() != 3 || !T->eps ||
+                T->leads_to[0]->expression[0]->getName() != "V" ||
+                T->leads_to[0]->expression[1]->getName() != "t" ||
+                T->leads_to[0]->expression[2]->getName() != "T") {
+                cout << "Error in expression 1 in T" << endl;
+            }
+
+            NonTerminal* U = static_cast<NonTerminal *>(rules[3]);
+            if (U->leads_to[0]->expression.size() != 2 || !U->eps ||
+                U->leads_to[0]->expression[0]->getName() != "u" ||
+                U->leads_to[0]->expression[1]->getName() != "U") {
+                cout << "Error in expression 1 in U" << endl;
+            }
+
+            NonTerminal* V = static_cast<NonTerminal *>(rules[4]);
+            if (V->leads_to[0]->expression.size() != 2 || !V->eps ||
+                V->leads_to[0]->expression[0]->getName() != "v" ||
+                V->leads_to[0]->expression[1]->getName() != "V") {
+                cout << "Error in expression 1 in V" << endl;
+            }
+        }
+    }
 }
 
 void projectPdfTestCase() {
