@@ -14,6 +14,7 @@ void test_left_recursion();
 void test_indirect_left_recursion();
 void test_ll_converter() {
 	test_left_recursion();
+	test_indirect_left_recursion();
 }
 
 void test_left_recursion() {
@@ -97,9 +98,9 @@ void test_left_recursion() {
 
 	vector <GrammarElement* > set = {bexpr, bterm, bfactor, nOT, aND, oR, closeBracket, openBracket, tRUE, fALSE };
 	unordered_set <GrammarExpression*> set2 = {exp11, exp12, exp21, exp22, exp31, exp32, exp33, exp34};
-
+	unordered_set <NonTerminal*> changed;
 	LlConverter converter;
-	converter.remove_left_recursion(&set, &set2);
+	converter.remove_left_recursion(&set, &set2, &changed);
 	// if pass integration test passed
 
 	if (set[0]->name == "bexpr") {
@@ -114,9 +115,142 @@ void test_left_recursion() {
 		cout << "Error in Referencing sets" << endl;
 	}
 	cout << "Eliminating left recursion success" << endl;
-
+	delete bexpr;
+	delete bterm;
+	delete bfactor;
+	delete oR;
+	delete openBracket;
+	delete closeBracket;
+	delete aND;
+	delete nOT;
+	delete tRUE;
+	delete fALSE;
 }
 void test_indirect_left_recursion() {
+	NonTerminal* a = new NonTerminal();
+	a->name = "A";
+	a->type = NON_TERMINAL;
+	NonTerminal* b = new NonTerminal();
+	b->name = "B";
+	b->type = NON_TERMINAL;
+	NonTerminal* c = new NonTerminal();
+	c->name = "C";
+	c->type = NON_TERMINAL;
+	NonTerminal* d = new NonTerminal();
+	d->name = "D";
+	d->type = NON_TERMINAL;
+	GrammarElement* x = new GrammarElement();
+	x->name = "x";
+	x->type = TERMINAL;
+	GrammarElement* y = new GrammarElement();
+	y->name = "y";
+	y->type = TERMINAL;
+	GrammarElement* cS = new GrammarElement();
+	cS->name = ")";
+	cS->type = TERMINAL;
+	GrammarElement* dS = new GrammarElement();
+	dS->name = "and";
+	dS->type = TERMINAL;
+	GrammarExpression* exp11 = new GrammarExpression();
+	exp11->belongs_to = a;
+	exp11->expression = { b, x, y};
+	b->referenced_in.push_back(exp11);
+	GrammarExpression* exp12 = new GrammarExpression();
+	exp12->belongs_to = a;
+	exp12->expression = { x };
+	GrammarExpression* exp21 = new GrammarExpression();
+	exp21->belongs_to = b;
+	exp21->expression = { c, d};
+	d->referenced_in.push_back(exp21);
+	c->referenced_in.push_back(exp21);
+	GrammarExpression* exp31 = new GrammarExpression();
+	exp31->belongs_to = c;
+	exp31->expression = { a };
+	a->referenced_in.push_back(exp31);
+	GrammarExpression* exp32 = new GrammarExpression();
+	exp32->belongs_to = c;
+	exp32->expression = { cS };
+	GrammarExpression* exp41 = new GrammarExpression();
+	exp41->belongs_to = d;
+	exp41->expression = { dS };
+	a->leads_to = { exp11, exp12};
+	b->leads_to = { exp21 };
+	c->leads_to = { exp31, exp32 };
+	d->leads_to = { exp41 };
 
+	vector <GrammarElement* > set = {a, b, c, d, x, y, cS, dS};
+	unordered_set <GrammarExpression*> set2 = {exp11, exp12, exp21, exp31, exp32, exp41};
+	unordered_set <NonTerminal*> changed;
+	LlConverter converter;
+	converter.remove_left_recursion(&set, &set2, &changed);
+	NonTerminal * ele =  dynamic_cast<NonTerminal *> (set[8]);
+	NonTerminal * ele1 =  dynamic_cast<NonTerminal *> (set[2]);
+	if (ele->name == "C'" ) {
+		if (ele->leads_to.size() == 1) {
+			if (ele->eps) {
+				if (ele->leads_to[0]->belongs_to == ele) {
+					if (ele->leads_to[0]->expression.size() == 4) {
+						if (ele->leads_to[0]->expression[3] == ele) {
+							if (ele->referenced_in.size() == 3) {
+								if (ele->referenced_in[0]->belongs_to == c ||
+									ele->referenced_in[0]->belongs_to == c ||
+									ele->referenced_in[0]->belongs_to == ele) {
+									if (ele->referenced_in[1]->belongs_to == c ||
+										ele->referenced_in[1]->belongs_to == c ||
+										ele->referenced_in[1]->belongs_to == ele) {
+										if (ele->referenced_in[2]->belongs_to == c ||
+											ele->referenced_in[2]->belongs_to == c ||
+											ele->referenced_in[2]->belongs_to == ele) {
+											if ( ele1->leads_to.size() == 2) {
+												if (ele1->leads_to[1]->expression[0] == x &&
+													ele1->leads_to[1]->expression[1] == ele) {
+													if (ele1->leads_to[0]->expression[0] == cS &&
+														ele1->leads_to[0]->expression[1] == ele) {
+														if (ele1->referenced_in.size() == 1 &&
+															ele1->referenced_in[0] == exp21	) {
+															cout << "Eliminating indirect left recursion success..." << endl;
+														} else {
+															cout << "Error in indirect left recursion" << endl;
+														}
+
+													} else {
+														cout << "Error in indirect left recursion" << endl;
+													}
+												} else {
+													cout << "Error in indirect left recursion" << endl;
+												}
+											} else {
+												cout << "Error in indirect left recursion" << endl;
+											}
+										} else {
+											cout << "Error in indirect left recursion" << endl;
+										}
+									} else {
+										cout << "Error in indirect left recursion" << endl;
+									}
+								} else {
+									cout << "Error in indirect left recursion" << endl;
+								}
+							} else {
+								cout << "Error in indirect left recursion" << endl;
+							}
+						} else {
+							cout << "Error in indirect left recursion" << endl;
+						}
+					} else {
+						cout << "Error in indirect left recursion" << endl;
+					}
+				} else {
+					cout << "Error in indirect left recursion" << endl;
+				}
+			} else {
+				cout << "Error in indirect left recursion" << endl;
+			}
+		} else {
+			cout << "Error in indirect left recursion" << endl;
+		}
+	} else {
+		cout << "Error in indirect left recursion" << endl;
+	}
 }
 
