@@ -20,8 +20,8 @@ class LlConverter {
 	private:
 		bool check_direct_left_recursion(GrammarElement *rule);
 		void remove_direct_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions, GrammarElement * adjustRule, unordered_set<NonTerminal *> *changed);
-		void remove_indirect_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions, unordered_set<NonTerminal *> *changed);
 		bool check_indirect_left_recursion(GrammarElement * source, GrammarElement * rule, map<GrammarElement *, int>* matcher, unordered_set<GrammarExpression*> *chooser);
+		bool check_left_factoring(GrammarElement * source, unordered_set<GrammarExpression*> *to_be_substituted, bool * direct);
 	public:
 		void remove_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions, unordered_set<NonTerminal *> *changed);
 		void left_factor(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions);

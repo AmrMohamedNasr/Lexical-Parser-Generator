@@ -14,17 +14,63 @@
 
 
 void LlConverter::remove_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions, unordered_set<NonTerminal *> *changed) {
-	remove_indirect_left_recursion(rules, expressions, changed);
-}
-
-bool LlConverter::check_direct_left_recursion(GrammarElement *rule) {
-	NonTerminal * temp = dynamic_cast<NonTerminal *>(rule);
-	for (unsigned i = 0; i < temp->leads_to.size(); ++i) {
-		if (temp->leads_to[i]->expression[0] == rule) {
-			return true;
+	int size = rules->size();
+	for (unsigned i = 0; i < size; ++i) {
+		if ((*rules)[i]->type == NON_TERMINAL) {
+			map<GrammarElement*,int > matcher;
+			unordered_set <GrammarExpression *> chooser;
+			NonTerminal * temp = dynamic_cast<NonTerminal *>((*rules)[i]);
+			for (unsigned j = 0; j < i; ++j) {
+				matcher.insert(pair<GrammarElement*,int> ((*rules)[j], j));
+			}
+			stack <GrammarExpression *> s;
+			std::unordered_set<GrammarExpression *>::const_iterator it;
+			if ( check_indirect_left_recursion(temp, temp, &matcher, &chooser)) {
+				for (unsigned j = 0; j < temp->leads_to.size(); j++ ) {
+					it = chooser.find(temp->leads_to[j]);
+					if (it != chooser.end()) {
+						s.push(temp->leads_to[j]);
+						temp->leads_to.erase(temp->leads_to.begin() + j);
+					}
+				}
+				while(!s.empty()) {
+					GrammarExpression * expr = s.top();
+					s.pop();
+					NonTerminal * ele =  dynamic_cast<NonTerminal *> (expr->expression[0]);
+					expr->expression.erase(expr->expression.begin());
+					for (unsigned k = 0; k < ele->leads_to.size(); ++k) {
+						// boolean considered for the new expression to be substituted.
+						bool considered = false;
+						it = chooser.find(ele->leads_to[k]);
+						if (it != chooser.end()) {
+							considered = true;
+						}
+						GrammarExpression * exprTemp = new GrammarExpression();
+						for (unsigned count = 0; count < ele->leads_to[k]->expression.size(); ++count) {
+							exprTemp->expression.push_back(ele->leads_to[k]->expression[count]);
+						}
+						for (unsigned j = 0; j < expr->expression.size(); ++j) {
+							exprTemp->expression.push_back(expr->expression[j]);
+						}
+						exprTemp->belongs_to = temp;
+						temp->leads_to.push_back(exprTemp);
+						(*expressions).insert(exprTemp);
+						if (considered) {
+							chooser.insert(exprTemp);
+						}
+					}
+					for (unsigned j = 0; j < temp->leads_to.size(); j++ ) {
+						it = chooser.find(temp->leads_to[j]);
+						if (it != chooser.end()) {
+							s.push(temp->leads_to[j]);
+							temp->leads_to.erase(temp->leads_to.begin() + j);
+						}
+					}
+				}
+			}
+			remove_direct_left_recursion(rules, expressions, temp, changed);
 		}
 	}
-	return false;
 }
 
 void LlConverter::remove_direct_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions, GrammarElement * adjustRule, unordered_set<NonTerminal *> *changed) {
@@ -60,65 +106,15 @@ void LlConverter::remove_direct_left_recursion(vector<GrammarElement *> *rules ,
 			rules->push_back(newRule);
 		}
 }
-void LlConverter::remove_indirect_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions, unordered_set<NonTerminal *> *changed) {
-	int size = rules->size();
-	for (unsigned i = 0; i < size; ++i) {
-		if ((*rules)[i]->type == NON_TERMINAL) {
-			map<GrammarElement*,int > matcher;
-			unordered_set <GrammarExpression *> chooser;
-			NonTerminal * temp = dynamic_cast<NonTerminal *>((*rules)[i]);
-			for (unsigned j = 0; j < i; ++j) {
-				matcher.insert(pair<GrammarElement*,int> ((*rules)[j], j));
-			}
-			stack <GrammarExpression *> s;
-			std::unordered_set<GrammarExpression *>::const_iterator it;
-			if ( check_indirect_left_recursion(temp, temp, &matcher, &chooser)) {
-				for (unsigned j = 0; j < temp->leads_to.size(); j++ ) {
-					it = chooser.find(temp->leads_to[j]);
-					if (it != chooser.end()) {
-						s.push(temp->leads_to[j]);
-						temp->leads_to.erase(temp->leads_to.begin() + j);
-					}
-				}
-				while(!s.empty()) {
-					// boolean considered for the new expression to be substituted.
 
-					GrammarExpression * expr = s.top();
-					s.pop();
-					NonTerminal * ele =  dynamic_cast<NonTerminal *> (expr->expression[0]);
-					expr->expression.erase(expr->expression.begin());
-					for (unsigned k = 0; k < ele->leads_to.size(); ++k) {
-						bool considered = false;
-						it = chooser.find(ele->leads_to[k]);
-						if (it != chooser.end()) {
-							considered = true;
-						}
-						GrammarExpression * exprTemp = new GrammarExpression();
-						for (unsigned count = 0; count < ele->leads_to[k]->expression.size(); ++count) {
-							exprTemp->expression.push_back(ele->leads_to[k]->expression[count]);
-						}
-						for (unsigned j = 0; j < expr->expression.size(); ++j) {
-							exprTemp->expression.push_back(expr->expression[j]);
-						}
-						exprTemp->belongs_to = temp;
-						temp->leads_to.push_back(exprTemp);
-						(*expressions).insert(exprTemp);
-						if (considered) {
-							chooser.insert(exprTemp);
-						}
-					}
-					for (unsigned j = 0; j < temp->leads_to.size(); j++ ) {
-						it = chooser.find(temp->leads_to[j]);
-						if (it != chooser.end()) {
-							s.push(temp->leads_to[j]);
-							temp->leads_to.erase(temp->leads_to.begin() + j);
-						}
-					}
-				}
-			}
-			remove_direct_left_recursion(rules, expressions, temp, changed);
+bool LlConverter::check_direct_left_recursion(GrammarElement *rule) {
+	NonTerminal * temp = dynamic_cast<NonTerminal *>(rule);
+	for (unsigned i = 0; i < temp->leads_to.size(); ++i) {
+		if (temp->leads_to[i]->expression[0] == rule) {
+			return true;
 		}
 	}
+	return false;
 }
 
 bool LlConverter::check_indirect_left_recursion(GrammarElement * source, GrammarElement * rule, map<GrammarElement *, int>* matcher, unordered_set<GrammarExpression*> *chooser) {
@@ -145,5 +141,40 @@ bool LlConverter::check_indirect_left_recursion(GrammarElement * source, Grammar
 	return false;
 
 }
+
+void LlConverter::left_factor(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions) {
+
+}
+
+bool LlConverter::check_left_factoring(GrammarElement * source, unordered_set<GrammarExpression*> *to_be_substituted, bool * direct) {
+	unordered_set<GrammarElement*> first_eles;
+	unordered_set<string> first_strings;
+	NonTerminal * src = dynamic_cast<NonTerminal *>(source);
+	bool left = false;
+	for (unsigned i = 0; i < src->leads_to.size(); ++i) {
+		unordered_set<GrammarExpression *>::const_iterator it = first_eles.find(src->leads_to[i]->expression[0]);
+		if (it != first_eles.end()) {
+			*direct = true;
+			to_be_substituted->insert(src->leads_to[i]);
+			left = true;
+		}
+	}
+	if (left) {
+		return true;
+	}
+	// if it need direct left factoring.
+	// check if it need indirect left factoring.
+	// TODO
+	for (unsigned i = 0; i < src->leads_to.size(); ++i) {
+		for (unsigned j = 0; j < src->first_strings.size(); ++j) {
+			first_strings.insert(*src->leads_to[i]->first_strings.begin() + j);
+		}
+
+	}
+
+}
+
+
+
 
 
