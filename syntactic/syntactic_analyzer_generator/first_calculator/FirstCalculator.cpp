@@ -17,9 +17,9 @@ void FirstCalculator::set_first_sets(vector<GrammarElement *> *rules , unordered
 	vector<FirstElementWrapper *> createdEleWrappers;
 	vector<FirstExpressionWrapper *> createdExpWrappers;
 	for (unsigned i = 0; i < rules->size(); i++) {
-		if ((*rules)[i]->type == NON_TERMINAL) {
+		if ((*rules)[i]->getType() == NON_TERMINAL) {
 			FirstElementWrapper *wrapper = new FirstElementWrapper();
-			NonTerminal * e = dynamic_cast<NonTerminal *>((*rules)[i]);
+			NonTerminal * e = static_cast<NonTerminal *>((*rules)[i]);
 			wrapper->core = e;
 			eleWrappers.insert(pair<NonTerminal *, FirstElementWrapper *>(e, wrapper));
 			createdEleWrappers.push_back(wrapper);
@@ -37,16 +37,16 @@ void FirstCalculator::set_first_sets(vector<GrammarElement *> *rules , unordered
 		found_terminal = false;
 		for (auto it = createdExpWrappers.begin(); it != createdExpWrappers.end(); it++) {
 			FirstExpressionWrapper * wrapper = *it;
-			FirstElementWrapper * parent = eleWrappers[wrapper->core->belongs_to];
+			FirstElementWrapper * parent = eleWrappers[static_cast<NonTerminal*>(wrapper->core->belongs_to)];
 			for (unsigned i = 0; i < wrapper->core->expression.size(); i++) {
 				GrammarElement * e = wrapper->core->expression[i];
-				if (e->type == TERMINAL) {
-					wrapper->first_strings.insert(e->name);
-					parent->first_strings.insert(e->name);
+				if (e->getType() == TERMINAL) {
+					wrapper->first_strings.insert(e->getName());
+					parent->first_strings.insert(e->getName());
 					found_terminal = true;
 					break;
 				} else {
-					NonTerminal * ex = dynamic_cast<NonTerminal *>(e);
+					NonTerminal * ex = static_cast<NonTerminal *>(e);
 					if (ex != parent->core) {
 						FirstElementWrapper * temp = eleWrappers[ex];
 						wrapper->first_elements.insert(temp);
@@ -60,7 +60,7 @@ void FirstCalculator::set_first_sets(vector<GrammarElement *> *rules , unordered
 			}
 			if (!found_terminal) {
 				still_working = true;
-				wrapper->core->belongs_to->eps = true;
+				static_cast<NonTerminal*>(wrapper->core->belongs_to)->eps = true;
 			}
 		}
 		for (auto it = createdEleWrappers.begin(); it != createdEleWrappers.end(); it++) {

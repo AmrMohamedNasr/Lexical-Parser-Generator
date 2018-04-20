@@ -29,7 +29,7 @@ class GrammarExpression {
 		void print_expression(void) {
 			cout << "Expression : ";
 			for (unsigned i = 0; i < expression.size(); i++) {
-				cout << expression[i]->name << " ";
+				cout << expression[i]->getName() << " ";
 			}
 			cout << endl;
 			cout << "First : ";
@@ -37,7 +37,7 @@ class GrammarExpression {
 				cout << "{\"" << *it << "\"}" << ", ";
 			}
 			cout << endl;
-			cout << "Belongs to : " << belongs_to->name << endl;
+			cout << "Belongs to : " << belongs_to->getName() << endl;
 		}
 };
 

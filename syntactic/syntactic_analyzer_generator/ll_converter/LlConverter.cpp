@@ -18,7 +18,7 @@ void LlConverter::remove_left_recursion(vector<GrammarElement *> *rules , unorde
 }
 
 bool LlConverter::check_direct_left_recursion(GrammarElement *rule) {
-	NonTerminal * temp = dynamic_cast<NonTerminal *>(rule);
+	NonTerminal * temp = static_cast<NonTerminal *>(rule);
 	for (unsigned i = 0; i < temp->leads_to.size(); ++i) {
 		if (temp->leads_to[i]->expression[0] == rule) {
 			return true;
@@ -28,31 +28,29 @@ bool LlConverter::check_direct_left_recursion(GrammarElement *rule) {
 }
 
 void LlConverter::remove_direct_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions, GrammarElement * adjustRule) {
-		if (adjustRule->type == NON_TERMINAL && check_direct_left_recursion(adjustRule)) {
-			NonTerminal * rule = dynamic_cast<NonTerminal *>(adjustRule);
-			NonTerminal * newRule = new NonTerminal();
-			newRule->type = NON_TERMINAL;
-			newRule->eps = true;
-			newRule->name = rule->name + "'";
-			vector<GrammarExpression *> *exprs = &(rule->leads_to);
+		if (adjustRule->getType() == NON_TERMINAL && check_direct_left_recursion(adjustRule)) {
+			GrammarElement * rule = static_cast<NonTerminal *>(adjustRule);
+			GrammarElement * newRule = new NonTerminal(rule->getName() + "'", NON_TERMINAL);
+			static_cast<NonTerminal *>(newRule)->eps = true;
+			vector<GrammarExpression *> *exprs = &(static_cast<NonTerminal *>(rule)->leads_to);
 			int size = exprs->size();
 			for (unsigned j = 0; j < size; ++j) {
-				 if ((*exprs)[j]->expression[0]->type == NON_TERMINAL) {
-					 NonTerminal * comparable = dynamic_cast<NonTerminal *> ((*exprs)[j]->expression[0]);
+				 if ((*exprs)[j]->expression[0]->getType() == NON_TERMINAL) {
+					 NonTerminal * comparable = static_cast<NonTerminal *> ((*exprs)[j]->expression[0]);
 					 if (comparable == rule) {
 						 (*exprs)[j]->expression.erase((*exprs)[j]->expression.begin());
 						 (*exprs)[j]->expression.push_back(newRule);
 						 (*exprs)[j]->belongs_to = newRule;
-						 newRule->referenced_in.push_back((*exprs)[j]);
-						 newRule->leads_to.push_back((*exprs)[j]);
-						 rule->leads_to.erase(rule->leads_to.begin()+j);
+						 static_cast<NonTerminal *>(newRule)->referenced_in.push_back((*exprs)[j]);
+						 static_cast<NonTerminal *>(newRule)->leads_to.push_back((*exprs)[j]);
+						 static_cast<NonTerminal *>(rule)->leads_to.erase(static_cast<NonTerminal *>(rule)->leads_to.begin()+j);
 					 } else {
 						 (*exprs)[j]->expression.push_back(newRule);
-						 newRule->referenced_in.push_back((*exprs)[j]);
+						 static_cast<NonTerminal *>(newRule)->referenced_in.push_back((*exprs)[j]);
 					 }
 				 } else {
 					 (*exprs)[j]->expression.push_back(newRule);
-					 newRule->referenced_in.push_back((*exprs)[j]);
+					 static_cast<NonTerminal *>(newRule)->referenced_in.push_back((*exprs)[j]);
 				 }
 			}
 			rules->push_back(newRule);
@@ -61,10 +59,10 @@ void LlConverter::remove_direct_left_recursion(vector<GrammarElement *> *rules ,
 void LlConverter::remove_indirect_left_recursion(vector<GrammarElement *> *rules , unordered_set<GrammarExpression *> * expressions) {
 	int size = rules->size();
 	for (unsigned i = 0; i < size; ++i) {
-		if ((*rules)[i]->type == NON_TERMINAL) {
+		if ((*rules)[i]->getType() == NON_TERMINAL) {
 			map<GrammarElement*,int > matcher;
 			unordered_set <GrammarExpression *> chooser;
-			NonTerminal * temp = dynamic_cast<NonTerminal *>((*rules)[i]);
+			NonTerminal * temp = static_cast<NonTerminal *>((*rules)[i]);
 			for (unsigned j = 0; j < i; ++j) {
 				matcher.insert(pair<GrammarElement*,int> ((*rules)[j], j));
 			}
@@ -80,7 +78,7 @@ void LlConverter::remove_indirect_left_recursion(vector<GrammarElement *> *rules
 				while(!s.empty()) {
 					GrammarExpression * expr = s.top();
 					s.pop();
-					NonTerminal * ele =  dynamic_cast<NonTerminal *> (expr->expression[0]);
+					NonTerminal * ele =  static_cast<NonTerminal *> (expr->expression[0]);
 					expr->expression.erase(expr->expression.begin());
 					for (unsigned k = 0; k < ele->leads_to.size(); ++k) {
 						for (unsigned j = 0; j < expr->expression.size(); ++j) {
@@ -107,11 +105,11 @@ void LlConverter::remove_indirect_left_recursion(vector<GrammarElement *> *rules
 }
 
 bool LlConverter::check_indirect_left_recursion(GrammarElement * source, GrammarElement * rule, map<GrammarElement *, int>* matcher, unordered_set<GrammarExpression*> *chooser) {
-	NonTerminal * temp = dynamic_cast<NonTerminal *>(rule);
-	NonTerminal * src = dynamic_cast<NonTerminal *>(source);
+	NonTerminal * temp = static_cast<NonTerminal *>(rule);
+	NonTerminal * src = static_cast<NonTerminal *>(source);
 	bool left = false;
 	for (unsigned i = 0; i < temp->leads_to.size(); ++i) {
-		if (temp->leads_to[i]->expression[0]->type == NON_TERMINAL &&
+		if (temp->leads_to[i]->expression[0]->getType() == NON_TERMINAL &&
 				temp->leads_to[i]->expression[0] != temp &&
 				temp->leads_to[i]->expression[0] != src) {
 			map<GrammarElement *, int>::const_iterator it = (*matcher).find(temp->leads_to[i]->expression[0]);

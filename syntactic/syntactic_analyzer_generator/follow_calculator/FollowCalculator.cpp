@@ -15,9 +15,9 @@ void FollowCalculator::set_follow_sets(vector<GrammarElement *> *rules , unorder
 	unordered_map<NonTerminal *, FollowElementWrapper *> eleWrappers;
 	vector<FollowElementWrapper *> createdEleWrappers;
 	for (unsigned i = 0; i < rules->size(); i++) {
-		if ((*rules)[i]->type == NON_TERMINAL) {
+		if ((*rules)[i]->getType() == NON_TERMINAL) {
 			FollowElementWrapper *wrapper = new FollowElementWrapper();
-			NonTerminal * e = dynamic_cast<NonTerminal *>((*rules)[i]);
+			NonTerminal * e = static_cast<NonTerminal *>((*rules)[i]);
 			wrapper->core = e;
 			eleWrappers.insert(pair<NonTerminal *, FollowElementWrapper *>(e, wrapper));
 			createdEleWrappers.push_back(wrapper);
@@ -31,23 +31,23 @@ void FollowCalculator::set_follow_sets(vector<GrammarElement *> *rules , unorder
 			FollowElementWrapper * wrapper = *it;
 			for (unsigned i = 0; i < wrapper->core->referenced_in.size(); i++) {
 				GrammarExpression * exp = wrapper->core->referenced_in[i];
-				FollowElementWrapper *big = eleWrappers[exp->belongs_to];
+				FollowElementWrapper *big = eleWrappers[static_cast<NonTerminal *>(exp->belongs_to)];
 				found  = false;
 				for (unsigned j = 0; j < exp->expression.size(); j++) {
 					GrammarElement *e = exp->expression[j];
 					if (found) {
-						if (e->type == TERMINAL) {
-							wrapper->follow_strings.insert(e->name);
+						if (e->getType() == TERMINAL) {
+							wrapper->follow_strings.insert(e->getName());
 							found = false;
 						} else {
-							NonTerminal * ex = dynamic_cast<NonTerminal *>(e);
+							NonTerminal * ex = static_cast<NonTerminal *>(e);
 							wrapper->follow_strings.insert(ex->first_strings.begin(), ex->first_strings.end());
 							if (!ex->eps && ex != wrapper->core) {
 								found = false;
 							}
 						}
-					} else if (e->type == NON_TERMINAL) {
-						found = wrapper->core == dynamic_cast<NonTerminal *>(e);
+					} else if (e->getType() == NON_TERMINAL) {
+						found = wrapper->core == static_cast<NonTerminal *>(e);
 					}
 				}
 				if (found) {

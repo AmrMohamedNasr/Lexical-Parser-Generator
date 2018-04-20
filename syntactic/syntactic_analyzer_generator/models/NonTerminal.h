@@ -10,6 +10,10 @@
 
 #include "GrammarElement.h"
 #include "GrammarExpression.h"
+#include <unordered_set>
+
+
+using namespace std;
 
 class GrammarExpression;
 

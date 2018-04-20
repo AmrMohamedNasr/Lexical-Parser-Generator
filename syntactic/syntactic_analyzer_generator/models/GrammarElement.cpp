@@ -16,3 +16,11 @@ string GrammarElement::getName() {
 ElementType GrammarElement::getType() {
     return this->type;
 }
+
+void GrammarElement::setName(string name) {
+    this->name = name;
+}
+
+void GrammarElement::setType(ElementType type) {
+    this->type = type;
+}

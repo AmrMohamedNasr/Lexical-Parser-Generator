@@ -22,6 +22,8 @@ class GrammarElement {
     GrammarElement(string name, ElementType type);
     string getName();
     ElementType getType();
+    void setName(string name);
+    void setType(ElementType type);
 
     private:
     string name;
