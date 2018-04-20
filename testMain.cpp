@@ -11,7 +11,7 @@ void run_tests_p1(void);
 void run_tests_p2(void);
 
 int main() {
-	run_tests_p1();
+//	run_tests_p1();
 	run_tests_p2();
     return 0;
 }
