@@ -16,7 +16,7 @@ using namespace std;
 
 class GrammarTableBuilder {
 	public:
-		GrammarTable build_grammar_table(vector<GrammarElement *> * rules);
+		GrammarTable* build_grammar_table(vector<GrammarElement *> * rules);
 };
 
 #endif /* SYNTACTIC_SYNTACTIC_ANALYZER_GENERATOR_TABLE_BUILDER_GRAMMARTABLEBUILDER_H_ */

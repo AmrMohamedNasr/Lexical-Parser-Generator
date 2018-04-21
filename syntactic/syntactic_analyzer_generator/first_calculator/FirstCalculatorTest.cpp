@@ -76,12 +76,6 @@ void build_test_graph1(vector<GrammarElement *> * elements, unordered_set<Gramma
 	expressions->insert(ex4);
 	expressions->insert(ex5);
 	expressions->insert(ex6);
-	ex1->belongs_to = e;
-	ex2->belongs_to = e1;
-	ex3->belongs_to = t;
-	ex4->belongs_to = t1;
-	ex5->belongs_to = f;
-	ex6->belongs_to = f;
 	ex1->expression.push_back(t);ex1->expression.push_back(e1);
 	ex2->expression.push_back(plus);ex2->expression.push_back(t);ex2->expression.push_back(e1);
 	ex3->expression.push_back(f);ex3->expression.push_back(t1);

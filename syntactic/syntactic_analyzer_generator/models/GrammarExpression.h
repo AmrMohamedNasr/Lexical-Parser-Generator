@@ -21,25 +21,11 @@ class NonTerminal;
 class GrammarExpression {
 	public:
 	GrammarExpression(GrammarElement *element);
-
-	vector<GrammarElement *> expression;
-		GrammarElement * belongs_to;
-		bool eps;
-		unordered_set<string> first_strings;
-		void print_expression(void) {
-			cout << "Expression : ";
-			for (unsigned i = 0; i < expression.size(); i++) {
-				cout << expression[i]->getName() << " ";
-			}
-			cout << endl;
-			cout << "First : ";
-			for (auto it = first_strings.begin(); it != first_strings.end(); it++) {
-				cout << "{\"" << *it << "\"}" << ", ";
-			}
-			cout << endl;
-			cout << "Belongs to : " << belongs_to->getName() << endl;
-		}
+	std::vector<GrammarElement *> expression;
+	NonTerminal * belongs_to;
+	bool eps;
+	std::unordered_set<string> first_strings;
+	void print_expression(void);
 };
-
 
 #endif /* SYNTACTIC_SYNTACTIC_ANALYZER_GENERATOR_MODELS_GRAMMAREXPRESSION_H_ */
