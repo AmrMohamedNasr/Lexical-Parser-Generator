@@ -239,16 +239,16 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 															(*itr)->expression[0], temp));
 		}
 	}
-	NonTerminal * src = dynamic_cast<NonTerminal *>(source);
+	NonTerminal * src = static_cast<NonTerminal *>(source);
 	for (auto itr = matched_exprs.begin(); itr != matched_exprs.end(); ++itr) {
 		char num_of_factors = '1';
-		GrammarExpression * newExpr = new GrammarExpression();
-		newExpr->belongs_to = src;
+		GrammarExpression * newExpr = new GrammarExpression(src);
+
 		bool sameFirst = true;
 		while (sameFirst) {
 			newExpr->expression.push_back((*itr).second[0]->expression[0]);
-			if ((*itr).second[0]->expression[0]->type == NON_TERMINAL) {
-				NonTerminal * temp = dynamic_cast<NonTerminal *>((*itr).second[0]->expression[0]);
+			if ((*itr).second[0]->expression[0]->getType() == NON_TERMINAL) {
+				NonTerminal * temp = static_cast<NonTerminal *>((*itr).second[0]->expression[0]);
 				temp->referenced_in.push_back(newExpr);
 			}
 			for (unsigned i = 0; i < (*itr).second.size(); ++i) {
@@ -264,10 +264,9 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 				}
 			}
 		}
-		NonTerminal * newEle = new NonTerminal();
-		newEle->name = src->name + "_" +  num_of_factors;
+		NonTerminal * newEle = new NonTerminal(
+				src->getName() + "_" +  num_of_factors, NON_TERMINAL);
 		num_of_factors++;
-		newEle->type = NON_TERMINAL;
 		newEle->referenced_in.push_back(newExpr);
 		newExpr->expression.push_back(newEle);
 		unordered_set<GrammarExpression *> to_be_removed;
