@@ -60,6 +60,7 @@ void FirstCalculator::set_first_sets(vector<GrammarElement *> *rules , unordered
 			}
 			if (!found_terminal) {
 				still_working = true;
+				wrapper->core->eps = true;
 				static_cast<NonTerminal*>(wrapper->core->belongs_to)->eps = true;
 			}
 		}

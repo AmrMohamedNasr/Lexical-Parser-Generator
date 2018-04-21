@@ -19,14 +19,12 @@ class GrammarExpression;
 
 class NonTerminal : public GrammarElement {
 public:
-	NonTerminal(const string &name, ElementType type) : GrammarElement(name, type) {}
-
-public:
-		bool eps;
-		vector<GrammarExpression *> leads_to;
-		vector<GrammarExpression *> referenced_in;
-		unordered_set<string> first_strings;
-		unordered_set<string> follow_strings;
+	NonTerminal(const string &name, ElementType type);
+	bool eps;
+	vector<GrammarExpression *> leads_to;
+	vector<GrammarExpression *> referenced_in;
+	unordered_set<string> first_strings;
+	unordered_set<string> follow_strings;
 };
 
 

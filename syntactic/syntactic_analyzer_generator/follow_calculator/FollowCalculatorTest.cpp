@@ -43,11 +43,11 @@ void build_test_graph_f(vector<GrammarElement *> * elements, unordered_set<Gramm
 	GrammarElement *t = new NonTerminal("T", NON_TERMINAL);
 	GrammarElement *t1 = new NonTerminal("T'", NON_TERMINAL);
 	GrammarElement *f = new NonTerminal("F", NON_TERMINAL);
-	GrammarElement *plus = new GrammarElement("id", TERMINAL);
-	GrammarElement *mul = new GrammarElement(")", TERMINAL);
+	GrammarElement *plus = new GrammarElement("+", TERMINAL);
+	GrammarElement *mul = new GrammarElement("*", TERMINAL);
 	GrammarElement *leftp = new GrammarElement("(", TERMINAL);
-	GrammarElement *rightp = new GrammarElement("*", TERMINAL);
-	GrammarElement *id = new GrammarElement("+", TERMINAL);
+	GrammarElement *rightp = new GrammarElement(")", TERMINAL);
+	GrammarElement *id = new GrammarElement("id", TERMINAL);
 	elements->push_back(e);
 	elements->push_back(t);
 	elements->push_back(e1);

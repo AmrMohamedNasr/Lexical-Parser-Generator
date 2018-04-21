@@ -8,6 +8,7 @@
 
 GrammarExpression::GrammarExpression(GrammarElement* element) {
     this->belongs_to = static_cast<NonTerminal*> (element);
+    this->eps = false;
 }
 
 void GrammarExpression::print_expression() {
