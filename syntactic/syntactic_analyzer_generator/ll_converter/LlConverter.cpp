@@ -179,20 +179,27 @@ void LlConverter::left_factor(vector<GrammarElement *> *rules , unordered_set<Gr
 }
 
 bool LlConverter::check_left_factoring(GrammarElement * source, unordered_set<GrammarExpression*> *to_be_changed, bool * direct) {
-	map<GrammarElement*, int> first_eles;
+	map<GrammarElement*, unsigned> first_eles;
 	unordered_set<string> first_strings;
 	NonTerminal * src = static_cast<NonTerminal *>(source);
 	bool left = false;
+	unordered_set<GrammarExpression*>::const_iterator itra;
 	// check if it needs direct left factoring.
 	for (unsigned i = 0; i < src->leads_to.size(); ++i) {
-		map<GrammarElement *, int>::const_iterator it = first_eles.find(src->leads_to[i]->expression[0]);
+		map<GrammarElement *, unsigned>::const_iterator it = first_eles.find(src->leads_to[i]->expression[0]);
 		if (it != first_eles.end()) {
 			*direct = true;
-			to_be_changed->insert(src->leads_to[i]);
-			to_be_changed->insert(src->leads_to[(*it).second]);
+			itra = (*to_be_changed).find(src->leads_to[i]);
+			if (itra == (*to_be_changed).end()) {
+				(*to_be_changed).insert(src->leads_to[i]);
+			}
+			itra = (*to_be_changed).find(src->leads_to[(*it).second]);
+			if (itra == (*to_be_changed).end()) {
+				(*to_be_changed).insert(src->leads_to[(*it).second]);
+			}
 			left = true;
 		} else {
-			first_eles.insert(pair<GrammarElement*, int>(src->leads_to[i]->expression[0], i));
+			first_eles.insert(pair<GrammarElement*, unsigned>(src->leads_to[i]->expression[0], i));
 		}
 	}
 	// if it need direct left factoring.
@@ -204,9 +211,15 @@ bool LlConverter::check_left_factoring(GrammarElement * source, unordered_set<Gr
 		for (auto itr = src->leads_to[i]->first_strings.begin(); itr != src->leads_to[i]->first_strings.end(); ++itr) {
 			unordered_set<string>::const_iterator it = first_strings.find(*itr);
 			if (it != first_strings.end()) {
-				to_be_changed->insert(src->leads_to[i]);
+				itra = (*to_be_changed).find(src->leads_to[i]);
+				if (itra == (*to_be_changed).end()) {
+					(*to_be_changed).insert(src->leads_to[i]);
+				}
 				if (src->leads_to[0]->first_strings.find(*itr) == it) {
-					to_be_changed->insert(src->leads_to[0]);
+					itra = (*to_be_changed).find(src->leads_to[0]);
+					if (itra == (*to_be_changed).end()) {
+						(*to_be_changed).insert(src->leads_to[0]);
+					}
 				}
 				*direct = false;
 				left = true;
@@ -240,10 +253,9 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 		}
 	}
 	NonTerminal * src = static_cast<NonTerminal *>(source);
+	char num_of_factors = '1';
 	for (auto itr = matched_exprs.begin(); itr != matched_exprs.end(); ++itr) {
-		char num_of_factors = '1';
 		GrammarExpression * newExpr = new GrammarExpression(src);
-
 		bool sameFirst = true;
 		while (sameFirst) {
 			newExpr->expression.push_back((*itr).second[0]->expression[0]);
@@ -277,6 +289,7 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 			unordered_set<GrammarExpression *>::iterator it = to_be_removed.find(src->leads_to[i]);
 			if (it != to_be_removed.end()) {
 				src->leads_to.erase(src->leads_to.begin() + i);
+				i--;
 			}
 		}
 		src->leads_to.push_back(newExpr);

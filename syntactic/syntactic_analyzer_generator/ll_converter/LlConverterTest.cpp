@@ -241,6 +241,9 @@ void test_direct_left_factoring() {
 	exp15->expression = { cS, dS, fS, b };
 	vector <GrammarElement* > set = {a};
 	unordered_set <GrammarExpression*> set2 = {exp11, exp12, exp13, exp14, exp15};
+	a->leads_to = { exp11, exp12, exp13, exp14, exp15 };
+	b->referenced_in = { exp11, exp12, exp14, exp15 };
+	a->first_strings = { "a", "c" };
 	unordered_set <NonTerminal*> set3;
 	LlConverter converter;
 	converter.left_factor(&set, &set2, &set3);
