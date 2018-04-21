@@ -144,6 +144,7 @@ GrammarElement * GrammarFileParser::insertNonTerminal(string line, const regex p
     if (nameToNonTerminal->find(name) == nameToNonTerminal->end()) {
         GrammarElement* element = new NonTerminal(name, NON_TERMINAL);
         (*nameToNonTerminal)[name] = static_cast<NonTerminal*> (element);
+        static_cast<NonTerminal*> (element)->eps = false;
         rules->push_back(element);
         non_terminals->insert(name);
         if (prevGrammarElement == nullptr) {
@@ -182,6 +183,7 @@ void GrammarFileParser::parseRightHandSide(string rightHandSide, unordered_set<s
                             if (nameToNonTerminal->find(temp) == nameToNonTerminal->end()) {
                                 GrammarElement* element = new NonTerminal(temp, NON_TERMINAL);
                                 (*nameToNonTerminal)[temp] = static_cast<NonTerminal *>(element);
+                                static_cast<NonTerminal*> (element)->eps = false;
                                 rules->push_back(element);
                                 non_terminals->insert(temp);
                             }
@@ -230,6 +232,7 @@ void GrammarFileParser::parseRightHandSide(string rightHandSide, unordered_set<s
                     if (nameToNonTerminal->find(temp) == nameToNonTerminal->end()) {
                         GrammarElement* element = new NonTerminal(temp, NON_TERMINAL);
                         (*nameToNonTerminal)[temp] = static_cast<NonTerminal *>(element);
+                        static_cast<NonTerminal*> (element)->eps = false;
                         rules->push_back(element);
                         non_terminals->insert(temp);
                     }

@@ -73,7 +73,6 @@ void sheetThreeProblemThreeTestCase() {
     NonTerminal* FD = static_cast<NonTerminal*>(FDE);
     FD->eps = true;
 
-
     GrammarElement* plus = new GrammarElement("+", TERMINAL);
     GrammarElement* star = new GrammarElement("*", TERMINAL);
     GrammarElement* open = new GrammarElement("(", TERMINAL);
@@ -274,6 +273,7 @@ void projectPdfTestCase() {
     STATEMENT_LIST->eps = false;
     STATEMENT->eps = false;
     DECLARATION->eps = false;
+    IF->eps = false;
     WHILE->eps = false;
     ASSIGNMENT->eps = false;
     PRIMITIVE_TYPE->eps = false;
