@@ -17,10 +17,17 @@ using namespace std;
 enum ElementType {TERMINAL, NON_TERMINAL};
 
 class GrammarElement {
-	public:
-		string name;
-		ElementType type;
-		virtual ~GrammarElement() = default;
+
+    public:
+    GrammarElement(string name, ElementType type);
+    string getName();
+    ElementType getType();
+    void setName(string name);
+    void setType(ElementType type);
+
+    private:
+    string name;
+    ElementType type;
 };
 
 

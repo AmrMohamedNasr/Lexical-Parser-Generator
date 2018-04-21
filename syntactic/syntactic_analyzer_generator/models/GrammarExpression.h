@@ -20,12 +20,12 @@ class NonTerminal;
 
 class GrammarExpression {
 	public:
-		std::vector<GrammarElement *> expression;
-		NonTerminal * belongs_to;
-		bool eps;
-		std::unordered_set<string> first_strings;
-		void print_expression(void);
+	GrammarExpression(GrammarElement *element);
+	std::vector<GrammarElement *> expression;
+	NonTerminal * belongs_to;
+	bool eps;
+	std::unordered_set<string> first_strings;
+	void print_expression(void);
 };
-
 
 #endif /* SYNTACTIC_SYNTACTIC_ANALYZER_GENERATOR_MODELS_GRAMMAREXPRESSION_H_ */

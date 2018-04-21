@@ -10,7 +10,7 @@
 GrammarTable* GrammarTableBuilder::build_grammar_table(vector<GrammarElement *> *rules) {
     auto grammarTable = new GrammarTable();
     for (auto grammarElement : *rules) {
-        NonTerminal* nonTerminal = dynamic_cast<NonTerminal*>(grammarElement);
+        NonTerminal* nonTerminal = static_cast<NonTerminal*>(grammarElement);
         if (nonTerminal) {
             cout << nonTerminal->eps << endl;
         }

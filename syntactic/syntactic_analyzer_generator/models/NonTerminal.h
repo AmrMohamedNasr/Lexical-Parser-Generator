@@ -12,10 +12,16 @@
 #include "GrammarExpression.h"
 #include <unordered_set>
 
+
+using namespace std;
+
 class GrammarExpression;
 
 class NonTerminal : public GrammarElement {
-	public:
+public:
+	NonTerminal(const string &name, ElementType type) : GrammarElement(name, type) {}
+
+public:
 		bool eps;
 		vector<GrammarExpression *> leads_to;
 		vector<GrammarExpression *> referenced_in;

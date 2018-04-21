@@ -18,83 +18,55 @@ void test_ll_converter() {
 }
 
 void test_left_recursion() {
-	NonTerminal* bterm = new NonTerminal();
-	NonTerminal* bfactor = new NonTerminal();
-	NonTerminal* bexpr = new NonTerminal();
-	GrammarElement* oR = new GrammarElement();
-	oR->name = "or";
-	oR->type = TERMINAL;
-	GrammarElement* openBracket = new GrammarElement();
-	openBracket->name = "(";
-	openBracket->type = TERMINAL;
-	GrammarElement* closeBracket = new GrammarElement();
-	closeBracket->name = ")";
-	closeBracket->type = TERMINAL;
-	GrammarElement* aND = new GrammarElement();
-	aND->name = "and";
-	aND->type = TERMINAL;
-	GrammarElement* nOT = new GrammarElement();
-	nOT->name = "not";
-	nOT->type = TERMINAL;
-	GrammarElement* tRUE = new GrammarElement();
-	tRUE->name = "true";
-	tRUE->type = TERMINAL;
-	GrammarElement* fALSE = new GrammarElement();
-	fALSE->name = "false";
-	fALSE->type = TERMINAL;
+	GrammarElement* bterm = new NonTerminal("bterm", NON_TERMINAL);
+	GrammarElement* bfactor = new NonTerminal("bfactor", NON_TERMINAL);
+	GrammarElement* bexpr = new NonTerminal("bexpr", NON_TERMINAL);
+	GrammarElement* oR = new GrammarElement("or", TERMINAL);
+	GrammarElement* openBracket = new GrammarElement("(", TERMINAL);
+	GrammarElement* closeBracket = new GrammarElement(")", TERMINAL);
+	GrammarElement* aND = new GrammarElement("and", TERMINAL);
+	GrammarElement* nOT = new GrammarElement("not", TERMINAL);
+	GrammarElement* tRUE = new GrammarElement("true", TERMINAL);
+	GrammarElement* fALSE = new GrammarElement("false", TERMINAL);
 	// first rule
-	GrammarExpression* exp11 = new GrammarExpression();
-	exp11->belongs_to = bexpr;
+	GrammarExpression* exp11 = new GrammarExpression(bexpr);
 	exp11->expression = { bexpr, oR, bterm };
 	exp11->first_strings = { "not", "(", "true", "false" };
-	GrammarExpression* exp12 = new GrammarExpression();
-	exp12->belongs_to = bexpr;
+	GrammarExpression* exp12 = new GrammarExpression(bexpr);
 	exp12->expression = { bterm };
 	exp12->first_strings = { "not", "(", "true", "false" };
-	bexpr->type = NON_TERMINAL;
-	bexpr->referenced_in = {exp11 };
-	bexpr->name = "bexpr";
-	bexpr->leads_to = { exp11, exp12 };
-	bexpr->first_strings = { "not", "(", "true", "false" };
-	bexpr->follow_strings = { "$", ")"};
+	static_cast<NonTerminal*>(bexpr)->referenced_in = {exp11 };
+	static_cast<NonTerminal*>(bexpr)->leads_to = { exp11, exp12 };
+	static_cast<NonTerminal*>(bexpr)->first_strings = { "not", "(", "true", "false" };
+	static_cast<NonTerminal*>(bexpr)->follow_strings = { "$", ")"};
 	// second rule
-	GrammarExpression* exp21 = new GrammarExpression();
-	exp21->belongs_to = bterm;
+	GrammarExpression* exp21 = new GrammarExpression(bterm);
 	exp21->expression = { bterm, aND, bfactor };
 	exp21->first_strings = { "not", "(", "true", "false" };
-	GrammarExpression* exp22 = new GrammarExpression();
-	exp22->belongs_to = bterm;
+	GrammarExpression* exp22 = new GrammarExpression(bterm);
 	exp22->expression = { bfactor };
 	exp22->first_strings = { "not", "(", "true", "false" };
-	bterm->type = NON_TERMINAL;
-	bterm->referenced_in = { exp11, exp12, exp21 };
-	bterm->name = "bterm";
-	bterm->leads_to = { exp21, exp22 };
-	bterm->first_strings = { "not", "(", "true", "false" };
-	bterm->follow_strings = { "$", "or", ")"};
+	static_cast<NonTerminal*>(bterm)->referenced_in = { exp11, exp12, exp21 };
+	static_cast<NonTerminal*>(bterm)->leads_to = { exp21, exp22 };
+	static_cast<NonTerminal*>(bterm)->first_strings = { "not", "(", "true", "false" };
+	static_cast<NonTerminal*>(bterm)->follow_strings = { "$", "or", ")"};
 	//third rule
-	GrammarExpression* exp31 = new GrammarExpression();
-	exp31->belongs_to = bfactor;
+	GrammarExpression* exp31 = new GrammarExpression(bfactor);
 	exp31->expression = { nOT, bfactor };
 	exp31->first_strings = {"not"};
-	GrammarExpression* exp32 = new GrammarExpression();
-	exp32->belongs_to = bfactor;
+	GrammarExpression* exp32 = new GrammarExpression(bfactor);
 	exp32->expression = { openBracket, bexpr, closeBracket };
 	exp32->first_strings = {"("};
-	GrammarExpression* exp33 = new GrammarExpression();
-	exp33->belongs_to = bfactor;
+	GrammarExpression* exp33 = new GrammarExpression(bfactor);
 	exp33->expression = { tRUE };
 	exp33->first_strings = {"true"};
-	GrammarExpression* exp34 = new GrammarExpression();
-	exp34->belongs_to = bfactor;
+	GrammarExpression* exp34 = new GrammarExpression(bfactor);
 	exp34->expression = { fALSE };
 	exp34->first_strings = {"false"};
-	bfactor->type = NON_TERMINAL;
-	bfactor->referenced_in = { exp31, exp21, exp22 };
-	bfactor->name = "bfactor";
-	bfactor->leads_to = { exp31, exp32, exp33, exp34 };
-	bfactor->first_strings = { "not", "(", "true", "false" };
-	bfactor->follow_strings = { "$", "or", ")", "and" };
+	static_cast<NonTerminal*>(bfactor)->referenced_in = { exp31, exp21, exp22 };
+	static_cast<NonTerminal*>(bfactor)->leads_to = { exp31, exp32, exp33, exp34 };
+	static_cast<NonTerminal*>(bfactor)->first_strings = { "not", "(", "true", "false" };
+	static_cast<NonTerminal*>(bfactor)->follow_strings = { "$", "or", ")", "and" };
 
 	vector <GrammarElement* > set = {bexpr, bterm, bfactor, nOT, aND, oR, closeBracket, openBracket, tRUE, fALSE };
 	unordered_set <GrammarExpression*> set2 = {exp11, exp12, exp21, exp22, exp31, exp32, exp33, exp34};
@@ -103,8 +75,8 @@ void test_left_recursion() {
 	converter.remove_left_recursion(&set, &set2, &changed);
 	// if pass integration test passed
 
-	if (set[0]->name == "bexpr") {
-		NonTerminal * temp = dynamic_cast<NonTerminal *>(set[0]);
+	if (set[0]->getName() == "bexpr") {
+		NonTerminal * temp = static_cast<NonTerminal *>(set[0]);
 		if (temp->leads_to[0]->expression[0] != set[1]) {
 			cout << "Error in Left recursion" << "Expected reference to \" bterm \" " <<endl;
 		}
@@ -127,51 +99,31 @@ void test_left_recursion() {
 	delete fALSE;
 }
 void test_indirect_left_recursion() {
-	NonTerminal* a = new NonTerminal();
-	a->name = "A";
-	a->type = NON_TERMINAL;
-	NonTerminal* b = new NonTerminal();
-	b->name = "B";
-	b->type = NON_TERMINAL;
-	NonTerminal* c = new NonTerminal();
-	c->name = "C";
-	c->type = NON_TERMINAL;
-	NonTerminal* d = new NonTerminal();
-	d->name = "D";
-	d->type = NON_TERMINAL;
-	GrammarElement* x = new GrammarElement();
-	x->name = "x";
-	x->type = TERMINAL;
-	GrammarElement* y = new GrammarElement();
-	y->name = "y";
-	y->type = TERMINAL;
-	GrammarElement* cS = new GrammarElement();
-	cS->name = ")";
-	cS->type = TERMINAL;
-	GrammarElement* dS = new GrammarElement();
-	dS->name = "and";
-	dS->type = TERMINAL;
-	GrammarExpression* exp11 = new GrammarExpression();
-	exp11->belongs_to = a;
+	NonTerminal* a = new NonTerminal("A", NON_TERMINAL);
+	NonTerminal* b = new NonTerminal("B", NON_TERMINAL);
+	NonTerminal* c = new NonTerminal("C", NON_TERMINAL);
+	NonTerminal* d = new NonTerminal("D", NON_TERMINAL);
+
+	GrammarElement* x = new GrammarElement("x", TERMINAL);
+	GrammarElement* y = new GrammarElement("y", TERMINAL);
+	GrammarElement* cS = new GrammarElement(")", TERMINAL);
+	GrammarElement* dS = new GrammarElement("and", TERMINAL);
+
+	GrammarExpression* exp11 = new GrammarExpression(a);
 	exp11->expression = { b, x, y};
 	b->referenced_in.push_back(exp11);
-	GrammarExpression* exp12 = new GrammarExpression();
-	exp12->belongs_to = a;
+	GrammarExpression* exp12 = new GrammarExpression(a);
 	exp12->expression = { x };
-	GrammarExpression* exp21 = new GrammarExpression();
-	exp21->belongs_to = b;
+	GrammarExpression* exp21 = new GrammarExpression(b);
 	exp21->expression = { c, d};
 	d->referenced_in.push_back(exp21);
 	c->referenced_in.push_back(exp21);
-	GrammarExpression* exp31 = new GrammarExpression();
-	exp31->belongs_to = c;
+	GrammarExpression* exp31 = new GrammarExpression(c);
 	exp31->expression = { a };
 	a->referenced_in.push_back(exp31);
-	GrammarExpression* exp32 = new GrammarExpression();
-	exp32->belongs_to = c;
+	GrammarExpression* exp32 = new GrammarExpression(c);
 	exp32->expression = { cS };
-	GrammarExpression* exp41 = new GrammarExpression();
-	exp41->belongs_to = d;
+	GrammarExpression* exp41 = new GrammarExpression(d);
 	exp41->expression = { dS };
 	a->leads_to = { exp11, exp12};
 	b->leads_to = { exp21 };
@@ -183,9 +135,9 @@ void test_indirect_left_recursion() {
 	unordered_set <NonTerminal*> changed;
 	LlConverter converter;
 	converter.remove_left_recursion(&set, &set2, &changed);
-	NonTerminal * ele =  dynamic_cast<NonTerminal *> (set[8]);
-	NonTerminal * ele1 =  dynamic_cast<NonTerminal *> (set[2]);
-	if (ele->name == "C'" ) {
+	NonTerminal * ele =  static_cast<NonTerminal *> (set[8]);
+	NonTerminal * ele1 =  static_cast<NonTerminal *> (set[2]);
+	if (ele->getName() == "C'" ) {
 		if (ele->leads_to.size() == 1) {
 			if (ele->eps) {
 				if (ele->leads_to[0]->belongs_to == ele) {

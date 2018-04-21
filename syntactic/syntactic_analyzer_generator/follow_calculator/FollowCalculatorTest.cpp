@@ -38,16 +38,16 @@ void test_follow_calculator() {
 
 
 void build_test_graph_f(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions) {
-	NonTerminal *e = new NonTerminal();
-	NonTerminal *e1 = new NonTerminal();
-	NonTerminal *t = new NonTerminal();
-	NonTerminal *t1 = new NonTerminal();
-	NonTerminal *f = new NonTerminal();
-	GrammarElement *plus = new GrammarElement();;
-	GrammarElement * mul = new GrammarElement();
-	GrammarElement * leftp = new GrammarElement();
-	GrammarElement * rightp = new GrammarElement();
-	GrammarElement * id = new GrammarElement();
+	GrammarElement *e = new NonTerminal("E", NON_TERMINAL);
+	GrammarElement *e1 = new NonTerminal("E'", NON_TERMINAL);
+	GrammarElement *t = new NonTerminal("T", NON_TERMINAL);
+	GrammarElement *t1 = new NonTerminal("T'", NON_TERMINAL);
+	GrammarElement *f = new NonTerminal("F", NON_TERMINAL);
+	GrammarElement *plus = new GrammarElement("id", TERMINAL);
+	GrammarElement *mul = new GrammarElement(")", TERMINAL);
+	GrammarElement *leftp = new GrammarElement("(", TERMINAL);
+	GrammarElement *rightp = new GrammarElement("*", TERMINAL);
+	GrammarElement *id = new GrammarElement("+", TERMINAL);
 	elements->push_back(e);
 	elements->push_back(t);
 	elements->push_back(e1);
@@ -58,69 +58,47 @@ void build_test_graph_f(vector<GrammarElement *> * elements, unordered_set<Gramm
 	elements->push_back(leftp);
 	elements->push_back(rightp);
 	elements->push_back(id);
-	id->type = TERMINAL;
-	rightp->type = TERMINAL;
-	leftp->type = TERMINAL;
-	mul->type = TERMINAL;
-	plus->type = TERMINAL;
-	id->name = "id";
-	rightp->name = ")";
-	leftp->name = "(";
-	mul->name = "*";
-	plus->name = "+";
-	e->type = NON_TERMINAL;
-	e1->type = NON_TERMINAL;
-	t->type = NON_TERMINAL;
-	t1->type = NON_TERMINAL;
-	f->type = NON_TERMINAL;
-	e->name = "E";
-	e1->name = "E'";
-	t->name = "T";
-	t1->name = "T'";
-	f->name = "F";
-	e1->eps = true;
-	t1->eps = true;
-	GrammarExpression *ex1 = new GrammarExpression();
-	GrammarExpression *ex2 = new GrammarExpression();
-	GrammarExpression *ex3 = new GrammarExpression();
-	GrammarExpression *ex4 = new GrammarExpression();
-	GrammarExpression *ex5 = new GrammarExpression();
-	GrammarExpression *ex6 = new GrammarExpression();
+	static_cast<NonTerminal *>(e1)->eps = true;
+	static_cast<NonTerminal *>(t1)->eps = true;
+	GrammarExpression *ex1 = new GrammarExpression(e);
+	GrammarExpression *ex2 = new GrammarExpression(e1);
+	GrammarExpression *ex3 = new GrammarExpression(t);
+	GrammarExpression *ex4 = new GrammarExpression(t1);
+	GrammarExpression *ex5 = new GrammarExpression(f);
+	GrammarExpression *ex6 = new GrammarExpression(f);
 	expressions->insert(ex1);
 	expressions->insert(ex2);
 	expressions->insert(ex3);
 	expressions->insert(ex4);
 	expressions->insert(ex5);
 	expressions->insert(ex6);
-	ex1->belongs_to = e;
-	ex2->belongs_to = e1;
-	ex3->belongs_to = t;
-	ex4->belongs_to = t1;
-	ex5->belongs_to = f;
-	ex6->belongs_to = f;
 	ex1->expression.push_back(t);ex1->expression.push_back(e1);
 	ex2->expression.push_back(plus);ex2->expression.push_back(t);ex2->expression.push_back(e1);
 	ex3->expression.push_back(f);ex3->expression.push_back(t1);
 	ex4->expression.push_back(mul);ex4->expression.push_back(f);ex4->expression.push_back(t1);
 	ex5->expression.push_back(leftp);ex5->expression.push_back(e);ex5->expression.push_back(rightp);
 	ex6->expression.push_back(id);
-	e->leads_to.push_back(ex1);
-	e1->leads_to.push_back(ex2);
-	t->leads_to.push_back(ex3);
-	t1->leads_to.push_back(ex4);
-	f->leads_to.push_back(ex5);
-	f->leads_to.push_back(ex6);
-	e->referenced_in.push_back(ex5);
-	e1->referenced_in.push_back(ex1);e1->referenced_in.push_back(ex2);
-	t->referenced_in.push_back(ex1);t->referenced_in.push_back(ex2);
-	t1->referenced_in.push_back(ex3);t1->referenced_in.push_back(ex4);
-	f->referenced_in.push_back(ex3);f->referenced_in.push_back(ex4);
+	static_cast<NonTerminal *>(e)->leads_to.push_back(ex1);
+	static_cast<NonTerminal *>(e1)->leads_to.push_back(ex2);
+	static_cast<NonTerminal *>(t)->leads_to.push_back(ex3);
+	static_cast<NonTerminal *>(t1)->leads_to.push_back(ex4);
+	static_cast<NonTerminal *>(f)->leads_to.push_back(ex5);
+	static_cast<NonTerminal *>(f)->leads_to.push_back(ex6);
+	static_cast<NonTerminal *>(e)->referenced_in.push_back(ex5);
+	static_cast<NonTerminal *>(e1)->referenced_in.push_back(ex1);
+	static_cast<NonTerminal *>(e1)->referenced_in.push_back(ex2);
+	static_cast<NonTerminal *>(t)->referenced_in.push_back(ex1);
+	static_cast<NonTerminal *>(t)->referenced_in.push_back(ex2);
+	static_cast<NonTerminal *>(t1)->referenced_in.push_back(ex3);
+	static_cast<NonTerminal *>(t1)->referenced_in.push_back(ex4);
+	static_cast<NonTerminal *>(f)->referenced_in.push_back(ex3);
+	static_cast<NonTerminal *>(f)->referenced_in.push_back(ex4);
 	unordered_set<string> s1 = {"(", "id"}, s2 = {"*"}, s3 = {"+"};
-	e->first_strings = s1;
-	e1->first_strings = s3;
-	t->first_strings = s1;
-	t1->first_strings = s2;
-	f->first_strings = s1;
+	static_cast<NonTerminal *>(e)->first_strings = s1;
+	static_cast<NonTerminal *>(e1)->first_strings = s3;
+	static_cast<NonTerminal *>(t)->first_strings = s1;
+	static_cast<NonTerminal *>(t1)->first_strings = s2;
+	static_cast<NonTerminal *>(f)->first_strings = s1;
 }
 
 bool test_graph_resultsf(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions) {
@@ -132,25 +110,25 @@ bool test_graph_resultsf(vector<GrammarElement *> * elements, unordered_set<Gram
 	int t = 0,nt = 0;
 	for (unsigned i = 0; i < elements->size(); i++) {
 		GrammarElement * e = (*elements)[i];
-		if (e->name == "E") {
+		if (e->getName() == "E") {
 			nt ^= 0b1;
-			NonTerminal * ex = dynamic_cast<NonTerminal*>(e);
+			NonTerminal * ex = static_cast<NonTerminal*>(e);
 			nonTerminals.push_back(ex);
-		} else if (e->name == "E'") {
+		} else if (e->getName() == "E'") {
 			nt ^= 0b10;
-			NonTerminal * ex = dynamic_cast<NonTerminal*>(e);
+			NonTerminal * ex = static_cast<NonTerminal*>(e);
 			nonTerminals.push_back(ex);
-		} else if (e->name == "T") {
+		} else if (e->getName() == "T") {
 			nt ^= 0b100;
-			NonTerminal * ex = dynamic_cast<NonTerminal*>(e);;
+			NonTerminal * ex = static_cast<NonTerminal*>(e);
 			nonTerminals.push_back(ex);
-		} else if (e->name == "T'") {
+		} else if (e->getName() == "T'") {
 			nt ^= 0b1000;
-			NonTerminal * ex = dynamic_cast<NonTerminal*>(e);;
+			NonTerminal * ex = static_cast<NonTerminal*>(e);;
 			nonTerminals.push_back(ex);
-		} else if (e->name == "F") {
+		} else if (e->getName() == "F") {
 			nt ^= 0b10000;
-			NonTerminal * ex = dynamic_cast<NonTerminal*>(e);;
+			NonTerminal * ex = static_cast<NonTerminal*>(e);;
 			nonTerminals.push_back(ex);
 		} else {
 			t++;
@@ -173,7 +151,7 @@ bool compare_non_terminalsf(vector<NonTerminal *> * elements, vector<unordered_s
 	for (unsigned i = 0; i < elements->size(); i++) {
 		NonTerminal e = *(*elements)[i];
 		if (e.follow_strings != ans[i]) {
-			cout << "Error at rule " << e.name << " : Follow not right" << endl;
+			cout << "Error at rule " << e.getName() << " : Follow not right" << endl;
 			error = true;
 		}
 	}

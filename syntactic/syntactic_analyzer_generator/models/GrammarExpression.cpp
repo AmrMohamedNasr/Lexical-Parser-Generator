@@ -6,10 +6,14 @@
 
 #include "GrammarExpression.h"
 
+GrammarExpression::GrammarExpression(GrammarElement* element) {
+    this->belongs_to = static_cast<NonTerminal*> (element);
+}
+
 void GrammarExpression::print_expression() {
     cout << "Expression : ";
     for (unsigned i = 0; i < expression.size(); i++) {
-        cout << expression[i]->name << " ";
+        cout << expression[i]->getName() << " ";
     }
     cout << endl;
     cout << "First : ";
@@ -17,5 +21,5 @@ void GrammarExpression::print_expression() {
         cout << "{\"" << *it << "\"}" << ", ";
     }
     cout << endl;
-    cout << "Belongs to : " << belongs_to->name << endl;
+    cout << "Belongs to : " << belongs_to->getName() << endl;
 }
