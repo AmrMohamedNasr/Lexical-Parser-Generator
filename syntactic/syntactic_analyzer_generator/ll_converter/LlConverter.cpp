@@ -145,7 +145,7 @@ void LlConverter::left_factor(vector<GrammarElement *> *rules , unordered_set<Gr
 			NonTerminal * rule = static_cast<NonTerminal *>((*rules)[i]);
 			unordered_set<GrammarExpression *> to_be_changed;
 			bool direct = false;
-			while (check_left_factoring((*rules)[i], &to_be_changed, &direct)) {
+			while (check_left_factoring(rule, &to_be_changed, &direct)) {
 				if (direct) {
 					generate_direct_left_factoring((*rules)[i], rules, expressions, changed, &to_be_changed);
 				} else {

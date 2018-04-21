@@ -10,14 +10,18 @@
 #include "../../../syntactic/syntactic_analyzer_generator/models/NonTerminal.h"
 #include "../../../test_headers/p2_tests.h"
 
-void test_left_recursion();
+void test_direct_left_recursion();
 void test_indirect_left_recursion();
+void test_direct_left_factoring();
+void test_indirect_left_factoring();
 void test_ll_converter() {
-	test_left_recursion();
-	test_indirect_left_recursion();
+	//test_direct_left_recursion();
+	//test_indirect_left_recursion();
+	test_direct_left_factoring();
+	//test_indirect_left_factoring();
 }
 
-void test_left_recursion() {
+void test_direct_left_recursion() {
 	GrammarElement* bterm = new NonTerminal("bterm", NON_TERMINAL);
 	GrammarElement* bfactor = new NonTerminal("bfactor", NON_TERMINAL);
 	GrammarElement* bexpr = new NonTerminal("bexpr", NON_TERMINAL);
@@ -86,7 +90,7 @@ void test_left_recursion() {
 	} else {
 		cout << "Error in Referencing sets" << endl;
 	}
-	cout << "Eliminating left recursion success" << endl;
+	cout << "Eliminating direct left recursion success..." << endl;
 	delete bexpr;
 	delete bterm;
 	delete bfactor;
@@ -106,8 +110,8 @@ void test_indirect_left_recursion() {
 
 	GrammarElement* x = new GrammarElement("x", TERMINAL);
 	GrammarElement* y = new GrammarElement("y", TERMINAL);
-	GrammarElement* cS = new GrammarElement(")", TERMINAL);
-	GrammarElement* dS = new GrammarElement("and", TERMINAL);
+	GrammarElement* cS = new GrammarElement("c", TERMINAL);
+	GrammarElement* dS = new GrammarElement("d", TERMINAL);
 
 	GrammarExpression* exp11 = new GrammarExpression(a);
 	exp11->expression = { b, x, y};
@@ -204,7 +208,84 @@ void test_indirect_left_recursion() {
 	} else {
 		cout << "Error in indirect left recursion" << endl;
 	}
+	delete a;
+	delete b;
+	delete c;
+	delete d;
+	delete x;
+	delete y;
+	delete cS;
+	delete dS;
 }
 
+void test_direct_left_factoring() {
+	NonTerminal* a = new NonTerminal("A", NON_TERMINAL);
+	NonTerminal* b = new NonTerminal("B", NON_TERMINAL);
+	GrammarElement* aS = new GrammarElement("a", TERMINAL);
+	GrammarElement* bS = new GrammarElement("b", TERMINAL);
+	GrammarElement* cS = new GrammarElement("c", TERMINAL);
+	GrammarElement* dS = new GrammarElement("d", TERMINAL);
+	GrammarElement* gS = new GrammarElement("g", TERMINAL);
+	GrammarElement* eS = new GrammarElement("e", TERMINAL);
+	GrammarElement* fS = new GrammarElement("f", TERMINAL);
 
+	GrammarExpression* exp11 = new GrammarExpression(a);
+	exp11->expression = { aS, bS, b };
+	GrammarExpression* exp12 = new GrammarExpression(a);
+	exp12->expression = { aS, b };
+	GrammarExpression* exp13 = new GrammarExpression(a);
+	exp13->expression = { cS, dS, gS };
+	GrammarExpression* exp14 = new GrammarExpression(a);
+	exp14->expression = { cS, dS, eS, b };
+	GrammarExpression* exp15 = new GrammarExpression(a);
+	exp15->expression = { cS, dS, fS, b };
+	vector <GrammarElement* > set = {a};
+	unordered_set <GrammarExpression*> set2 = {exp11, exp12, exp13, exp14, exp15};
+	unordered_set <NonTerminal*> set3;
+	LlConverter converter;
+	converter.left_factor(&set, &set2, &set3);
+	NonTerminal * ele0 =  static_cast<NonTerminal *> (set[0]);
+	NonTerminal * ele =  static_cast<NonTerminal *> (set[1]);
+	NonTerminal * ele2 =  static_cast<NonTerminal *> (set[2]);
+	if (set.size() == 3) {
+		if (set2.size() == 7) {
+			if (ele->getName() == "A_1") {
+				if (ele->getType() == NON_TERMINAL) {
+					if (ele->leads_to[0]->expression[0] == bS ||
+							ele->leads_to[0]->expression[0] == b) {
+						if (ele->leads_to[1]->expression[0] == bS ||
+							ele->leads_to[1]->expression[0] == b) {
+							if (ele->leads_to.size() == 2) {
+								if (ele->leads_to[0]->belongs_to == ele &&
+									ele->leads_to[0]->belongs_to == ele) {
+									if (ele->referenced_in[0] == ele0->leads_to[0] ||
+										ele->referenced_in[0] == ele0->leads_to[1]	) {
+										if (ele2->leads_to.size() == 3) {
+											if (ele2->leads_to[0]->expression[0] == gS ||
+												ele2->leads_to[0]->expression[0] == eS ||
+												ele2->leads_to[0]->expression[0] == fS) {
+												if (ele2->leads_to[1]->expression[0] == gS ||
+													ele2->leads_to[1]->expression[0] == eS ||
+													ele2->leads_to[1]->expression[0] == fS) {
+													if (ele2->referenced_in[0] == ele0->leads_to[0] ||
+														ele2->referenced_in[0] == ele0->leads_to[1]) {
+														if (ele2->getName() == "A_2") {
+															cout << "Direct left factoring Success..." << endl;
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+}
 
