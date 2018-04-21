@@ -13,9 +13,9 @@ using namespace std;
 
 enum LineType {FULL, LEFT, MIDDLE, RIGHT, LEFT_MIDDLE, RIGHT_MIDDLE};
 
-const regex fullExpressionLine = regex("^\\s*#\\s*([A-Za-z0-9_]*)\\s*\\:\\:\\=\\s*(.*)\\s*");
-const regex leftPartExpressionLine = regex("^\\s*#\\s*([A-Za-z0-9_]*)\\s*");
-const regex leftAndEqualExpressionLine = regex("^\\s*#\\s*([A-Za-z0-9_]*)\\s*\\:\\:\\=\\s*");
+const regex fullExpressionLine = regex("^\\s*#\\s*([A-Za-z0-9_'#:=\\\\]*)\\s*\\:\\:\\=\\s*(.*)\\s*");
+const regex leftPartExpressionLine = regex("^\\s*#\\s*([A-Za-z0-9_'#:=\\\\]*)\\s*");
+const regex leftAndEqualExpressionLine = regex("^\\s*#\\s*([A-Za-z0-9_'#:=\\\\]*)\\s*\\:\\:\\=\\s*");
 const regex EqualPartExpressionLine = regex("\\s*\\:\\:\\=\\s*");
 const regex rightPartExpressionLine = regex("\\s*(.*)\\s*");
 const regex rightAndEqualExpressionLine = regex("\\s*\\:\\:\\=\\s*(.*)\\s*");
@@ -47,7 +47,7 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
                                    &errors, lines.size());
                 rightHandSide = "";
                 prevGrammarElement = insertNonTerminal(line, fullExpressionLine, &nameToNonTerminal,
-                                         matcher, rules, prevGrammarElement, startRule, non_terminals);
+                                                       matcher, rules, prevGrammarElement, startRule, non_terminals, &errors, lines.size());
                 regex_search(line, matcher, fullExpressionLine);
                 bool error = isValidatRightHandSide(matcher[2], &errors, lines.size());
                 if (!error) {
@@ -63,7 +63,8 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
                                    &errors, lines.size());
                 rightHandSide = "";
                 prevGrammarElement = insertNonTerminal(line, leftAndEqualExpressionLine, &nameToNonTerminal,
-                                                       matcher, rules, prevGrammarElement, startRule, non_terminals);
+                                                       matcher, rules, prevGrammarElement, startRule, non_terminals,
+                                                       &errors, lines.size());
                 prevLineType = LEFT_MIDDLE;
                 leftDefineFound = true;
             } else if (regex_match(line, rightAndEqualExpressionLine)) {
@@ -86,7 +87,8 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
                                    &errors, lines.size());
                 rightHandSide = "";
                 prevGrammarElement = insertNonTerminal(line, leftPartExpressionLine, &nameToNonTerminal,
-                                                       matcher, rules, prevGrammarElement, startRule, non_terminals);
+                                                       matcher, rules, prevGrammarElement, startRule, non_terminals,
+                                                       &errors, lines.size());
                 prevLineType = LEFT;
                 leftDefineFound = true;
             } else if (regex_match(line, rightPartExpressionLine)) {
@@ -124,9 +126,21 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
 
 GrammarElement * GrammarFileParser::insertNonTerminal(string line, const regex pattern, map<string, NonTerminal *> *nameToNonTerminal, smatch matcher,
                                                       vector<GrammarElement *> *rules, GrammarElement *prevGrammarElement, GrammarElement *startRule,
-                                                      unordered_set<string> *non_terminals) {
+                                                      unordered_set<string> *non_terminals, vector<string> *errors, int lineMum) {
     regex_search(line, matcher, pattern);
-    string name = matcher[1];
+    string temp = matcher[1];
+    string name = "";
+    for (int i = 0; i < temp.length(); ++i) {
+        bool isSpecial = isQuote(temp[i]) || temp[i] == '#' || temp[i] == '|' || temp[i] == ':' || temp[i] == '=';
+        if (isSpecial && (i == 0 || temp[i - 1] != '\\')) {
+            addError(errors, temp[i] + " is a reserved char and must be preceeded with \\" , lineMum);
+        } else if (isSpecial) {
+            name[name.length() - 1] = temp[i];
+        } else {
+            name += temp[i];
+        }
+    }
+
     if (nameToNonTerminal->find(name) == nameToNonTerminal->end()) {
         GrammarElement* element = new NonTerminal(name, NON_TERMINAL);
         (*nameToNonTerminal)[name] = static_cast<NonTerminal*> (element);
@@ -142,7 +156,7 @@ GrammarElement * GrammarFileParser::insertNonTerminal(string line, const regex p
 }
 
 void GrammarFileParser::addError(vector<string> *errors, string error, int lineNumber) {
-    errors->push_back("ERROR: " + error + " at " + to_string(lineNumber));
+    errors->push_back("ERROR: " + error + " at line " + to_string(lineNumber));
 }
 
 void GrammarFileParser::parseRightHandSide(string rightHandSide, unordered_set<string> *terminals, unordered_set<string> *non_terminals,
@@ -156,10 +170,14 @@ void GrammarFileParser::parseRightHandSide(string rightHandSide, unordered_set<s
             bool isEpslon = false;
             for (int j = 0; j < terminalsAndNonTerminals.size(); ++j) {
                 string curr = terminalsAndNonTerminals[j];
+                if (curr.empty()) {
+                    addError(errors, "Empty Element", lineMum);
+                    continue;
+                }
                 bool quoteFound = false;
                 string temp = "";
                 for (int k = 0; k < curr.length(); ++k) {
-                    if (isQuote(curr[k])) {
+                    if (isQuote(curr[k]) && (k == 0 || curr[k - 1] != '\\')) {
                         if (!quoteFound && !temp.empty()) {
                             if (nameToNonTerminal->find(temp) == nameToNonTerminal->end()) {
                                 GrammarElement* element = new NonTerminal(temp, NON_TERMINAL);
@@ -175,11 +193,11 @@ void GrammarFileParser::parseRightHandSide(string rightHandSide, unordered_set<s
                         }
                         if (quoteFound) {
                             if (temp.empty()) {
+                                addError(errors, "Empty Terminal", lineMum);
                                 continue;
-//                                errors->push_back("Empty Terminal");
                             } else {
                                 if (temp == "\\L" && expression->expression.size() == 0
-                                        && prevGrammarElement != nullptr) {
+                                    && prevGrammarElement != nullptr) {
                                     isEpslon = true;
                                 } else {
                                     isEpslon = false;
@@ -196,6 +214,12 @@ void GrammarFileParser::parseRightHandSide(string rightHandSide, unordered_set<s
                         } else {
                             quoteFound = true;
                         }
+                    } else if (isQuote(curr[k]) && k > 0 && curr[k - 1] == '\\') {
+                        temp[temp.length() - 1] = curr[k];
+                    } else if((curr[k] == '=' || curr[k] == ':' || curr[k] == '#') && k > 0 && curr[k - 1] == '\\') {
+                        temp[temp.length() - 1] = curr[k];
+                    } else if((curr[k] == '=' || curr[k] == ':' || curr[k] == '#') && (k == 0 || curr[k - 1] != '\\')) {
+                        addError(errors, curr[k] + " is a reserved char and must be preceeded with \\" , lineMum);
                     } else {
                         temp += curr[k];
                     }
@@ -227,7 +251,7 @@ void GrammarFileParser::parseRightHandSide(string rightHandSide, unordered_set<s
 bool GrammarFileParser::isValidatRightHandSide(string rightHandSide, vector<string> *errors, int lineNumber) {
     int quotesCount = 0;
     for (int i = 0; i < rightHandSide.length(); ++i) {
-        if (isQuote(rightHandSide[i])) {
+        if (isQuote(rightHandSide[i] && (i == 0 || rightHandSide[i] != '\\'))) {
             quotesCount++;
         }
     }
