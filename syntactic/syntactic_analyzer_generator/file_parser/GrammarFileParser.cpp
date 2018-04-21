@@ -21,8 +21,8 @@ const regex rightPartExpressionLine = regex("\\s*(.*)\\s*");
 const regex rightAndEqualExpressionLine = regex("\\s*\\:\\:\\=\\s*(.*)\\s*");
 
 std::vector <string> GrammarFileParser::parse_grammar_file(
-        vector < GrammarElement * > *rules, unordered_set < GrammarExpression * > *expressions,
-        ifstream * lexical_file_stream, unordered_set < string > *terminals,
+        vector < GrammarElement * > *rules, unordered_set <GrammarExpression * > *expressions,
+        ifstream * lexical_file_stream, unordered_set <string> *terminals,
         unordered_set < string > *non_terminals, GrammarElement * startRule) {
     string line;
     vector<string> lines;
@@ -121,6 +121,19 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
     } else {
         errors.push_back("Input Stream is Closed");
     }
+
+    for (int i = 0; i < rules->size(); ++i) {
+        NonTerminal* nonTerminal = static_cast<NonTerminal *> ((*rules)[i]);
+        for (int j = 0; j < nonTerminal->leads_to.size(); ++j) {
+            expressions->insert(nonTerminal->leads_to[j]);
+        }
+    }
+
+    for (auto it = terminals->begin(); it != terminals->end(); it++) {
+        GrammarElement* terminal = nameToTerminal[*it];
+        rules->push_back(terminal);
+    }
+
     return errors;
 }
 
