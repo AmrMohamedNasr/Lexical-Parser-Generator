@@ -359,11 +359,8 @@ void test_indirect_left_factoring(){
 	unordered_set <NonTerminal*> set3;
 	LlConverter converter;
 	converter.left_factor(&set, &set2, &set3);
-	NonTerminal * ele11 =  static_cast<NonTerminal *> (set[11]);
-	NonTerminal * ele1 =  static_cast<NonTerminal *> (set[1]);
 	if (set.size() == 12) {
 		if (set2.size() == 9) {
-				cout << "indirect left factoring not completely tested yet..." << endl;
 				test_indirect_left_factoring_2();
 		}
 	}
@@ -458,7 +455,7 @@ void test_indirect_left_factoring_2() {
 									if (ele12->leads_to[0]->expression[2] == ele13 &&
 										ele12->leads_to[0]->expression[1] == eS) {
 										if (set2.size() == 11) {
-											cout << "Bisho's test on left factoring written by mico passed..." << endl;
+											cout << "Nested left factoring success..." << endl;
 										}
 									}
 								}

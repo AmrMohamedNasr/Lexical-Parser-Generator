@@ -174,6 +174,7 @@ void LlConverter::left_factor(vector<GrammarElement *> *rules , unordered_set<Gr
 								(*expressions).insert(exprTemp);
 							}
 							(*expressions).erase((*itr));
+							delete (*itr);
 							for (unsigned k = 0; k < rule->leads_to.size(); ++k) {
 								if (rule->leads_to[k] == (*itr)) {
 									rule->leads_to.erase(rule->leads_to.begin() + k);
@@ -222,14 +223,8 @@ bool LlConverter::check_left_factoring(GrammarElement * source, unordered_set<Gr
 		map<GrammarElement *, unsigned>::const_iterator it = first_eles.find(src->leads_to[i]->expression[0]);
 		if (it != first_eles.end()) {
 			*direct = true;
-			itra = (*to_be_changed).find(src->leads_to[i]);
-			if (itra == (*to_be_changed).end()) {
-				(*to_be_changed).insert(src->leads_to[i]);
-			}
-			itra = (*to_be_changed).find(src->leads_to[(*it).second]);
-			if (itra == (*to_be_changed).end()) {
-				(*to_be_changed).insert(src->leads_to[(*it).second]);
-			}
+			(*to_be_changed).insert(src->leads_to[i]);
+			(*to_be_changed).insert(src->leads_to[(*it).second]);
 			left = true;
 		} else {
 			first_eles.insert(pair<GrammarElement*, unsigned>(src->leads_to[i]->expression[0], i));
@@ -343,6 +338,7 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 			if ((*itra)->expression.size() == 0) {
 				newEle->eps = true;
 				(*expressions).erase((*itra));
+				delete (*itra);
 			} else {
 				newEle->leads_to.push_back((*itra));
 				if ((*itra)->expression[0]->getType() == NON_TERMINAL) {
