@@ -80,3 +80,32 @@ string GrammarTable::get_start() {
 void GrammarTable::set_start(string str) {
     start_rule = str;
 }
+
+unsigned long GrammarTable::get_sync_elements_count() {
+    return synchronizing.size();
+}
+
+unsigned long GrammarTable::get_table_elements_count() {
+    return table.size();
+}
+
+bool GrammarTable::compare_table(GrammarTable *grammarTable) {
+    auto t1 = this->table;
+    auto t2 = grammarTable->table;
+    if (t1.size() != t2.size()) {
+        return false;
+    }
+
+    return std::equal(t1.begin(), t1.end(), t2.begin());
+}
+
+bool GrammarTable::compare_sync(GrammarTable *grammarTable) {
+    auto s1 = this->synchronizing;
+    auto s2 = grammarTable->synchronizing;
+    if (s1.size() != s2.size()) {
+        return false;
+    }
+
+    return std::equal(s1.begin(), s1.end(), s2.begin());
+}
+

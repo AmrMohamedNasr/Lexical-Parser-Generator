@@ -10,11 +10,15 @@
 
 #include "../../grammar_table/model/GrammarTable.h"
 #include "../models/GrammarElement.h"
+#include "../models/GrammarExpression.h"
 #include <vector>
 
 using namespace std;
 
 class GrammarTableBuilder {
+	private:
+		void set_expression_vector(vector<string>* expression_vector
+				, GrammarExpression* grammarExpression);
 	public:
 		GrammarTable* build_grammar_table(vector<GrammarElement *> * rules);
 };
