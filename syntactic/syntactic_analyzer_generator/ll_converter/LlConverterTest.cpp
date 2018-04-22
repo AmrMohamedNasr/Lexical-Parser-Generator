@@ -9,16 +9,18 @@
 #include "../../../syntactic/syntactic_analyzer_generator/models/GrammarElement.h"
 #include "../../../syntactic/syntactic_analyzer_generator/models/NonTerminal.h"
 #include "../../../test_headers/p2_tests.h"
-
+#include "../../../syntactic/syntactic_analyzer_generator/first_calculator/FirstCalculator.h"
+#include "../../../syntactic/syntactic_analyzer_generator/follow_calculator/FollowCalculator.h"
 void test_direct_left_recursion();
 void test_indirect_left_recursion();
 void test_direct_left_factoring();
 void test_indirect_left_factoring();
+void test_indirect_left_factoring_2();
 void test_ll_converter() {
-	//test_direct_left_recursion();
-	//test_indirect_left_recursion();
+	test_direct_left_recursion();
+	test_indirect_left_recursion();
 	test_direct_left_factoring();
-	//test_indirect_left_factoring();
+	test_indirect_left_factoring();
 }
 
 void test_direct_left_recursion() {
@@ -288,6 +290,197 @@ void test_direct_left_factoring() {
 			}
 		}
 	}
+	delete a;
+	delete b;
+	delete aS;
+	delete bS;
+	delete cS;
+	delete dS;
+	delete eS;
+	delete fS;
+	delete gS;
+}
+
+
+void test_indirect_left_factoring(){
+	NonTerminal* l = new NonTerminal("L", NON_TERMINAL);
+	NonTerminal* s = new NonTerminal("S", NON_TERMINAL);
+	NonTerminal* a = new NonTerminal("A", NON_TERMINAL);
+	NonTerminal* c = new NonTerminal("C", NON_TERMINAL);
+	NonTerminal* e = new NonTerminal("E", NON_TERMINAL);
+	GrammarElement* semi_colon = new GrammarElement(";", TERMINAL);
+	GrammarElement* openBracket = new GrammarElement("(", TERMINAL);
+	GrammarElement* closeBracket = new GrammarElement(")", TERMINAL);
+	GrammarElement* id = new GrammarElement("id", TERMINAL);
+	GrammarElement* equal = new GrammarElement("=", TERMINAL);
+	GrammarElement* num = new GrammarElement("num", TERMINAL);
+	GrammarExpression* exp11 = new GrammarExpression(l);
+	exp11->expression = { l, semi_colon, s };
+	exp11->first_strings = { "id" };
+	GrammarExpression* exp12 = new GrammarExpression(l);
+	exp12->expression = { s };
+	exp12->first_strings = { "id" };
+	GrammarExpression* exp21 = new GrammarExpression(s);
+	exp21->expression = { a };
+	exp21->first_strings = { "id" };
+	GrammarExpression* exp22 = new GrammarExpression(s);
+	exp22->expression = { c };
+	exp22->first_strings = { "id" };
+	GrammarExpression* exp31 = new GrammarExpression(a);
+	exp31->expression = { id, equal, e };
+	exp31->first_strings = { "id" };
+	GrammarExpression* exp41 = new GrammarExpression(c);
+	exp41->expression = { id, openBracket, e, closeBracket };
+	exp41->first_strings = { "id" };
+	GrammarExpression* exp51 = new GrammarExpression(e);
+	exp51->expression = { id };
+	exp51->first_strings = { "id" };
+	GrammarExpression* exp52 = new GrammarExpression(e);
+	exp52->expression = { num };
+	exp52->first_strings = { "num" };
+	l->referenced_in = { exp11 };
+	l->leads_to = { exp11, exp12 };
+	l->first_strings = { "id" };
+	s->referenced_in = { exp12, exp11 };
+	s->leads_to = { exp21, exp22 };
+	s->first_strings = { "id" };
+	a->referenced_in = { exp21 };
+	a->leads_to = { exp31 };
+	a->first_strings = { "id" };
+	c->referenced_in = { exp22 };
+	c->leads_to = { exp41 };
+	c->first_strings = { "id" };
+	e->referenced_in = { exp31, exp41 };
+	e->leads_to = {exp51, exp52 };
+	e->first_strings = { "id", "num" };
+
+	vector <GrammarElement* > set = {l, s, a, c, e, semi_colon, openBracket, closeBracket, equal, num, id};
+	unordered_set <GrammarExpression*> set2 = {exp11, exp12, exp21, exp22, exp31, exp41, exp51, exp52};
+	unordered_set <NonTerminal*> set3;
+	LlConverter converter;
+	converter.left_factor(&set, &set2, &set3);
+	NonTerminal * ele11 =  static_cast<NonTerminal *> (set[11]);
+	NonTerminal * ele1 =  static_cast<NonTerminal *> (set[1]);
+	if (set.size() == 12) {
+		if (set2.size() == 9) {
+				cout << "indirect left factoring not completely tested yet..." << endl;
+				test_indirect_left_factoring_2();
+		}
+	}
+
+
+}
+
+void test_indirect_left_factoring_2() {
+	NonTerminal* a = new NonTerminal("A", NON_TERMINAL);
+	NonTerminal* b = new NonTerminal("B", NON_TERMINAL);
+	NonTerminal* c = new NonTerminal("C", NON_TERMINAL);
+	NonTerminal* d = new NonTerminal("D", NON_TERMINAL);
+	NonTerminal* e = new NonTerminal("E", NON_TERMINAL);
+	NonTerminal* f = new NonTerminal("F", NON_TERMINAL);
+
+	GrammarElement* bS = new GrammarElement("b", TERMINAL);
+	GrammarElement* eS = new GrammarElement("e", TERMINAL);
+	GrammarElement* cS = new GrammarElement("c", TERMINAL);
+	GrammarElement* dS = new GrammarElement("d", TERMINAL);
+	GrammarElement* aS = new GrammarElement("a", TERMINAL);
+	GrammarElement* fS = new GrammarElement("f", TERMINAL);
+
+	GrammarExpression* exp11 = new GrammarExpression(a);
+	exp11->expression = { b, c };
+	exp11->first_strings = { "b" };
+	GrammarExpression* exp12 = new GrammarExpression(a);
+	exp12->expression = { d };
+	exp12->first_strings = { "b" };
+	GrammarExpression* exp13 = new GrammarExpression(a);
+	exp13->expression = { bS, cS };
+	exp13->first_strings = { "b" };
+	GrammarExpression* exp14 = new GrammarExpression(a);
+	exp14->expression = { eS, fS };
+	exp14->first_strings = { "e" };
+	GrammarExpression* exp21 = new GrammarExpression(b);
+	exp21->expression = { bS, cS };
+	exp21->first_strings = { "b" };
+	GrammarExpression* exp31 = new GrammarExpression(c);
+	exp31->expression = { dS, eS, e };
+	exp31->first_strings = { "d" };
+	GrammarExpression* exp41 = new GrammarExpression(d);
+	exp41->expression = { bS, cS, dS, eS, f };
+	exp41->first_strings = { "b" };
+	GrammarExpression* exp51 = new GrammarExpression(e);
+	exp51->expression = { aS, bS };
+	exp51->first_strings = { "a" };
+	GrammarExpression* exp61 = new GrammarExpression(f);
+	exp61->expression = { aS, cS };
+	exp61->first_strings = { "a" };
+
+	a->leads_to = { exp11, exp12, exp13, exp14 };
+	b->leads_to = { exp21 };
+	c->leads_to = { exp31 };
+	d->leads_to = { exp41 };
+	e->leads_to = { exp51 };
+	f->leads_to = { exp61 };
+	a->first_strings = { "b" , "e" };
+	b->referenced_in = { exp11 };
+	b->first_strings = { "b" };
+	c->referenced_in = { exp11 };
+	c->first_strings = { "d" };
+	d->referenced_in = { exp12 };
+	d->first_strings = { "b" };
+	e->referenced_in = { exp31 };
+	e->first_strings = { "a" };
+	f->referenced_in = { exp41 };
+	f->first_strings = { "a" };
+
+	vector <GrammarElement* > set = {a, b, c, d, e, f, aS, bS, cS, dS, eS, fS};
+	unordered_set <GrammarExpression*> set2 = {exp11, exp12, exp13, exp14, exp21, exp31, exp41, exp51, exp61};
+	unordered_set <NonTerminal*> set3;
+	LlConverter converter;
+	converter.left_factor(&set, &set2, &set3);
+
+	NonTerminal * ele12 =  static_cast<NonTerminal *> (set[12]);
+	NonTerminal * ele13 =  static_cast<NonTerminal *> (set[13]);
+	NonTerminal * ele14 =  static_cast<NonTerminal *> (set[14]);
+	NonTerminal * ele0 =  static_cast<NonTerminal *> (set[0]);
+
+	if (set.size() == 15) {
+		if (ele12->eps) {
+			if (ele12->leads_to.size() == 1) {
+				if (ele12->leads_to[0]->expression[0] == dS) {
+					if (ele12->referenced_in[0] == ele0->leads_to[0] ||
+						ele12->referenced_in[0] == ele0->leads_to[1]) {
+						if (ele13->referenced_in[0] == ele12->leads_to[0] &&
+							ele14->referenced_in[0] == ele13->leads_to[0]) {
+							if (ele14->leads_to[0]->expression[0] == bS ||
+								ele14->leads_to[0]->expression[0] == cS	) {
+								if (ele13->leads_to[0]->expression[0] == aS &&
+									ele13->leads_to[0]->expression[1] == ele14) {
+									if (ele12->leads_to[0]->expression[2] == ele13 &&
+										ele12->leads_to[0]->expression[1] == eS) {
+										if (set2.size() == 11) {
+											cout << "Bisho's test on left factoring written by mico passed..." << endl;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	delete a;
+	delete b;
+	delete c;
+	delete d;
+	delete e;
+	delete f;
+	delete aS;
+	delete bS;
+	delete cS;
+	delete dS;
+	delete eS;
+	delete fS;
 
 
 }
