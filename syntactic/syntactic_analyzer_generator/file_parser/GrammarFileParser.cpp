@@ -124,6 +124,10 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
 
     for (int i = 0; i < rules->size(); ++i) {
         NonTerminal* nonTerminal = static_cast<NonTerminal *> ((*rules)[i]);
+        if (!nonTerminal->eps && nonTerminal->leads_to.size() == 0) {
+            errors.push_back("Non terminal " + nonTerminal->getName()
+                             + " doesn't lead to any expressions");
+        }
         for (int j = 0; j < nonTerminal->leads_to.size(); ++j) {
             expressions->insert(nonTerminal->leads_to[j]);
         }
