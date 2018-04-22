@@ -44,7 +44,11 @@ class GrammarTable {
 		bool is_terminal(string str);
 		bool is_non_terminal(string str);
 		void set_start(string str);
+		unsigned long get_table_elements_count();
+		unsigned long get_sync_elements_count();
 		string get_start();
+		bool compare_table(GrammarTable* grammarTable);
+		bool compare_sync(GrammarTable* grammarTable);
 };
 
 
