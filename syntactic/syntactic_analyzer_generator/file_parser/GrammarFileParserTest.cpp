@@ -121,8 +121,8 @@ void sheetThreeProblemThreeTestCase() {
     ex10->expression = {star, F};
     FD->leads_to.push_back(ex10);
 
-
-    vector<GrammarElement *> expectedRules = {EE, TE, EDE, FE, TDE, PE, FDE};
+    vector<GrammarElement *> expectedRules = {EE, TE, EDE, FE, TDE, PE, FDE, plus, star, open,
+                                              close, a, b, Em};
 
     vector<string> errors = fileParser.parse_grammar_file(&rules, &expressions, &infile,
                                                           &terminals, &non_terminals, startRule);
@@ -203,7 +203,7 @@ void sheetThreeProblemFourTestCase() {
     ex5->expression = {v, V};
     V->leads_to.push_back(ex5);
 
-    vector<GrammarElement *> expectedRules = {SE, RE, TE, UE, VE};
+    vector<GrammarElement *> expectedRules = {SE, RE, TE, UE, VE, s, b, t, u, v};
 
     vector<string> errors = fileParser.parse_grammar_file(&rules, &expressions, &infile,
                                                           &terminals, &non_terminals, startRule);
@@ -409,7 +409,12 @@ void projectPdfTestCase() {
     vector<GrammarElement *> expectedRules = {METHOD_BODY_E, STATEMENT_LIST_E, STATEMENT_E,
                                               DECLARATION_E, IF_E, WHILE_E, ASSIGNMENT_E,
                                               PRIMITIVE_TYPE_E, EXPRESSION_E, SIMPLE_EXPRESSION_E,
-                                              TERM_E, SIGN_E, FACTOR_E};
+                                              TERM_E, SIGN_E, FACTOR_E, id_terminal, semicolon_terminal,
+                                              int_terminal, float_terminal, if_terminal, openBracket_terminal,
+                                              closedBracket_terminal, openCurlyBracket_terminal,
+                                              closedCurlyBracket_terminal, else_terminal, while_terminal,
+                                              relop_terminal, addop_terminal, mulop_terminal, equal_terminal,
+                                              num_terminal, plus_terminal, minus_terminal};
 
     vector<string> errors = fileParser.parse_grammar_file(&rules, &expressions, &infile,
                                                           &terminals, &non_terminals, startRule);
@@ -444,7 +449,7 @@ bool compareRules(vector<GrammarElement *> *rules, vector<GrammarElement *> *exp
     bool error = false;
     if (rules->size() != expectedRules->size()) {
         cout << "Syntactic Grammar Parser Errors: Rules found " + to_string(rules->size())
-                + " instead of 13" << endl;
+                + " instead of " << expectedRules->size() << endl;
         for (int i = 0; i < rules->size(); ++i) {
             cout << (*rules)[i]->getName() << endl;
         }
@@ -453,50 +458,51 @@ bool compareRules(vector<GrammarElement *> *rules, vector<GrammarElement *> *exp
 
     if (rules->size() == expectedRules->size()) {
         for (int i = 0; i < expectedRules->size(); i++) {
-            NonTerminal* rule = static_cast<NonTerminal *>((*rules)[i]);
-            NonTerminal* expectedRule = static_cast<NonTerminal *>((*expectedRules)[i]);
-            if (rule->getName() != expectedRule->getName()) {
-                cout << "Grammar Rule with name " << rule->getName() << " instead of "
-                     << " instead of " << expectedRule->getName() << endl;
-                error = true;
-            } else if (rule->getType() != expectedRule->getType()) {
-                cout << "Grammar Rule with name " << rule->getName() << " has type "
-                     << to_string(rule->getType())
-                     << " rules instead of " << to_string(expectedRule->getType()) << endl;
-                error = true;
-            } else if (rule->eps != expectedRule->eps) {
-                cout << "Grammar Rule with name " << rule->getName() << " has eps "
-                     << to_string(rule->eps)
-                     << " rules instead of " << to_string(expectedRule->eps) << endl;
-                error = true;
-            } else if (rule->leads_to.size() != expectedRule->leads_to.size()) {
-                cout << "Grammar Rule with name " << rule->getName() << " has "
-                     << to_string(rule->leads_to.size())
-                     << " rules instead of " << to_string(expectedRule->leads_to.size()) << endl;
-                error = true;
-            } else {
-                for (int j = 0; j < rule->leads_to.size(); ++j) {
-                    GrammarExpression *expression = rule->leads_to[j];
-                    GrammarExpression *expectedExpression = expectedRule->leads_to[j];
-                    if (expression->expression.size() != expectedExpression->expression.size()) {
-                        cout << "Grammar Rule with name " << rule->getName() << "Expression"
-                             << j + 1 << " has size " << to_string(expression->expression.size())
-                             << " instead of " << to_string(expectedExpression->expression.size()) << endl;
-                        error = true;
-                    } else {
-                        for (int k = 0; k < expression->expression.size(); ++k) {
-                            GrammarElement *element = expression->expression[k];
-                            GrammarElement *expectedElement = expectedExpression->expression[k];
-                            if (element->getName() != expectedElement->getName()) {
-                                cout << "Grammar Element Number " << k + 1 << " in expression "
-                                     <<  j + 1 << " in rule" << i + 1 << " has name " << element->getName()
-                                     << " instead of " << expectedElement->getName() << endl;
-                                error = true;
-                            } else if (element->getType() != expectedElement->getType()) {
-                                cout << "Grammar Element Number " << k + 1 << " in expression "
-                                     <<  j + 1 << " in rule" << i + 1 << " has type " << element->getType()
-                                     << " instead of " << expectedElement->getType() << endl;
-                                error = true;
+            if ((*rules)[i]->getType() == NON_TERMINAL && (*expectedRules)[i]->getType() == NON_TERMINAL) {
+                NonTerminal* rule = static_cast<NonTerminal *>((*rules)[i]);
+                NonTerminal* expectedRule = static_cast<NonTerminal *>((*expectedRules)[i]);
+                if (rule->getName() != expectedRule->getName()) {
+                    cout << "Grammar Rule with name " << rule->getName() << " instead of " << expectedRule->getName() << endl;
+                    error = true;
+                } else if (rule->getType() != expectedRule->getType()) {
+                    cout << "Grammar Rule with name " << rule->getName() << " has type "
+                         << to_string(rule->getType())
+                         << " rules instead of " << to_string(expectedRule->getType()) << endl;
+                    error = true;
+                } else if (rule->eps != expectedRule->eps) {
+                    cout << "Grammar Rule with name " << rule->getName() << " has eps "
+                         << to_string(rule->eps)
+                         << " rules instead of " << to_string(expectedRule->eps) << endl;
+                    error = true;
+                } else if (rule->leads_to.size() != expectedRule->leads_to.size()) {
+                    cout << "Grammar Rule with name " << rule->getName() << " has "
+                         << to_string(rule->leads_to.size())
+                         << " rules instead of " << to_string(expectedRule->leads_to.size()) << endl;
+                    error = true;
+                } else {
+                    for (int j = 0; j < rule->leads_to.size(); ++j) {
+                        GrammarExpression *expression = rule->leads_to[j];
+                        GrammarExpression *expectedExpression = expectedRule->leads_to[j];
+                        if (expression->expression.size() != expectedExpression->expression.size()) {
+                            cout << "Grammar Rule with name " << rule->getName() << "Expression"
+                                 << j + 1 << " has size " << to_string(expression->expression.size())
+                                 << " instead of " << to_string(expectedExpression->expression.size()) << endl;
+                            error = true;
+                        } else {
+                            for (int k = 0; k < expression->expression.size(); ++k) {
+                                GrammarElement *element = expression->expression[k];
+                                GrammarElement *expectedElement = expectedExpression->expression[k];
+                                if (element->getName() != expectedElement->getName()) {
+                                    cout << "Grammar Element Number " << k + 1 << " in expression "
+                                         <<  j + 1 << " in rule" << i + 1 << " has name " << element->getName()
+                                         << " instead of " << expectedElement->getName() << endl;
+                                    error = true;
+                                } else if (element->getType() != expectedElement->getType()) {
+                                    cout << "Grammar Element Number " << k + 1 << " in expression "
+                                         <<  j + 1 << " in rule" << i + 1 << " has type " << element->getType()
+                                         << " instead of " << expectedElement->getType() << endl;
+                                    error = true;
+                                }
                             }
                         }
                     }
