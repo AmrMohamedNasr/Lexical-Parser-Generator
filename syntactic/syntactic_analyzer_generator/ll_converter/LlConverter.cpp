@@ -149,7 +149,6 @@ void LlConverter::left_factor(vector<GrammarElement *> *rules , unordered_set<Gr
 				if (direct) {
 					generate_direct_left_factoring((*rules)[i], rules, expressions, changed, &to_be_changed);
 				} else {
-					int counter = 0;
 					for (auto itr = to_be_changed.begin(); itr != to_be_changed.end(); ++itr) {
 						if ((*itr)->expression[0]->getType() == NON_TERMINAL) {
 							NonTerminal * temp = static_cast<NonTerminal *>((*itr)->expression[0]);
@@ -162,13 +161,43 @@ void LlConverter::left_factor(vector<GrammarElement *> *rules , unordered_set<Gr
 								for (unsigned k = 0; k < (*itr)->expression.size(); ++k) {
 									exprTemp->expression.push_back((*itr)->expression[k]);
 								}
+								if (exprTemp->expression[0]->getType() == NON_TERMINAL) {
+									NonTerminal * start_ele = static_cast<NonTerminal *>(exprTemp->expression[0]);
+									for (auto itra = start_ele->first_strings.begin();
+										itra != start_ele->first_strings.end(); ++itra) {
+										exprTemp->first_strings.insert(*itra);
+									}
+								} else {
+									exprTemp->first_strings.insert(exprTemp->expression[0]->getName());
+								}
 								rule->leads_to.push_back(exprTemp);
 								(*expressions).insert(exprTemp);
-								rule->leads_to.erase(rule->leads_to.begin() + counter);
+							}
+							(*expressions).erase((*itr));
+							for (unsigned k = 0; k < rule->leads_to.size(); ++k) {
+								if (rule->leads_to[k] == (*itr)) {
+									rule->leads_to.erase(rule->leads_to.begin() + k);
+								}
+							}
+							if (temp->eps) {
+								GrammarExpression * exprTemp = new GrammarExpression(rule);
+								exprTemp->expression.clear();
+								for (unsigned k = 0; k < (*itr)->expression.size(); ++k) {
+									exprTemp->expression.push_back((*itr)->expression[k]);
+								}
+								if (exprTemp->expression[0]->getType() == NON_TERMINAL) {
+									NonTerminal * start_ele = static_cast<NonTerminal *>(exprTemp->expression[0]);
+									for (auto itra = start_ele->first_strings.begin();
+										itra != start_ele->first_strings.end(); ++itra) {
+									exprTemp->first_strings.insert(*itra);
+									}
+								} else {
+									exprTemp->first_strings.insert(exprTemp->expression[0]->getName());
+								}
+								rule->leads_to.push_back(exprTemp);
+								(*expressions).insert(exprTemp);
 							}
 						}
-
-						counter++;
 					}
 					direct = false;
 					to_be_changed.clear();
@@ -183,9 +212,13 @@ bool LlConverter::check_left_factoring(GrammarElement * source, unordered_set<Gr
 	unordered_set<string> first_strings;
 	NonTerminal * src = static_cast<NonTerminal *>(source);
 	bool left = false;
+	bool can_indirect = false;
 	unordered_set<GrammarExpression*>::const_iterator itra;
 	// check if it needs direct left factoring.
 	for (unsigned i = 0; i < src->leads_to.size(); ++i) {
+		if (src->leads_to[i]->expression[0]->getType() == NON_TERMINAL) {
+			can_indirect = true;
+		}
 		map<GrammarElement *, unsigned>::const_iterator it = first_eles.find(src->leads_to[i]->expression[0]);
 		if (it != first_eles.end()) {
 			*direct = true;
@@ -202,31 +235,35 @@ bool LlConverter::check_left_factoring(GrammarElement * source, unordered_set<Gr
 			first_eles.insert(pair<GrammarElement*, unsigned>(src->leads_to[i]->expression[0], i));
 		}
 	}
+	if (!can_indirect) {
+		return left;
+	}
+	unsigned direct_changed_size = (*to_be_changed).size();
 	// if it need direct left factoring.
 	// check if it needs indirect left factoring.
-	for (auto itr = src->leads_to[0]->first_strings.begin(); itr != src->leads_to[0]->first_strings.end(); ++itr) {
+	for (auto itr = src->leads_to[0]->first_strings.begin(); src->leads_to[0]->expression[0] != src &&
+															 itr != src->leads_to[0]->first_strings.end(); ++itr) {
 		first_strings.insert(*itr);
 	}
 	for (unsigned i = 1; i < src->leads_to.size(); ++i) {
-		for (auto itr = src->leads_to[i]->first_strings.begin(); itr != src->leads_to[i]->first_strings.end(); ++itr) {
-			unordered_set<string>::const_iterator it = first_strings.find(*itr);
-			if (it != first_strings.end()) {
-				itra = (*to_be_changed).find(src->leads_to[i]);
-				if (itra == (*to_be_changed).end()) {
+		if (src->leads_to[i]->expression[0] != src) {
+			for (auto itr = src->leads_to[i]->first_strings.begin(); itr != src->leads_to[i]->first_strings.end(); ++itr) {
+				unordered_set<string>::const_iterator it = first_strings.find(*itr);
+				if (it != first_strings.end()) {
 					(*to_be_changed).insert(src->leads_to[i]);
-				}
-				if (src->leads_to[0]->first_strings.find(*itr) == it) {
-					itra = (*to_be_changed).find(src->leads_to[0]);
-					if (itra == (*to_be_changed).end()) {
+					unordered_set<string>::const_iterator tempIt = src->leads_to[0]->first_strings.find(*itr);
+					if ( tempIt != src->leads_to[0]->first_strings.end()) {
 						(*to_be_changed).insert(src->leads_to[0]);
 					}
+					left = true;
+				} else {
+					first_strings.insert(*itr);
 				}
-				*direct = false;
-				left = true;
-			} else {
-				first_strings.insert(*itr);
 			}
 		}
+	}
+	if (direct_changed_size < (*to_be_changed).size()) {
+		*direct = false;
 	}
 	if (left) {
 		return true;
@@ -257,6 +294,14 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 	for (auto itr = matched_exprs.begin(); itr != matched_exprs.end(); ++itr) {
 		GrammarExpression * newExpr = new GrammarExpression(src);
 		bool sameFirst = true;
+		if ((*itr).second[0]->expression[0]->getType() == NON_TERMINAL) {
+			NonTerminal * temp = static_cast<NonTerminal *>((*itr).second[0]->expression[0]);
+			for (auto itra = temp->first_strings.begin(); itra != temp->first_strings.end(); ++itra) {
+				newExpr->first_strings.insert(*itra);
+			}
+		} else {
+			newExpr->first_strings.insert((*itr).second[0]->expression[0]->getName());
+		}
 		while (sameFirst) {
 			newExpr->expression.push_back((*itr).second[0]->expression[0]);
 			if ((*itr).second[0]->expression[0]->getType() == NON_TERMINAL) {
@@ -295,7 +340,20 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 		src->leads_to.push_back(newExpr);
 		for (auto itra = to_be_removed.begin(); itra != to_be_removed.end(); ++itra) {
 			(*itra)->belongs_to = newEle;
-			newEle->leads_to.push_back((*itra));
+			if ((*itra)->expression.size() == 0) {
+				newEle->eps = true;
+				(*expressions).erase((*itra));
+			} else {
+				newEle->leads_to.push_back((*itra));
+				if ((*itra)->expression[0]->getType() == NON_TERMINAL) {
+					NonTerminal * new_elem = static_cast<NonTerminal *>((*itra)->expression[0]);
+					for (auto itrate = new_elem->first_strings.begin(); itrate != new_elem->first_strings.end(); ++itrate) {
+						(*itra)->first_strings.insert(*itrate);
+					}
+				} else {
+					(*itra)->first_strings.insert((*itra)->expression[0]->getName());
+				}
+			}
 		}
 		(*rules).push_back(newEle);
 		(*expressions).insert(newExpr);
