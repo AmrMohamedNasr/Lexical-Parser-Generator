@@ -24,3 +24,14 @@ void GrammarExpression::print_expression() {
     cout << endl;
     cout << "Belongs to : " << belongs_to->getName() << endl;
 }
+
+string GrammarExpression::getName() {
+	string name = "";
+	for (unsigned i = 0; i < this->expression.size(); i++) {
+		name += this->expression[i]->getName();
+		if (i != this->expression.size() - 1) {
+			name += " ";
+		}
+	}
+	return name;
+}

@@ -23,6 +23,9 @@ void FollowCalculator::set_follow_sets(vector<GrammarElement *> *rules , unorder
 			createdEleWrappers.push_back(wrapper);
 		}
 	}
+	if (createdEleWrappers.size() == 0) {
+		return;
+	}
 	createdEleWrappers.at(0)->follow_strings.insert("$");
 	bool still_working = true, found = false;
 	while(still_working) {
