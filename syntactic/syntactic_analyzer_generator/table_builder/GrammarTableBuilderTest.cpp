@@ -8,12 +8,15 @@
 #include "../../../test_headers/p2_tests.h"
 #include "GrammarTableBuilder.h"
 #include "../models/NonTerminal.h"
+#include "../calculator_test_utils/TestGraph.h"
 
 void compareGrammarTable(GrammarTable* t1, GrammarTable* t2);
 void test_sheet_four_problem_two();
+void test_sheet_four_pro_two();
 
 void test_grammar_table_builder() {
-    test_sheet_four_problem_two();
+//    test_sheet_four_problem_two();
+    test_sheet_four_pro_two();
 }
 
 void test_pdf_problem() {
@@ -322,38 +325,47 @@ void test_sheet_four_problem_two() {
 
     GrammarExpression* ex2 = new GrammarExpression(T);
     ex2->expression = {F, TD};
+    ex2->first_strings.insert({"(", "a", "b", "Em"});
     T->leads_to.push_back(ex2);
 
     GrammarExpression* ex3 = new GrammarExpression(ED);
     ex3->expression = {plus, E};
+    ex3->first_strings.insert("+");
     ED->leads_to.push_back(ex3);
 
     GrammarExpression* ex4 = new GrammarExpression(F);
     ex4->expression = {P, FD};
+    ex4->first_strings.insert({"(", "a", "b", "Em"});
     F->leads_to.push_back(ex4);
 
     GrammarExpression* ex5 = new GrammarExpression(TD);
     ex5->expression = {T};
+    ex5->first_strings.insert({"(", "a", "b", "Em"});
     TD->leads_to.push_back(ex5);
 
     GrammarExpression* ex6 = new GrammarExpression(P);
     ex6->expression = {open, E, close};
+    ex1->first_strings.insert("(");
     P->leads_to.push_back(ex6);
 
     GrammarExpression* ex7 = new GrammarExpression(P);
     ex7->expression = {a};
+    ex7->first_strings.insert("a");
     P->leads_to.push_back(ex7);
 
     GrammarExpression* ex8 = new GrammarExpression(P);
     ex8->expression = {b};
+    ex8->first_strings.insert("b");
     P->leads_to.push_back(ex8);
 
     GrammarExpression* ex9 = new GrammarExpression(P);
     ex9->expression = {Em};
+    ex9->first_strings.insert("Em");
     P->leads_to.push_back(ex9);
 
     GrammarExpression* ex10 = new GrammarExpression(FD);
     ex10->expression = {star, F};
+    ex10->first_strings.insert("*");
     FD->leads_to.push_back(ex10);
 
     rules.push_back(E);
@@ -428,18 +440,88 @@ void test_sheet_four_problem_two() {
     compareGrammarTable(result, &grammarTable);
 }
 
+void test_sheet_four_pro_two() {
+    vector<GrammarElement*> elements;
+    unordered_set<GrammarExpression*> expressions;
+    build_sheet_four_pro_two(&elements, &expressions, true, true);
+    GrammarTableBuilder grammarTableBuilder;
+    auto result = grammarTableBuilder.build_grammar_table(&elements);
+
+    // build valid table
+    GrammarTable grammarTable;
+
+    grammarTable.set_start("E");
+
+    grammarTable.add_entry("E", "(", {"T", "E'"});
+    grammarTable.add_synch("E", ")");
+    grammarTable.add_synch("E", "$");
+    grammarTable.add_entry("E", "a", {"T", "E'"});
+    grammarTable.add_entry("E", "b", {"T", "E'"});
+    grammarTable.add_entry("E", "Em", {"T", "E'"});
+
+    grammarTable.add_entry("E'", ")", {});
+    grammarTable.add_entry("E'", "$", {});
+    grammarTable.add_entry("E'", "+", {"+", "E"});
+
+    grammarTable.add_entry("T", "(", {"F", "T'"});
+    grammarTable.add_synch("T", ")");
+    grammarTable.add_synch("T", "+");
+    grammarTable.add_synch("T", "$");
+    grammarTable.add_entry("T", "a", {"F", "T'"});
+    grammarTable.add_entry("T", "b", {"F", "T'"});
+    grammarTable.add_entry("T", "Em", {"F", "T'"});
+
+    grammarTable.add_entry("T'", "(", {"T"});
+    grammarTable.add_entry("T'", ")", {});
+    grammarTable.add_entry("T'", "a", {"T"});
+    grammarTable.add_entry("T'", "b", {"T"});
+    grammarTable.add_entry("T'", "Em", {"T"});
+    grammarTable.add_entry("T'", "+", {});
+    grammarTable.add_entry("T'", "$", {});
+
+    grammarTable.add_entry("F", "(", {"P", "F'"});
+    grammarTable.add_synch("F", ")");
+    grammarTable.add_synch("F", "+");
+    grammarTable.add_synch("F", "$");
+    grammarTable.add_entry("F", "a", {"P", "F'"});
+    grammarTable.add_entry("F", "b", {"P", "F'"});
+    grammarTable.add_entry("F", "Em", {"P", "F'"});
+
+    grammarTable.add_entry("F'", "(", {});
+    grammarTable.add_entry("F'", ")", {});
+    grammarTable.add_entry("F'", "a", {});
+    grammarTable.add_entry("F'", "b", {});
+    grammarTable.add_entry("F'", "+", {});
+    grammarTable.add_entry("F'", "Em", {});
+    grammarTable.add_entry("F'", "$", {});
+    grammarTable.add_entry("F'", "*", {"*", "F"});
+
+    grammarTable.add_entry("P", "(", {"(", "E", ")"});
+    grammarTable.add_synch("P", ")");
+    grammarTable.add_synch("P", "+");
+    grammarTable.add_synch("P", "*");
+    grammarTable.add_synch("P", "$");
+    grammarTable.add_entry("P", "a", {"a"});
+    grammarTable.add_entry("P", "b", {"b"});
+    grammarTable.add_entry("P", "Em", {"Em"});
+
+    compareGrammarTable(result, &grammarTable);
+}
+
 void compareGrammarTable(GrammarTable* t1, GrammarTable* t2) {
     bool valid = true;
     // check start
     if (t1->get_start() != t2->get_start()) {
         valid = false;
-        cout << "Error comparing grammar table builder first" << endl;
+        cout << "Error comparing grammar table builder first. Expected: (" << t2->get_start()
+             <<"). Actual: ("<< t1->get_start()<<")." << endl;
     }
 
     // check table
     if (t1->get_table_elements_count() != t2->get_table_elements_count()) {
         valid = false;
-        cout << "Error in constructing table, table size not matched" << endl;
+        cout << "Error in constructing table, table size not matched. Expected: (" << t2->get_table_elements_count()
+             <<"). Actual: ("<< t1->get_table_elements_count()<<")." << endl;
     }
 
     if (!t1->compare_table(t2)) {
@@ -450,7 +532,8 @@ void compareGrammarTable(GrammarTable* t1, GrammarTable* t2) {
     // check synch
     if (t1->get_sync_elements_count() != t2->get_sync_elements_count()) {
         valid = false;
-        cout << "Error in constructing sync, sync size not matched" << endl;
+        cout << "Error in constructing sync, sync size not matched.Expected: (" << t2->get_sync_elements_count()
+             <<"). Actual: ("<< t1->get_sync_elements_count()<<")." << endl;
     }
 
     if (!t1->compare_sync(t2)) {

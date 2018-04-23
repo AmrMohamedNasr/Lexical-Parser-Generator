@@ -31,6 +31,11 @@ class GrammarTable {
 		unordered_set<pair<string, string>, pair_hash> synchronizing;
 		unordered_set<string> non_terminals, terminals;
 		string start_rule;
+		bool compare_vector(vector<string> v1, vector<string> v2);
+		bool compare_map(unordered_map<pair<string, string>, vector<string>, pair_hash> map1
+				, unordered_map<pair<string, string>, vector<string>, pair_hash> map2);
+		bool compare_set(unordered_set<pair<string, string>, pair_hash> set1
+				, unordered_set<pair<string, string>, pair_hash>set2);
 	public:
 		bool add_entry(string non_terminal, string terminal, vector<string> rules);
 		bool has_entry(string non_terminal, string terminal);

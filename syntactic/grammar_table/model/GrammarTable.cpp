@@ -4,6 +4,7 @@
  *     Author: marc
  */
 
+#include <iostream>
 #include "GrammarTable.h"
 
 bool GrammarTable::add_entry(string non_terminal, string terminal, vector<string> rules) {
@@ -96,7 +97,7 @@ bool GrammarTable::compare_table(GrammarTable *grammarTable) {
         return false;
     }
 
-    return std::equal(t1.begin(), t1.end(), t2.begin());
+    return compare_map(t1, t2);
 }
 
 bool GrammarTable::compare_sync(GrammarTable *grammarTable) {
@@ -106,6 +107,66 @@ bool GrammarTable::compare_sync(GrammarTable *grammarTable) {
         return false;
     }
 
-    return std::equal(s1.begin(), s1.end(), s2.begin());
+    return compare_set(s1, s2);
 }
 
+/**.
+ *
+ * @param v1 computed vector
+ * @param v2 expected vector
+ * @return
+ */
+bool GrammarTable::compare_vector(vector<string> v1, vector<string> v2) {
+    for (int i = 0; i < v1.size(); i++) {
+        if (v1[i] != v2[i]) {
+            cout << "Vectors not matched. Expected(" << v2[i] << ") Actual(" << v1[i] << ").\n";
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**.
+ * @param map1 computed output
+ * @param map2 expected output
+ * @return
+ */
+bool GrammarTable::compare_map(unordered_map<pair<string, string>, vector<string>, pair_hash> map1,
+                               unordered_map<pair<string, string>, vector<string>, pair_hash> map2) {
+    for (auto const m2Pair : map2) {
+        pair<string, string> m2Key = m2Pair.first;
+        vector<string> m2Value = m2Pair.second;
+        auto m1Pair = map1.find(m2Key);
+        if (m1Pair != map1.end()) {
+            auto m1Value = m1Pair.operator->()->second;
+            if (m1Value.size() != m2Value.size()) {
+                cout << "Vector size not matched. Expected(" << m2Value.size()
+                     <<") Actual(" << m1Value.size() << ").\n";
+                return false;
+            } else if (!compare_vector(m1Value, m2Value)) {
+                cout << "Key(" << m2Key.first << " " << m2Key.second << ")\n";
+                return false;
+            }
+        } else {
+            cout << "Key(" << m2Key.first << " " << m2Key.second << ")not found in table\n";
+            return false;
+        }
+
+    }
+
+    return true;
+}
+
+bool GrammarTable::compare_set(unordered_set<pair<string, string>, pair_hash> set1
+        , unordered_set<pair<string, string>, pair_hash> set2) {
+    for (auto const v1 : set1) {
+        auto v2 = set2.find(v1);
+        if (v2 == set2.end()) {
+            cout << "Key(" << v1.first << " " << v1.second << ")not found as sync.\n";
+            return false;
+        }
+    }
+
+    return true;
+}

@@ -9,9 +9,15 @@
 
 GrammarTable* GrammarTableBuilder::build_grammar_table(vector<GrammarElement *> *rules) {
     auto grammarTable = new GrammarTable();
+    bool first = true;
     for (auto grammarElement : *rules) {
         if (grammarElement->getType() == NON_TERMINAL) {
             auto nonTerminal = static_cast<NonTerminal*>(grammarElement);
+
+            if (first) {
+                first = false;
+                grammarTable->set_start(nonTerminal->getName());
+            }
 
             // loop through every expression in non terminal
             for (auto expression : nonTerminal->leads_to) {
