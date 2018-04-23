@@ -96,12 +96,99 @@ void build_lecture_example_1(vector<GrammarElement *> * elements, unordered_set<
 
 void build_lecture_example_2(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions,
 		bool set_first, bool set_follow) {
+	NonTerminal * S = new NonTerminal("S", NON_TERMINAL);
+	NonTerminal * E = new NonTerminal("E", NON_TERMINAL);
+	NonTerminal * C = new NonTerminal("C", NON_TERMINAL);
+	GrammarElement * i = new GrammarElement("i", TERMINAL);
+	GrammarElement * t = new GrammarElement("t", TERMINAL);
+	GrammarElement * a = new GrammarElement("a", TERMINAL);
+	GrammarElement * e = new GrammarElement("e", TERMINAL);
+	GrammarElement * b = new GrammarElement("b", TERMINAL);
+	elements->push_back(S);elements->push_back(E);elements->push_back(C);elements->push_back(i);elements->push_back(t);
+	elements->push_back(a);elements->push_back(e);elements->push_back(b);
+	E->eps = true;
 
+	GrammarExpression * ex1 = new GrammarExpression(S);
+	GrammarExpression * ex2 = new GrammarExpression(S);
+	GrammarExpression * ex3 = new GrammarExpression(E);
+	GrammarExpression * ex4 = new GrammarExpression(C);
+	expressions->insert(ex1);expressions->insert(ex2);expressions->insert(ex3);expressions->insert(ex4);
+
+	ex1->expression.push_back(i);ex1->expression.push_back(C);ex1->expression.push_back(t);ex1->expression.push_back(S);
+	ex1->expression.push_back(E);
+	S->leads_to.push_back(ex1);S->referenced_in.push_back(ex1);C->referenced_in.push_back(ex1);E->referenced_in.push_back(ex1);
+
+	ex2->expression.push_back(a);
+	S->leads_to.push_back(ex2);
+
+	ex3->expression.push_back(e);ex3->expression.push_back(S);
+	E->leads_to.push_back(ex3);S->referenced_in.push_back(ex3);
+
+	ex4->expression.push_back(b);
+	C->leads_to.push_back(ex4);
+
+	if (set_first) {
+		S->first_strings = {"i", "a"};
+		E->first_strings = {"e"};
+		C->first_strings = {"b"};
+		ex1->first_strings = {"i"};
+		ex2->first_strings = {"a"};
+		ex3->first_strings = {"e"};
+		ex4->first_strings = {"b"};
+	}
+	if (set_follow) {
+		S->follow_strings = {"$", "e"};
+		E->follow_strings = {"$", "e"};
+		C->follow_strings = {"t"};
+	}
 }
 
 void build_lecture_example_3(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions,
 		bool set_first, bool set_follow) {
+	NonTerminal * S = new NonTerminal("S", NON_TERMINAL);
+	NonTerminal * A = new NonTerminal("A", NON_TERMINAL);
+	GrammarElement * c = new GrammarElement("c", TERMINAL);
+	GrammarElement * d = new GrammarElement("d", TERMINAL);
+	GrammarElement * a = new GrammarElement("a", TERMINAL);
+	GrammarElement * e = new GrammarElement("e", TERMINAL);
+	GrammarElement * b = new GrammarElement("b", TERMINAL);
+	elements->push_back(S);elements->push_back(A);elements->push_back(c);elements->push_back(d);
+	elements->push_back(a);elements->push_back(e);elements->push_back(b);
+	S->eps = true;
 
+	GrammarExpression * ex1 = new GrammarExpression(S);
+	GrammarExpression * ex2 = new GrammarExpression(S);
+	GrammarExpression * ex3 = new GrammarExpression(A);
+	GrammarExpression * ex4 = new GrammarExpression(A);
+	expressions->insert(ex1);expressions->insert(ex2);expressions->insert(ex3);expressions->insert(ex4);
+
+	ex1->expression.push_back(A);ex1->expression.push_back(b);ex1->expression.push_back(S);
+	S->leads_to.push_back(ex1);S->referenced_in.push_back(ex1);A->referenced_in.push_back(ex1);
+
+	ex2->expression.push_back(e);
+	S->leads_to.push_back(ex2);
+
+	ex3->expression.push_back(a);
+	A->leads_to.push_back(ex3);
+
+	ex4->expression.push_back(c);
+	ex4->expression.push_back(A);
+	ex4->expression.push_back(d);
+	A->leads_to.push_back(ex4);
+	A->referenced_in.push_back(ex4);
+
+	if (set_first) {
+		S->first_strings = {"a", "c", "e"};
+		A->first_strings = {"a", "c"};
+		ex1->first_strings = {"a", "c"};
+		ex2->first_strings = {"e"};
+		ex3->first_strings = {"a"};
+		ex4->first_strings = {"c"};
+	}
+	if (set_follow) {
+		S->follow_strings = {"$"};
+		A->follow_strings = {"b", "d"};
+	}
 }
 
 void build_sheet_four_pro_two(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions,
