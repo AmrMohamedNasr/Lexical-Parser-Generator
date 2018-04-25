@@ -4,10 +4,12 @@
  *     Author: marc
  */
 
+#include <cstring>
 #include "GrammarTableBuilder.h"
 #include "../models/NonTerminal.h"
 
-GrammarTable* GrammarTableBuilder::build_grammar_table(vector<GrammarElement *> *rules) {
+GrammarTable* GrammarTableBuilder::build_grammar_table(vector<GrammarElement *> *rules
+        , vector<string>* errors) {
     auto grammarTable = new GrammarTable();
     bool first = true;
     for (auto grammarElement : *rules) {
@@ -26,7 +28,10 @@ GrammarTable* GrammarTableBuilder::build_grammar_table(vector<GrammarElement *> 
                 set_expression_vector(&expression_vector, expression);
                 for (auto first : expression->first_strings) {
                     if (grammarTable->has_entry(nonTerminal->getName(), first)) {
-                        // TODO add error
+                        // error found
+                        string error = "Ambiguous grammar. Key(" + nonTerminal->getName()
+                                        + " " + first + "). has multiple values.";
+                        errors->push_back(error);
                     } else {
                         grammarTable->add_entry(nonTerminal->getName(), first, expression_vector);
                     }
@@ -36,7 +41,9 @@ GrammarTable* GrammarTableBuilder::build_grammar_table(vector<GrammarElement *> 
                 if (expression->eps) {
                     for (auto follow : nonTerminal->follow_strings) {
                         if (grammarTable->has_entry(nonTerminal->getName(), follow)) {
-                            // TODO add error
+                            string error = "Ambiguous grammar. Key(" + nonTerminal->getName()
+                                           + " " + follow + "). has multiple values.";
+                            errors->push_back(error);
                         } else {
                             grammarTable->add_entry(nonTerminal->getName(), follow, {expression_vector});
                         }
@@ -48,7 +55,9 @@ GrammarTable* GrammarTableBuilder::build_grammar_table(vector<GrammarElement *> 
             if (nonTerminal->eps) {
                 for (auto follow : nonTerminal->follow_strings) {
                     if (grammarTable->has_entry(nonTerminal->getName(), follow)) {
-                        // TODO add error
+                        string error = "Ambiguous grammar. Key(" + nonTerminal->getName()
+                                       + " " + follow + "). has multiple values.";
+                        errors->push_back(error);
                     } else {
                         grammarTable->add_entry(nonTerminal->getName(), follow, {});
                     }

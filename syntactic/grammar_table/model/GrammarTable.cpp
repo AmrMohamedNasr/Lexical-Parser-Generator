@@ -143,6 +143,7 @@ bool GrammarTable::compare_map(unordered_map<pair<string, string>, vector<string
             if (m1Value.size() != m2Value.size()) {
                 cout << "Vector size not matched. Expected(" << m2Value.size()
                      <<") Actual(" << m1Value.size() << ").\n";
+                cout << "Key(" << m2Key.first << " " << m2Key.second << ")\n";
                 return false;
             } else if (!compare_vector(m1Value, m2Value)) {
                 cout << "Key(" << m2Key.first << " " << m2Key.second << ")\n";
