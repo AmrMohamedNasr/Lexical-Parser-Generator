@@ -8,8 +8,10 @@
 
 void Parser::init_parser() {
     current_derived_index = 0;
-    rules.push_back("$");
+    rules.emplace_back("$");
     rules.push_back(table.get_start());
+    derivations.push_back({table.get_start()});
+
 }
 
 void Parser::set_grammar_table(GrammarTable gTable) {
@@ -22,7 +24,6 @@ void Parser::derive_token(Token token) {
     // pop TOS
     string topStackVal = rules.back();
     rules.pop_back();
-    derivations.push_back({topStackVal});
 
     // if it's non terminal, exchange with it's value from the table
     while (table.is_non_terminal(topStackVal)) {
@@ -36,6 +37,10 @@ void Parser::derive_token(Token token) {
             add_matched_tokens(&derivation);
             add_current_rules(&derivation);
             derivations.push_back(derivation);
+
+            // pop top element
+            topStackVal = rules.back();
+            rules.pop_back();
         } else if (table.is_synch(topStackVal, value)) {
 
         } else {
@@ -77,7 +82,7 @@ void Parser::add_matched_tokens(vector<string> *derivation) {
 }
 
 void Parser::add_current_rules(vector<string> *derivation) {
-    for (long i = rules.size() - 1; i >= 0; i--) {
+    for (long i = rules.size() - 1; i > 0; i--) {
         derivation->push_back(rules[i]);
     }
 }
