@@ -15,11 +15,11 @@
 #include "first_calculator/FirstCalculator.h"
 #include "follow_calculator/FollowCalculator.h"
 
-class LexicalAnalyzerGenerator {
+class SyntacticAnalyzerGenerator {
 	private:
 		GrammarFileParser grammarParser;
 		FirstCalculator firstCalculator;
-		FollowCalculator FollowCalculator;
+		FollowCalculator followCalculator;
 		LlConverter converter;
 		GrammarTableBuilder tableBuilder;
 		GrammarTableWriter tableWriter;

@@ -125,7 +125,7 @@ void sheetThreeProblemThreeTestCase() {
                                               close, a, b, Em};
 
     vector<string> errors = fileParser.parse_grammar_file(&rules, &expressions, &infile,
-                                                          &terminals, &non_terminals, startRule);
+                                                          &terminals, &non_terminals, &startRule);
 
     unordered_set<string> expectedNonTerminals = {"E", "E'", "T", "T'", "F", "F'", "P"};
     unordered_set<string> expectedTerminals = {"+", "*'", "(", ")'", "a", "b'", "Em"};
@@ -206,7 +206,7 @@ void sheetThreeProblemFourTestCase() {
     vector<GrammarElement *> expectedRules = {SE, RE, TE, UE, VE, s, b, t, u, v};
 
     vector<string> errors = fileParser.parse_grammar_file(&rules, &expressions, &infile,
-                                                          &terminals, &non_terminals, startRule);
+                                                          &terminals, &non_terminals, &startRule);
 
     unordered_set<string> expectedNonTerminals = {"T", "R", "S", "U", "V"};
     unordered_set<string> expectedTerminals = {"t", "r", "s", "u", "v"};
@@ -417,7 +417,7 @@ void projectPdfTestCase() {
                                               num_terminal, plus_terminal, minus_terminal};
 
     vector<string> errors = fileParser.parse_grammar_file(&rules, &expressions, &infile,
-                                                          &terminals, &non_terminals, startRule);
+                                                          &terminals, &non_terminals, &startRule);
 
     if (!errors.size() == 0) {
         cout << "Syntactic Grammar Parser Errors: " + to_string(errors.size()) + " errors detected" << endl;
