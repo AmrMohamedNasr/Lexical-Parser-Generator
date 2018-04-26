@@ -21,8 +21,8 @@ class Parser {
 		vector<string> errors;
 		vector<vector<string>> derivations;
 		unsigned int current_derived_index;
+		void copy_vector(vector<string>* src, vector<string>* destination);
 	public:
-		Parser();
 		void set_grammar_table(GrammarTable gTable);
 		/**.
 		 * Inititalize the stack, push the sign dollar and first rule.
