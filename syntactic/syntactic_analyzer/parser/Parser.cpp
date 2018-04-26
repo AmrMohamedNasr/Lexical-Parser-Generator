@@ -25,38 +25,63 @@ void Parser::derive_token(Token token) {
     string topStackVal = rules.back();
     rules.pop_back();
 
-    // if it's non terminal, exchange with it's value from the table
-    while (table.is_non_terminal(topStackVal)) {
-        if (table.has_entry(topStackVal, value)) {
-            // add to stack
-            vector<string> rule = table.get_entry(topStackVal, value);
-            add_new_rule(&rule);
-
-            vector<string> derivation;
-            // add new derivation
-            add_matched_tokens(&derivation);
-            add_current_rules(&derivation);
-            derivations.push_back(derivation);
-
-            // pop top element
+    bool search = true;
+    while (search) {
+        // handle if TOS is terminal and not matched
+        while (table.is_terminal(topStackVal) && topStackVal != value) {
+            string s = "Error: missing " + topStackVal + ", inserted";
+            errors.push_back(s);
+            matched_tokens.push_back(topStackVal);
             topStackVal = rules.back();
             rules.pop_back();
-        } else if (table.is_synch(topStackVal, value)) {
-
-        } else {
-            // Mark error
         }
-    }
 
-    if (topStackVal == value) {
-        matched_tokens.push_back(topStackVal);
-    } else {
-        // Mark error
+        // if it's non terminal, exchange with it's value from the table, if invalid discard
+        while (search && table.is_non_terminal(topStackVal)) {
+            if (table.has_entry(topStackVal, value)) {
+                // add to stack
+                vector<string> rule = table.get_entry(topStackVal, value);
+                add_new_rule(&rule);
+
+                vector<string> derivation;
+                // add new derivation
+                add_matched_tokens(&derivation);
+                add_current_rules(&derivation);
+                derivations.push_back(derivation);
+
+                // pop top element
+                topStackVal = rules.back();
+                rules.pop_back();
+            } else if (table.is_synch(topStackVal, value)) {
+                string s = "Error: synch, discard(" + topStackVal + ")";
+                errors.push_back(s);
+                topStackVal = rules.back();
+                rules.pop_back();
+            } else {
+                // Mark error - non terminal not matched - discard input and continue
+                string s = "Error:(illegal " + topStackVal + ") – discard " + value;
+                search = false;
+                errors.push_back(s);
+                rules.push_back(topStackVal);
+            }
+        }
+
+        if (topStackVal == value) {
+            matched_tokens.push_back(topStackVal);
+            search = false;
+        } else if (topStackVal == "$") {
+            rules.emplace_back("$");
+            search = false;
+        }
     }
 }
 
 
 void Parser::finish_derivation(vector<string> *rerrors, vector<vector<string>> *rderiv) {
+    if (!rules.empty()) {
+        errors.emplace_back("Error: input not matched, stack is not empty.\n");
+    }
+
     copy_vector(&errors, rerrors);
 
     for (auto vec : derivations) {
