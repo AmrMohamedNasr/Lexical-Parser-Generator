@@ -17,6 +17,7 @@ int main() {
 }
 
 void run_tests_p2() {
+	test_grammar_table_writer_reader();
 	test_grammar_table();
 	test_grammar_table_reader();
 	test_grammar_table_writer();

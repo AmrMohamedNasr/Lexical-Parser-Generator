@@ -5,6 +5,7 @@
 #include <iostream>
 #include "../model/GrammarTable.h"
 #include "GrammarTableReader.h"
+#include "../writer/GrammarTableWriter.h"
 
 GrammarTable *GrammarTableReader::readGrammarTable(ifstream *stream) {
     GrammarTable* grammarTable = new GrammarTable();
@@ -32,7 +33,7 @@ GrammarTable *GrammarTableReader::readGrammarTable(ifstream *stream) {
             cout << "ERROR: In reading terminals size" << endl;
             return nullptr;
         }
-        for (int i = 0; i < nonTerminalsSize; i++) {
+        for (int i = 0; i < terminalsSize; i++) {
             string name;
             if (!(*stream >> name) || name.empty()) {
                 cout << "Couldn't read correct name for terminal ..." << endl;
@@ -55,13 +56,13 @@ GrammarTable *GrammarTableReader::readGrammarTable(ifstream *stream) {
             for (int j = 0; j < terminalsSize; ++j) {
                 string terminal = terminals[j];
                 int vectorSize;
-                if (!(*stream >> vectorSize) || vectorSize < -1) {
+                if (!(*stream >> vectorSize) || vectorSize < -2) {
                     cout << "Couldn't read correct name for vector size ..." << endl;
                     return nullptr;
                 } else {
                     if (vectorSize == -1) {
                         grammarTable->add_synch(nonTerminal, terminal);
-                    } else {
+                    } else if (vectorSize != -2) {
                         vector<string> nextElements;
                         for (int k = 0; k < vectorSize; ++k) {
                             string next;
