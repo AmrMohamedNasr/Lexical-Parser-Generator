@@ -17,11 +17,15 @@
 class Parser {
 	private:
 		GrammarTable table;
-		stack<string> rules;
+		vector<string> rules; // used as a stack
 		vector<string> errors;
 		vector<vector<string>> derivations;
+		vector<string> matched_tokens;
 		unsigned int current_derived_index;
 		void copy_vector(vector<string>* src, vector<string>* destination);
+		void add_new_rule(vector<string>* derivation);
+		void add_matched_tokens(vector<string>* derivation);
+		void add_current_rules(vector<string>* derivation);
 	public:
 		void set_grammar_table(GrammarTable gTable);
 		/**.
