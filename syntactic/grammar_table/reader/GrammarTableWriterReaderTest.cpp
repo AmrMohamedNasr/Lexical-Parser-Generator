@@ -104,6 +104,12 @@ bool test_sheet_four_problem_two_writer_reader() {
     GrammarTable* grammarTable1 = reader.readGrammarTable(&of2);
     bool valid = compareGrammarTable(grammarTable1, &grammarTable);
 
+    if(remove("grammarTableWriterTest1.txt") != 0) {
+        cout << "File not generated : Grammar Table Writer failed" << endl;
+    } else {
+        cout << "Grammar Table Reader Writer Test 1 file removal success..." << endl;
+    }
+
     return valid;
 }
 
@@ -137,6 +143,12 @@ bool test_lecture_example_3_writer_reader() {
 
     GrammarTable* grammarTable1 = reader.readGrammarTable(&of2);
     bool valid = compareGrammarTable(grammarTable1, &grammarTable);
+
+    if(remove("grammarTableWriterTest2.txt") != 0) {
+        cout << "File not generated : Grammar Table Writer failed" << endl;
+    } else {
+        cout << "Grammar Table Reader Writer Test 2 file removal success..." << endl;
+    }
 
     return valid;
 }
