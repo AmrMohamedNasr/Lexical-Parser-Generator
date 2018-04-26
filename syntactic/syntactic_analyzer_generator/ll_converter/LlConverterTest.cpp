@@ -78,6 +78,7 @@ void test_direct_left_recursion() {
 	unordered_set <GrammarExpression*> set2 = {exp11, exp12, exp21, exp22, exp31, exp32, exp33, exp34};
 	unordered_set <NonTerminal*> changed;
 	LlConverter converter;
+	converter.left_factor(&set, &set2, &changed);
 	converter.remove_left_recursion(&set, &set2, &changed);
 	// if pass integration test passed
 
@@ -140,6 +141,7 @@ void test_indirect_left_recursion() {
 	unordered_set <GrammarExpression*> set2 = {exp11, exp12, exp21, exp31, exp32, exp41};
 	unordered_set <NonTerminal*> changed;
 	LlConverter converter;
+	converter.left_factor(&set, &set2, &changed);
 	converter.remove_left_recursion(&set, &set2, &changed);
 	NonTerminal * ele =  static_cast<NonTerminal *> (set[8]);
 	NonTerminal * ele1 =  static_cast<NonTerminal *> (set[2]);
@@ -256,24 +258,24 @@ void test_direct_left_factoring() {
 		if (set2.size() == 7) {
 			if (ele->getName() == "A_1") {
 				if (ele->getType() == NON_TERMINAL) {
-					if (ele->leads_to[0]->expression[0] == bS ||
-							ele->leads_to[0]->expression[0] == b) {
-						if (ele->leads_to[1]->expression[0] == bS ||
-							ele->leads_to[1]->expression[0] == b) {
-							if (ele->leads_to.size() == 2) {
-								if (ele->leads_to[0]->belongs_to == ele &&
-									ele->leads_to[0]->belongs_to == ele) {
-									if (ele->referenced_in[0] == ele0->leads_to[0] ||
-										ele->referenced_in[0] == ele0->leads_to[1]	) {
-										if (ele2->leads_to.size() == 3) {
-											if (ele2->leads_to[0]->expression[0] == gS ||
-												ele2->leads_to[0]->expression[0] == eS ||
-												ele2->leads_to[0]->expression[0] == fS) {
-												if (ele2->leads_to[1]->expression[0] == gS ||
-													ele2->leads_to[1]->expression[0] == eS ||
-													ele2->leads_to[1]->expression[0] == fS) {
-													if (ele2->referenced_in[0] == ele0->leads_to[0] ||
-														ele2->referenced_in[0] == ele0->leads_to[1]) {
+					if (ele2->leads_to[0]->expression[0] == bS ||
+							ele2->leads_to[0]->expression[0] == b) {
+						if (ele2->leads_to[1]->expression[0] == bS ||
+							ele2->leads_to[1]->expression[0] == b) {
+							if (ele2->leads_to.size() == 2) {
+								if (ele2->leads_to[0]->belongs_to == ele2 &&
+									ele2->leads_to[0]->belongs_to == ele2) {
+									if (ele2->referenced_in[0] == ele0->leads_to[0] ||
+										ele2->referenced_in[0] == ele0->leads_to[1]	) {
+										if (ele->leads_to.size() == 3) {
+											if (ele->leads_to[0]->expression[0] == gS ||
+												ele->leads_to[0]->expression[0] == eS ||
+												ele->leads_to[0]->expression[0] == fS) {
+												if (ele->leads_to[1]->expression[0] == gS ||
+													ele->leads_to[1]->expression[0] == eS ||
+													ele->leads_to[1]->expression[0] == fS) {
+													if (ele->referenced_in[0] == ele0->leads_to[0] ||
+														ele->referenced_in[0] == ele0->leads_to[1]) {
 														if (ele2->getName() == "A_2") {
 															cout << "Direct left factoring Success..." << endl;
 														}
