@@ -25,7 +25,7 @@ public:
     // Will return vector of errors, empty if no errors.
     vector<string> parse_grammar_file(vector<GrammarElement *> *rules, unordered_set<GrammarExpression *> * expressions,
                                       ifstream * lexical_file_stream, unordered_set<string> *terminals,
-                                      unordered_set<string> *non_terminals, GrammarElement * startRule);
+                                      unordered_set<string> *non_terminals, GrammarElement ** startRule);
 
 private:
     static const regex startExpressionLine;
@@ -62,7 +62,7 @@ private:
 
     GrammarElement *
     insertNonTerminal(string line, const regex pattern, map<string, NonTerminal *> *nameToNonTerminal, smatch matcher,
-                      vector<GrammarElement *> *rules, GrammarElement *prevGrammarElement, GrammarElement *startRule,
+                      vector<GrammarElement *> *rules, GrammarElement *prevGrammarElement, GrammarElement **startRule,
                       unordered_set<string> *non_terminals, vector<string> *errors, int lineMum);
 
     vector<string> splitOrs(string curr, vector<string> *errors);

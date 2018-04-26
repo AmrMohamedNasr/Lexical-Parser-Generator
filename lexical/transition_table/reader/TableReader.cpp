@@ -10,7 +10,6 @@ TransitionTable* TableReader::readTransitionTable(ifstream *stream) {
     vector<string> fin_input;
     vector<vector<DfaNode * >> fin_transitions;
 
-    string line;
     if (stream->is_open()) {
     	unsigned node_number;
     	if (!(*stream >> node_number) || node_number <1) {
