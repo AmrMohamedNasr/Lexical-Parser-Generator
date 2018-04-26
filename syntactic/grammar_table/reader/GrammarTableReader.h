@@ -13,7 +13,7 @@
 
 class GrammarTableReader {
 	public:
-    	GrammarTable readGrammarTable(ifstream* stream);
+    	GrammarTable *readGrammarTable(ifstream* stream);
 };
 
 
