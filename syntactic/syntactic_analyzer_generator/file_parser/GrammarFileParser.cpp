@@ -23,7 +23,7 @@ const regex rightAndEqualExpressionLine = regex("\\s*\\:\\:\\=\\s*(.*)\\s*");
 std::vector <string> GrammarFileParser::parse_grammar_file(
         vector < GrammarElement * > *rules, unordered_set <GrammarExpression * > *expressions,
         ifstream * lexical_file_stream, unordered_set <string> *terminals,
-        unordered_set < string > *non_terminals, GrammarElement * startRule) {
+        unordered_set < string > *non_terminals, GrammarElement ** startRule) {
     string line;
     vector<string> lines;
     vector<string> errors;
@@ -124,6 +124,10 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
 
     for (int i = 0; i < rules->size(); ++i) {
         NonTerminal* nonTerminal = static_cast<NonTerminal *> ((*rules)[i]);
+        if (!nonTerminal->eps && nonTerminal->leads_to.size() == 0) {
+            errors.push_back("Non terminal " + nonTerminal->getName()
+                             + " doesn't lead to any expressions");
+        }
         for (int j = 0; j < nonTerminal->leads_to.size(); ++j) {
             expressions->insert(nonTerminal->leads_to[j]);
         }
@@ -138,7 +142,7 @@ std::vector <string> GrammarFileParser::parse_grammar_file(
 }
 
 GrammarElement * GrammarFileParser::insertNonTerminal(string line, const regex pattern, map<string, NonTerminal *> *nameToNonTerminal, smatch matcher,
-                                                      vector<GrammarElement *> *rules, GrammarElement *prevGrammarElement, GrammarElement *startRule,
+                                                      vector<GrammarElement *> *rules, GrammarElement *prevGrammarElement, GrammarElement **startRule,
                                                       unordered_set<string> *non_terminals, vector<string> *errors, int lineMum) {
     regex_search(line, matcher, pattern);
     string temp = matcher[1];
@@ -161,7 +165,7 @@ GrammarElement * GrammarFileParser::insertNonTerminal(string line, const regex p
         rules->push_back(element);
         non_terminals->insert(name);
         if (prevGrammarElement == nullptr) {
-            startRule = element;
+            *startRule = element;
         }
         return element;
     } else {

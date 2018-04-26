@@ -9,160 +9,98 @@
 #include "FollowCalculator.h"
 #include "../models/NonTerminal.h"
 #include <iostream>
-#include <unordered_map>
-#include <unordered_set>
-
-void build_test_graph_f(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions);
-bool test_graph_resultsf(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions);
-bool compare_non_terminalsf(vector<NonTerminal *> * elements, vector<unordered_set<string>> ans);
-void destroy_graphf(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions);
+#include "../calculator_test_utils/TestGraph.h"
 
 void test_follow_calculator() {
 	FollowCalculator cal;
-	bool error = false;
-	vector<GrammarElement *> ele;
-	unordered_set<GrammarExpression *> exp;
-	build_test_graph_f(&ele, &exp);
+	bool no_error = true;
+	vector<GrammarElement *> ele, cele;
+	unordered_set<GrammarExpression *> exp, cexp;
+	vector<string> errors;
+	// First test.
+	build_lecture_example_1(&ele, &exp, true, false);
+	build_lecture_example_1(&cele, &cexp, true, true);
 	cal.set_follow_sets(&ele, &exp);
-	error = error || test_graph_resultsf(&ele, &exp);
-	destroy_graphf(&ele, &exp);
+	if(test_graph_results(&ele, &exp, &cele, &cexp, &errors) > 0) {
+		no_error = false;
+		cout << "Follow : Lecture Example 1 Failed : " << endl;
+		print_errors(&errors);
+	}
+	destroy_graph(&ele, &exp);
+	destroy_graph(&cele, &cexp);
 	ele.clear();
 	exp.clear();
-	if (error) {
+	cele.clear();
+	cexp.clear();
+	errors.clear();
+	// Second test.
+	build_lecture_example_2(&ele, &exp, true, false);
+	build_lecture_example_2(&cele, &cexp, true, true);
+	cal.set_follow_sets(&ele, &exp);
+	if(test_graph_results(&ele, &exp, &cele, &cexp, &errors) > 0) {
+		no_error = false;
+		cout << "Follow : Lecture Example 2 Failed : " << endl;
+		print_errors(&errors);
+	}
+	destroy_graph(&ele, &exp);
+	destroy_graph(&cele, &cexp);
+	ele.clear();
+	exp.clear();
+	cele.clear();
+	cexp.clear();
+	errors.clear();
+	// Third test.
+	build_lecture_example_3(&ele, &exp, true, false);
+	build_lecture_example_3(&cele, &cexp, true, true);
+	cal.set_follow_sets(&ele, &exp);
+	if(test_graph_results(&ele, &exp, &cele, &cexp, &errors) > 0) {
+		no_error = false;
+		cout << "Follow : Lecture Example 3 Failed : " << endl;
+		print_errors(&errors);
+	}
+	destroy_graph(&ele, &exp);
+	destroy_graph(&cele, &cexp);
+	ele.clear();
+	exp.clear();
+	cele.clear();
+	cexp.clear();
+	errors.clear();
+	// Fourth Test.
+	build_sheet_four_pro_two(&ele, &exp, true, false);
+	build_sheet_four_pro_two(&cele, &cexp, true, true);
+	cal.set_follow_sets(&ele, &exp);
+	if(test_graph_results(&ele, &exp, &cele, &cexp, &errors) > 0) {
+		no_error = false;
+		cout << "Follow : Sheet 4 Problem 2 Failed : " << endl;
+		print_errors(&errors);
+	}
+	destroy_graph(&ele, &exp);
+	destroy_graph(&cele, &cexp);
+	ele.clear();
+	exp.clear();
+	cele.clear();
+	cexp.clear();
+	errors.clear();
+	// Fifth test.
+	build_pdf(&ele, &exp, true, false);
+	build_pdf(&cele, &cexp, true, true);
+	cal.set_follow_sets(&ele, &exp);
+	if(test_graph_results(&ele, &exp, &cele, &cexp, &errors) > 0) {
+		no_error = false;
+		cout << "Follow : Pdf Failed : " << endl;
+		print_errors(&errors);
+	}
+	destroy_graph(&ele, &exp);
+	destroy_graph(&cele, &cexp);
+	ele.clear();
+	exp.clear();
+	cele.clear();
+	cexp.clear();
+	errors.clear();
+	// Print final result.
+	if (!no_error) {
 		cout << "Follow Calculator Failed Test..." << endl;
 	} else {
 		cout << "Follow Calculator Success..." << endl;
-	}
-}
-
-
-
-void build_test_graph_f(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions) {
-	GrammarElement *e = new NonTerminal("E", NON_TERMINAL);
-	GrammarElement *e1 = new NonTerminal("E'", NON_TERMINAL);
-	GrammarElement *t = new NonTerminal("T", NON_TERMINAL);
-	GrammarElement *t1 = new NonTerminal("T'", NON_TERMINAL);
-	GrammarElement *f = new NonTerminal("F", NON_TERMINAL);
-	GrammarElement *plus = new GrammarElement("+", TERMINAL);
-	GrammarElement *mul = new GrammarElement("*", TERMINAL);
-	GrammarElement *leftp = new GrammarElement("(", TERMINAL);
-	GrammarElement *rightp = new GrammarElement(")", TERMINAL);
-	GrammarElement *id = new GrammarElement("id", TERMINAL);
-	elements->push_back(e);
-	elements->push_back(t);
-	elements->push_back(e1);
-	elements->push_back(plus);
-	elements->push_back(f);
-	elements->push_back(t1);
-	elements->push_back(mul);
-	elements->push_back(leftp);
-	elements->push_back(rightp);
-	elements->push_back(id);
-	static_cast<NonTerminal *>(e1)->eps = true;
-	static_cast<NonTerminal *>(t1)->eps = true;
-	GrammarExpression *ex1 = new GrammarExpression(e);
-	GrammarExpression *ex2 = new GrammarExpression(e1);
-	GrammarExpression *ex3 = new GrammarExpression(t);
-	GrammarExpression *ex4 = new GrammarExpression(t1);
-	GrammarExpression *ex5 = new GrammarExpression(f);
-	GrammarExpression *ex6 = new GrammarExpression(f);
-	expressions->insert(ex1);
-	expressions->insert(ex2);
-	expressions->insert(ex3);
-	expressions->insert(ex4);
-	expressions->insert(ex5);
-	expressions->insert(ex6);
-	ex1->expression.push_back(t);ex1->expression.push_back(e1);
-	ex2->expression.push_back(plus);ex2->expression.push_back(t);ex2->expression.push_back(e1);
-	ex3->expression.push_back(f);ex3->expression.push_back(t1);
-	ex4->expression.push_back(mul);ex4->expression.push_back(f);ex4->expression.push_back(t1);
-	ex5->expression.push_back(leftp);ex5->expression.push_back(e);ex5->expression.push_back(rightp);
-	ex6->expression.push_back(id);
-	static_cast<NonTerminal *>(e)->leads_to.push_back(ex1);
-	static_cast<NonTerminal *>(e1)->leads_to.push_back(ex2);
-	static_cast<NonTerminal *>(t)->leads_to.push_back(ex3);
-	static_cast<NonTerminal *>(t1)->leads_to.push_back(ex4);
-	static_cast<NonTerminal *>(f)->leads_to.push_back(ex5);
-	static_cast<NonTerminal *>(f)->leads_to.push_back(ex6);
-	static_cast<NonTerminal *>(e)->referenced_in.push_back(ex5);
-	static_cast<NonTerminal *>(e1)->referenced_in.push_back(ex1);
-	static_cast<NonTerminal *>(e1)->referenced_in.push_back(ex2);
-	static_cast<NonTerminal *>(t)->referenced_in.push_back(ex1);
-	static_cast<NonTerminal *>(t)->referenced_in.push_back(ex2);
-	static_cast<NonTerminal *>(t1)->referenced_in.push_back(ex3);
-	static_cast<NonTerminal *>(t1)->referenced_in.push_back(ex4);
-	static_cast<NonTerminal *>(f)->referenced_in.push_back(ex3);
-	static_cast<NonTerminal *>(f)->referenced_in.push_back(ex4);
-	unordered_set<string> s1 = {"(", "id"}, s2 = {"*"}, s3 = {"+"};
-	static_cast<NonTerminal *>(e)->first_strings = s1;
-	static_cast<NonTerminal *>(e1)->first_strings = s3;
-	static_cast<NonTerminal *>(t)->first_strings = s1;
-	static_cast<NonTerminal *>(t1)->first_strings = s2;
-	static_cast<NonTerminal *>(f)->first_strings = s1;
-}
-
-bool test_graph_resultsf(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions) {
-	bool error = false;
-	vector<unordered_set<string>> resele = {
-			{"$", ")"}, {"+", ")", "$"}, {"$", ")"}, {"+", "*", ")", "$"},  {"+", ")", "$"}
-	};
-	vector<NonTerminal *> nonTerminals;
-	int t = 0,nt = 0;
-	for (unsigned i = 0; i < elements->size(); i++) {
-		GrammarElement * e = (*elements)[i];
-		if (e->getName() == "E") {
-			nt ^= 0b1;
-			NonTerminal * ex = static_cast<NonTerminal*>(e);
-			nonTerminals.push_back(ex);
-		} else if (e->getName() == "E'") {
-			nt ^= 0b10;
-			NonTerminal * ex = static_cast<NonTerminal*>(e);
-			nonTerminals.push_back(ex);
-		} else if (e->getName() == "T") {
-			nt ^= 0b100;
-			NonTerminal * ex = static_cast<NonTerminal*>(e);
-			nonTerminals.push_back(ex);
-		} else if (e->getName() == "T'") {
-			nt ^= 0b1000;
-			NonTerminal * ex = static_cast<NonTerminal*>(e);;
-			nonTerminals.push_back(ex);
-		} else if (e->getName() == "F") {
-			nt ^= 0b10000;
-			NonTerminal * ex = static_cast<NonTerminal*>(e);;
-			nonTerminals.push_back(ex);
-		} else {
-			t++;
-		}
-	}
-	if (nt != 0b11111) {
-		cout << "Error : A Non-Terminal has not returned in the vector!" << endl;
-		error = true;
-	}
-	if (t != 5) {
-		cout << "Error : A Terminal has not returned in the vector!" << endl;
-		error = true;
-	}
-	bool er1 = compare_non_terminalsf(&nonTerminals, resele);
-	return error || er1;
-}
-
-bool compare_non_terminalsf(vector<NonTerminal *> * elements, vector<unordered_set<string>> ans) {
-	bool error = false;
-	for (unsigned i = 0; i < elements->size(); i++) {
-		NonTerminal e = *(*elements)[i];
-		if (e.follow_strings != ans[i]) {
-			cout << "Error at rule " << e.getName() << " : Follow not right" << endl;
-			error = true;
-		}
-	}
-	return error;
-}
-
-void destroy_graphf(vector<GrammarElement *> * elements, unordered_set<GrammarExpression *> *expressions) {
-	for (unsigned i = 0; i < elements->size(); i++) {
-		delete (*elements)[i];
-	}
-	for (auto it = expressions->begin(); it != expressions->end(); it++) {
-		delete (*it);
 	}
 }

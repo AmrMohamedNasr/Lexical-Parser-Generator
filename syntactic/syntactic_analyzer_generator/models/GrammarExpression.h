@@ -26,6 +26,7 @@ class GrammarExpression {
 	bool eps;
 	std::unordered_set<string> first_strings;
 	void print_expression(void);
+	string getName(void);
 };
 
 #endif /* SYNTACTIC_SYNTACTIC_ANALYZER_GENERATOR_MODELS_GRAMMAREXPRESSION_H_ */

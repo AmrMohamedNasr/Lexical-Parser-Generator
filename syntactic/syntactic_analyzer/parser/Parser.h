@@ -24,8 +24,16 @@ class Parser {
 	public:
 		Parser();
 		void set_grammar_table(GrammarTable gTable);
+		/**.
+		 * Inititalize the stack, push the sign dollar and first rule.
+		 */
 		void init_parser();
+
 		void derive_token(Token token);
+		/**.
+		 * @param rerrors strong copy of errors.
+		 * @param rderiv strong copy of derivations.
+		 */
 		void finish_derivation(vector<string> *rerrors, vector<vector<string>> * rderiv);
 };
 

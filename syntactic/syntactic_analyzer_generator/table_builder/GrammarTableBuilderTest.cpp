@@ -2,18 +2,29 @@
  * GrammarTableBuilderTest.cpp
  *
  *  Created on: Apr 18, 2018
- *      Author: amrnasr
+ *      Author: Marc Magdi
  */
 
 #include "../../../test_headers/p2_tests.h"
 #include "GrammarTableBuilder.h"
 #include "../models/NonTerminal.h"
+#include "../calculator_test_utils/TestGraph.h"
 
-void compareGrammarTable(GrammarTable* t1, GrammarTable* t2);
-void test_sheet_four_problem_two();
+bool compareGrammarTable(GrammarTable* t1, GrammarTable* t2);
+bool test_sheet_four_problem_two();
+bool test_lecture_example_2_invalid();
+bool compareErrorVector(vector<string>* e1, vector<string>* e2);
+bool test_lecture_example_3();
 
 void test_grammar_table_builder() {
-    test_sheet_four_problem_two();
+    bool valid = true;
+    valid &= test_sheet_four_problem_two();
+    valid &= test_lecture_example_2_invalid();
+    valid &= test_lecture_example_3();
+
+    if (valid) {
+        cout << "Grammar Table Builder test pass..." << endl;
+    }
 }
 
 void test_pdf_problem() {
@@ -262,159 +273,66 @@ void test_pdf_problem() {
     grammarTable.add_synch("STATEMENT_LIST", "$");
 
     GrammarTableBuilder grammarTableBuilder;
-    auto result = grammarTableBuilder.build_grammar_table(&rules);
+    vector<string> errors;
+    auto result = grammarTableBuilder.build_grammar_table(&rules, &errors);
     compareGrammarTable(&grammarTable, result);}
 
-void test_sheet_four_problem_two() {
-    vector<GrammarElement *> rules;
-    unordered_set<GrammarExpression *> expressions;
-    unordered_set<string> terminals;
-    unordered_set<string> non_terminals;
-    GrammarElement *startRule;
-
-    GrammarElement* EE = new NonTerminal("E", NON_TERMINAL);
-    NonTerminal* E = static_cast<NonTerminal*>(EE);
-    E->follow_strings.insert({")", "$"});
-    E->eps = false;
-
-    GrammarElement* TE = new NonTerminal("T", NON_TERMINAL);
-    NonTerminal* T = static_cast<NonTerminal*>(TE);
-    T->follow_strings.insert({"+", ")", "$"});
-    T->eps = false;
-
-    GrammarElement* EDE = new NonTerminal("E'", NON_TERMINAL);
-    NonTerminal* ED = static_cast<NonTerminal*>(EDE);
-    ED->follow_strings.insert({")", "$"});
-    ED->eps = true;
-
-    GrammarElement* FE = new NonTerminal("F", NON_TERMINAL);
-    NonTerminal* F = static_cast<NonTerminal*>(FE);
-    F->follow_strings.insert({"(", "a", "b", "Em", "+", ")", "$"});
-    F->eps = false;
-
-    GrammarElement* TDE = new NonTerminal("T'", NON_TERMINAL);
-    NonTerminal* TD = static_cast<NonTerminal*>(TDE);
-    TD->follow_strings.insert({"+", ")", "$"});
-    TD->eps = true;
-
-    GrammarElement* PE = new NonTerminal("P", NON_TERMINAL);
-    NonTerminal* P = static_cast<NonTerminal*>(PE);
-    P->follow_strings.insert({"*", "(", "a", "b", "Em", "+", ")", "$"});
-    P->eps = false;
-
-    GrammarElement* FDE = new NonTerminal("F'", NON_TERMINAL);
-    NonTerminal* FD = static_cast<NonTerminal*>(FDE);
-    FD->follow_strings.insert({"(", "a", "b", "Em", "+", ")", "$"});
-    FD->eps = true;
-
-    GrammarElement* plus = new GrammarElement("+", TERMINAL);
-    GrammarElement* star = new GrammarElement("*", TERMINAL);
-    GrammarElement* open = new GrammarElement("(", TERMINAL);
-    GrammarElement* close = new GrammarElement(")", TERMINAL);
-    GrammarElement* a = new GrammarElement("a", TERMINAL);
-    GrammarElement* b = new GrammarElement("b", TERMINAL);
-    GrammarElement* Em = new GrammarElement("Em", TERMINAL);
-
-    GrammarExpression* ex1 = new GrammarExpression(E);
-    ex1->expression = {T, ED};
-    ex1->first_strings.insert({"(", "a", "b", "Em"});
-    E->leads_to.push_back(ex1);
-
-    GrammarExpression* ex2 = new GrammarExpression(T);
-    ex2->expression = {F, TD};
-    T->leads_to.push_back(ex2);
-
-    GrammarExpression* ex3 = new GrammarExpression(ED);
-    ex3->expression = {plus, E};
-    ED->leads_to.push_back(ex3);
-
-    GrammarExpression* ex4 = new GrammarExpression(F);
-    ex4->expression = {P, FD};
-    F->leads_to.push_back(ex4);
-
-    GrammarExpression* ex5 = new GrammarExpression(TD);
-    ex5->expression = {T};
-    TD->leads_to.push_back(ex5);
-
-    GrammarExpression* ex6 = new GrammarExpression(P);
-    ex6->expression = {open, E, close};
-    P->leads_to.push_back(ex6);
-
-    GrammarExpression* ex7 = new GrammarExpression(P);
-    ex7->expression = {a};
-    P->leads_to.push_back(ex7);
-
-    GrammarExpression* ex8 = new GrammarExpression(P);
-    ex8->expression = {b};
-    P->leads_to.push_back(ex8);
-
-    GrammarExpression* ex9 = new GrammarExpression(P);
-    ex9->expression = {Em};
-    P->leads_to.push_back(ex9);
-
-    GrammarExpression* ex10 = new GrammarExpression(FD);
-    ex10->expression = {star, F};
-    FD->leads_to.push_back(ex10);
-
-    rules.push_back(E);
-    rules.push_back(ED);
-    rules.push_back(T);
-    rules.push_back(TD);
-    rules.push_back(F);
-    rules.push_back(FD);
-    rules.push_back(P);
-
+bool test_sheet_four_problem_two() {
+    vector<GrammarElement*> elements;
+    unordered_set<GrammarExpression*> expressions;
+    build_sheet_four_pro_two(&elements, &expressions, true, true);
     GrammarTableBuilder grammarTableBuilder;
-    auto result = grammarTableBuilder.build_grammar_table(&rules);
+    vector<string> errors;
+    auto result = grammarTableBuilder.build_grammar_table(&elements, &errors);
 
     // build valid table
     GrammarTable grammarTable;
 
     grammarTable.set_start("E");
 
-    grammarTable.add_entry("E", "(", {"T", "ED"});
+    grammarTable.add_entry("E", "(", {"T", "E'"});
     grammarTable.add_synch("E", ")");
     grammarTable.add_synch("E", "$");
-    grammarTable.add_entry("E", "a", {"T", "ED"});
-    grammarTable.add_entry("E", "b", {"T", "ED"});
-    grammarTable.add_entry("E", "Em", {"T", "ED"});
+    grammarTable.add_entry("E", "a", {"T", "E'"});
+    grammarTable.add_entry("E", "b", {"T", "E'"});
+    grammarTable.add_entry("E", "Em", {"T", "E'"});
 
-    grammarTable.add_entry("ED", ")", {});
-    grammarTable.add_entry("ED", "$", {});
-    grammarTable.add_entry("ED", "+", {"+", "E"});
+    grammarTable.add_entry("E'", ")", {});
+    grammarTable.add_entry("E'", "$", {});
+    grammarTable.add_entry("E'", "+", {"+", "E"});
 
-    grammarTable.add_entry("T", "(", {"F", "TD"});
+    grammarTable.add_entry("T", "(", {"F", "T'"});
     grammarTable.add_synch("T", ")");
     grammarTable.add_synch("T", "+");
     grammarTable.add_synch("T", "$");
-    grammarTable.add_entry("T", "a", {"F", "TD"});
-    grammarTable.add_entry("T", "b", {"F", "TD"});
-    grammarTable.add_entry("T", "Em", {"F", "TD"});
+    grammarTable.add_entry("T", "a", {"F", "T'"});
+    grammarTable.add_entry("T", "b", {"F", "T'"});
+    grammarTable.add_entry("T", "Em", {"F", "T'"});
 
-    grammarTable.add_entry("TD", "(", {"T"});
-    grammarTable.add_entry("TD", ")", {});
-    grammarTable.add_entry("TD", "a", {"T"});
-    grammarTable.add_entry("TD", "b", {"T"});
-    grammarTable.add_entry("TD", "Em", {"T"});
-    grammarTable.add_entry("TD", "+", {});
-    grammarTable.add_entry("TD", "$", {});
+    grammarTable.add_entry("T'", "(", {"T"});
+    grammarTable.add_entry("T'", ")", {});
+    grammarTable.add_entry("T'", "a", {"T"});
+    grammarTable.add_entry("T'", "b", {"T"});
+    grammarTable.add_entry("T'", "Em", {"T"});
+    grammarTable.add_entry("T'", "+", {});
+    grammarTable.add_entry("T'", "$", {});
 
-    grammarTable.add_entry("F", "(", {"P", "FD"});
+    grammarTable.add_entry("F", "(", {"P", "F'"});
     grammarTable.add_synch("F", ")");
     grammarTable.add_synch("F", "+");
     grammarTable.add_synch("F", "$");
-    grammarTable.add_entry("F", "a", {"P", "FD"});
-    grammarTable.add_entry("F", "b", {"P", "FD"});
-    grammarTable.add_entry("F", "Em", {"P", "FD"});
+    grammarTable.add_entry("F", "a", {"P", "F'"});
+    grammarTable.add_entry("F", "b", {"P", "F'"});
+    grammarTable.add_entry("F", "Em", {"P", "F'"});
 
-    grammarTable.add_entry("FD", "(", {});
-    grammarTable.add_entry("FD", ")", {});
-    grammarTable.add_entry("FD", "a", {});
-    grammarTable.add_entry("FD", "b", {});
-    grammarTable.add_entry("FD", "+", {});
-    grammarTable.add_entry("FD", "Em", {});
-    grammarTable.add_entry("FD", "$", {});
-    grammarTable.add_entry("FD", "*", {"*", "FD"});
+    grammarTable.add_entry("F'", "(", {});
+    grammarTable.add_entry("F'", ")", {});
+    grammarTable.add_entry("F'", "a", {});
+    grammarTable.add_entry("F'", "b", {});
+    grammarTable.add_entry("F'", "+", {});
+    grammarTable.add_entry("F'", "Em", {});
+    grammarTable.add_entry("F'", "$", {});
+    grammarTable.add_entry("F'", "*", {"*", "F"});
 
     grammarTable.add_entry("P", "(", {"(", "E", ")"});
     grammarTable.add_synch("P", ")");
@@ -425,21 +343,83 @@ void test_sheet_four_problem_two() {
     grammarTable.add_entry("P", "b", {"b"});
     grammarTable.add_entry("P", "Em", {"Em"});
 
-    compareGrammarTable(result, &grammarTable);
+    bool valid = compareGrammarTable(result, &grammarTable);
+
+    return valid;
 }
 
-void compareGrammarTable(GrammarTable* t1, GrammarTable* t2) {
+bool test_lecture_example_2_invalid() {
+    vector<GrammarElement*> elements;
+    unordered_set<GrammarExpression*> expressions;
+    build_lecture_example_2(&elements, &expressions, true, true);
+    GrammarTableBuilder grammarTableBuilder;
+    vector<string> errors;
+    auto result = grammarTableBuilder.build_grammar_table(&elements, &errors);
+
+    GrammarTable grammarTable;
+    grammarTable.set_start("S");
+
+    grammarTable.add_entry("S", "a", {"a"});
+    grammarTable.add_entry("S", "i", {"i", "C", "t", "S", "E"});
+    grammarTable.add_entry("E", "e", {"e", "S"});
+    grammarTable.add_entry("E", "$", {});
+    grammarTable.add_entry("C", "b", {"b"});
+
+    grammarTable.add_synch("S", "e");
+    grammarTable.add_synch("S", "$");
+    grammarTable.add_synch("C", "t");
+
+    vector<string> expectedErrors = {"Ambiguous grammar. Key(E e). has multiple values."};
+
+    bool valid = compareGrammarTable(result, &grammarTable);
+    valid &= compareErrorVector(&expectedErrors, &errors);
+
+    return valid;
+}
+
+bool test_lecture_example_3() {
+    vector<GrammarElement*> elements;
+    unordered_set<GrammarExpression*> expressions;
+    build_lecture_example_3(&elements, &expressions, true, true);
+    GrammarTableBuilder grammarTableBuilder;
+    vector<string> errors;
+    auto result = grammarTableBuilder.build_grammar_table(&elements, &errors);
+
+    GrammarTable grammarTable;
+    grammarTable.set_start("S");
+
+    grammarTable.add_entry("S", "a", {"A", "b", "S"});
+    grammarTable.add_entry("S", "c", {"A", "b", "S"});
+    grammarTable.add_entry("S", "e", {"e"});
+    grammarTable.add_entry("S", "$", {});
+    grammarTable.add_entry("A", "a", {"a"});
+    grammarTable.add_entry("A", "c", {"c", "A", "d"});
+    grammarTable.add_synch("A", "b");
+    grammarTable.add_synch("A", "d");
+
+
+    vector<string> expectedErrors = {};
+
+    bool valid = compareGrammarTable(result, &grammarTable);
+    valid &= compareErrorVector(&expectedErrors, &errors);
+
+    return valid;
+}
+
+bool compareGrammarTable(GrammarTable* t1, GrammarTable* t2) {
     bool valid = true;
     // check start
     if (t1->get_start() != t2->get_start()) {
         valid = false;
-        cout << "Error comparing grammar table builder first" << endl;
+        cout << "Error comparing grammar table builder first. Expected: (" << t2->get_start()
+             <<"). Actual: ("<< t1->get_start()<<")." << endl;
     }
 
     // check table
     if (t1->get_table_elements_count() != t2->get_table_elements_count()) {
         valid = false;
-        cout << "Error in constructing table, table size not matched" << endl;
+        cout << "Error in constructing table, table size not matched. Expected: (" << t2->get_table_elements_count()
+             <<"). Actual: ("<< t1->get_table_elements_count()<<")." << endl;
     }
 
     if (!t1->compare_table(t2)) {
@@ -450,7 +430,8 @@ void compareGrammarTable(GrammarTable* t1, GrammarTable* t2) {
     // check synch
     if (t1->get_sync_elements_count() != t2->get_sync_elements_count()) {
         valid = false;
-        cout << "Error in constructing sync, sync size not matched" << endl;
+        cout << "Error in constructing sync, sync size not matched.Expected: (" << t2->get_sync_elements_count()
+             <<"). Actual: ("<< t1->get_sync_elements_count()<<")." << endl;
     }
 
     if (!t1->compare_sync(t2)) {
@@ -458,8 +439,35 @@ void compareGrammarTable(GrammarTable* t1, GrammarTable* t2) {
         cout << "Error in comparing sync table" << endl;
     }
 
-    if (valid) {
-        cout << "Grammar Table Builder test pass..." << endl;
-    }
+    return valid;
 }
 
+/**.
+ * @param e1 expected error vector
+ * @param e2 actual error vector
+ */
+bool compareErrorVector(vector<string>* e1, vector<string>* e2) {
+    bool valid = true;
+    if (e1->size() != e2->size()) {
+        cout << "Error vector count not matched.Expected(" << e1->size() << "), Actual("
+                            << e2->size() << ").\n";
+        cout << "Error vector values\n";
+        for (int i = 0; i < e2->size() && valid; i++) {
+            string s2 = (*e2)[i];
+            cout << "Element[" << i << "] = " << s2 << ".\n";
+        }
+
+        valid = false;
+    }
+
+    for (int i = 0; i < e1->size() && valid; i++) {
+        string s1 = (*e1)[i];
+        string s2 = (*e2)[i];
+        if (s1 != s2) {
+            cout << "Expected error not matched. Expected(" << s1 << "), Actual(" << s2 <<").\n" ;
+            valid = false;
+        }
+    }
+
+    return valid;
+}
