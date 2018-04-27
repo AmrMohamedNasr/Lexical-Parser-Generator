@@ -15,12 +15,14 @@ bool compareVectors(vector<string>* v1, vector<string>* v2);
 bool test_1();
 bool test_2();
 bool test_3();
+bool test_4();
 
 void test_parser() {
     bool valid = true;
     valid &= test_1();
     valid &= test_2();
     valid &= test_3();
+    valid &= test_4();
 
     if (valid) {
         cout << "Parser tests passed ..\n";
@@ -52,12 +54,12 @@ bool test_1() {
     Token* token2 = new Token(REAL_TOKEN, "", "b");
     Token* token3 = new Token(REAL_TOKEN, "", "b");
     Token* token4 = new Token(REAL_TOKEN, "", "a");
-    Token* token5 = new Token(REAL_TOKEN, "", "$");
+//    Token* token5 = new Token(REAL_TOKEN, "", "$");
     parser.derive_token(*token1);
     parser.derive_token(*token2);
     parser.derive_token(*token3);
     parser.derive_token(*token4);
-    parser.derive_token(*token5);
+//    parser.derive_token(*token5);
 
     vector<vector<string>> derivations;
     vector<string> errors;
@@ -120,11 +122,11 @@ bool test_2() {
     Token* token1 = new Token(REAL_TOKEN, "", "a");
     Token* token2 = new Token(REAL_TOKEN, "", "a");
     Token* token3 = new Token(REAL_TOKEN, "", "b");
-    Token* token4 = new Token(REAL_TOKEN, "", "$");
+//    Token* token4 = new Token(REAL_TOKEN, "", "$");
     parser.derive_token(*token1);
     parser.derive_token(*token2);
     parser.derive_token(*token3);
-    parser.derive_token(*token4);
+//    parser.derive_token(*token4);
 
     vector<vector<string>> derivations;
     vector<string> errors;
@@ -195,13 +197,13 @@ bool test_3() {
     Token* token3 = new Token(REAL_TOKEN, "", "a");
     Token* token4 = new Token(REAL_TOKEN, "", "d");
     Token* token5 = new Token(REAL_TOKEN, "", "b");
-    Token* token6 = new Token(REAL_TOKEN, "", "$");
+//    Token* token6 = new Token(REAL_TOKEN, "", "$");
     parser.derive_token(*token1);
     parser.derive_token(*token2);
     parser.derive_token(*token3);
     parser.derive_token(*token4);
     parser.derive_token(*token5);
-    parser.derive_token(*token6);
+//    parser.derive_token(*token6);
 
     vector<vector<string>> derivations;
     vector<string> errors;
@@ -234,6 +236,35 @@ bool test_3() {
     compareVectors(&expectedErrors, &errors);
 
     return valid;
+
+}
+
+bool test_4() {
+    // setup Grammar Table
+    GrammarTable grammarTable;
+
+    vector<string> terminals = {"a", "$"};
+    vector<string> nonTerminals = {"A", "B"};
+    grammarTable.set_non_terminals(nonTerminals);
+    grammarTable.set_terminals(terminals);
+
+    grammarTable.add_entry("A", "a", {"B"});
+    grammarTable.add_entry("B", "$", {});
+
+    grammarTable.set_start("A");
+
+    Parser parser;
+    parser.set_grammar_table(grammarTable);
+    parser.init_parser();
+
+    Token* token1 = new Token(REAL_TOKEN, "", "a");
+//    Token* token2 = new Token(REAL_TOKEN, "", "$");
+    parser.derive_token(*token1);
+//    parser.derive_token(*token2);
+
+    vector<vector<string>> derivations;
+    vector<string> errors;
+    parser.finish_derivation(&errors, &derivations);
 
 }
 

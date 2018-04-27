@@ -11,7 +11,6 @@ void Parser::init_parser() {
     rules.emplace_back("$");
     rules.push_back(table.get_start());
     derivations.push_back({table.get_start()});
-
 }
 
 void Parser::set_grammar_table(GrammarTable gTable) {
@@ -78,8 +77,13 @@ void Parser::derive_token(Token token) {
 
 
 void Parser::finish_derivation(vector<string> *rerrors, vector<vector<string>> *rderiv) {
+    Token endToken(REAL_TOKEN, "", "$");
+    derive_token(endToken);
     if (!rules.empty()) {
-        errors.emplace_back("Error: input not matched, stack is not empty.\n");
+        errors.emplace_back("Error: input not matched, stack is not empty.\nStack context:");
+        for (auto rule : rules) {
+            errors.push_back(rule);
+        }
     }
 
     copy_vector(&errors, rerrors);
