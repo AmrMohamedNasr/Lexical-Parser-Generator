@@ -37,6 +37,11 @@ void LlConverter::remove_left_recursion(vector<GrammarElement *> *rules , unorde
 					GrammarExpression * expr = s.top();
 					s.pop();
 					NonTerminal * ele = static_cast<NonTerminal *> (expr->expression[0]);
+					for (unsigned k = 0; k < ele->referenced_in.size(); ++k) {
+						if (ele->referenced_in[k] == expr) {
+							ele->referenced_in.erase(ele->referenced_in.begin() + k);
+						}
+					}
 					expr->expression.erase(expr->expression.begin());
 					for (unsigned k = 0; k < ele->leads_to.size(); ++k) {
 						// boolean considered for the new expression to be substituted.
@@ -45,17 +50,26 @@ void LlConverter::remove_left_recursion(vector<GrammarElement *> *rules , unorde
 						if (it != chooser.end()) {
 							considered = true;
 						}
-						GrammarExpression * exprTemp = new GrammarExpression(temp);
+						NonTerminal * temp_rule;
+						GrammarExpression * expr_temp = new GrammarExpression(temp);
 						for (unsigned count = 0; count < ele->leads_to[k]->expression.size(); ++count) {
-							exprTemp->expression.push_back(ele->leads_to[k]->expression[count]);
+							expr_temp->expression.push_back(ele->leads_to[k]->expression[count]);
+							if (ele->leads_to[k]->expression[count]->getType() == NON_TERMINAL) {
+								temp_rule = static_cast<NonTerminal *>(ele->leads_to[k]->expression[count]);
+								temp_rule->referenced_in.push_back(expr_temp);
+							}
 						}
 						for (unsigned j = 0; j < expr->expression.size(); ++j) {
-							exprTemp->expression.push_back(expr->expression[j]);
+							expr_temp->expression.push_back(expr->expression[j]);
+							if (expr->expression[j]->getType() == NON_TERMINAL) {
+								temp_rule = static_cast<NonTerminal *>(expr->expression[j]);
+								temp_rule->referenced_in.push_back(expr_temp);
+							}
 						}
-						temp->leads_to.push_back(exprTemp);
-						(*expressions).insert(exprTemp);
+						temp->leads_to.push_back(expr_temp);
+						(*expressions).insert(expr_temp);
 						if (considered) {
-							chooser.insert(exprTemp);
+							chooser.insert(expr_temp);
 						}
 					}
 					for (unsigned j = 0; j < temp->leads_to.size(); j++ ) {
@@ -84,6 +98,11 @@ void LlConverter::remove_direct_left_recursion(vector<GrammarElement *> *rules ,
 					 NonTerminal * comparable = static_cast<NonTerminal *> ((*exprs)[j]->expression[0]);
 					 if (comparable == rule) {
 						 (*exprs)[j]->expression.erase((*exprs)[j]->expression.begin());
+						 for (unsigned i = 0; i < comparable->referenced_in.size(); ++i) {
+							 if (comparable->referenced_in[i] == (*exprs)[j]) {
+								 comparable->referenced_in.erase((comparable->referenced_in.begin() + i));
+							 }
+						 }
 						 (*exprs)[j]->expression.push_back(newRule);
 						 (*exprs)[j]->belongs_to = static_cast<NonTerminal *>(newRule);
 						 static_cast<NonTerminal *>(newRule)->referenced_in.push_back((*exprs)[j]);
