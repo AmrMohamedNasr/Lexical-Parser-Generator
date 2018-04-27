@@ -38,12 +38,16 @@ void SyntacticAnalyzerGenerator::generate_syntactic_analyzer(string file_name, b
 	this->followCalculator.set_follow_sets(&rules, &expressions);
 	unordered_set<NonTerminal *> changed;
 	this->converter.left_factor(&rules, &expressions, &changed);
-	this->firstCalculator.set_first_sets(&rules, &expressions);
-	this->followCalculator.set_follow_sets(&rules, &expressions);
+	if (changed.size() > 0) {
+		this->firstCalculator.set_first_sets(&rules, &expressions);
+		this->followCalculator.set_follow_sets(&rules, &expressions);
+	}
 	changed.clear();
 	this->converter.remove_left_recursion(&rules,&expressions,&changed);
-	this->firstCalculator.set_first_sets(&rules, &expressions);
-	this->followCalculator.set_follow_sets(&rules, &expressions);
+	if (changed.size() > 0) {
+		this->firstCalculator.set_first_sets(&rules, &expressions);
+		this->followCalculator.set_follow_sets(&rules, &expressions);
+	}
 	GrammarTable * table = this->tableBuilder.build_grammar_table(&rules, &errors);
 	if (!errors.empty()) {
 		cout << "Couldn't build syntactic analyzer! Table error :" << endl;
