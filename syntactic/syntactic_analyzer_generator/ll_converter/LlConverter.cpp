@@ -39,7 +39,15 @@ void LlConverter::remove_left_recursion(vector<GrammarElement *> *rules , unorde
 					NonTerminal * ele = static_cast<NonTerminal *> (expr->expression[0]);
 					for (unsigned k = 0; k < ele->referenced_in.size(); ++k) {
 						if (ele->referenced_in[k] == expr) {
-							ele->referenced_in.erase(ele->referenced_in.begin() + k);
+							bool flag;
+							for (unsigned j = 1; j < expr->expression.size(); ++j) {
+								if (expr->expression[j] == ele) {
+									flag = true;
+								}
+							}
+							if (!flag) {
+								ele->referenced_in.erase(ele->referenced_in.begin() + k);
+							}
 						}
 					}
 					expr->expression.erase(expr->expression.begin());
@@ -98,6 +106,20 @@ void LlConverter::remove_direct_left_recursion(vector<GrammarElement *> *rules ,
 					 NonTerminal * comparable = static_cast<NonTerminal *> ((*exprs)[j]->expression[0]);
 					 if (comparable == rule) {
 						 (*exprs)[j]->expression.erase((*exprs)[j]->expression.begin());
+						 for (unsigned i = 0; i < comparable->referenced_in.size(); ++i) {
+						 	 if (comparable->referenced_in[i] == (*exprs)[j]) {
+						 		 bool flag;
+						 		 for (unsigned k = 1; k < (*exprs)[j]->expression.size(); ++k){
+						 			 if ((*exprs)[j]->expression[k] == comparable->referenced_in[i]){
+						 				 flag = true;
+						 			 }
+						 		 }
+						 		if (!flag) {
+						 			comparable->referenced_in.erase((comparable->referenced_in.begin() + i));
+						 		}
+						 	 }
+
+						 }
 						 (*exprs)[j]->expression.push_back(newRule);
 						 (*exprs)[j]->belongs_to = static_cast<NonTerminal *>(newRule);
 						 static_cast<NonTerminal *>(newRule)->referenced_in.push_back((*exprs)[j]);
