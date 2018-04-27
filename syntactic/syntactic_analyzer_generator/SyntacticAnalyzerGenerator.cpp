@@ -37,26 +37,17 @@ void SyntacticAnalyzerGenerator::generate_syntactic_analyzer(string file_name, b
 	this->firstCalculator.set_first_sets(&rules, &expressions);
 	this->followCalculator.set_follow_sets(&rules, &expressions);
 	unordered_set<NonTerminal *> changed;
-	cout << "Before Factoring" << endl;
-	print_rules(&rules);
 	this->converter.left_factor(&rules, &expressions, &changed);
 	if (changed.size() > 0) {
 		this->firstCalculator.set_first_sets(&rules, &expressions);
 		this->followCalculator.set_follow_sets(&rules, &expressions);
 	}
-	cout << endl << "-----------------------------------------------------------------------------------" << endl;
-	cout << "After Factoring" << endl;
-	print_rules(&rules);
 	changed.clear();
 	this->converter.remove_left_recursion(&rules,&expressions,&changed);
 	if (changed.size() > 0) {
 		this->firstCalculator.set_first_sets(&rules, &expressions);
 		this->followCalculator.set_follow_sets(&rules, &expressions);
 	}
-	cout << endl << "-----------------------------------------------------------------------------------" << endl;
-	cout << "After Recursion" << endl;
-	print_rules(&rules);
-	cout << endl << "-----------------------------------------------------------------------------------" << endl;
 	GrammarTable * table = this->tableBuilder.build_grammar_table(&rules, &errors);
 	if (!errors.empty()) {
 		cout << "Couldn't build syntactic analyzer! Table error :" << endl;

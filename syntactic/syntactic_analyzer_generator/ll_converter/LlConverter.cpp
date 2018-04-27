@@ -379,7 +379,9 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 									}
 								}
 								if (!flag) {
-									temp->referenced_in.erase(temp->referenced_in.begin() + i);
+									if (temp->referenced_in[i] != newExpr) {
+										temp->referenced_in.erase(temp->referenced_in.begin() + i);
+									}
 								}
 							}
 					}
