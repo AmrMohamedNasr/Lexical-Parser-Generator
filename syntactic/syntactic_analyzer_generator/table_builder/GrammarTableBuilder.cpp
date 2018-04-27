@@ -13,7 +13,6 @@ GrammarTable* GrammarTableBuilder::build_grammar_table(vector<GrammarElement *> 
     auto grammarTable = new GrammarTable();
     build_terminals_nonTerminals(grammarTable, rules);
 
-
     bool first = true;
     for (auto grammarElement : *rules) {
         if (grammarElement->getType() == NON_TERMINAL) {
