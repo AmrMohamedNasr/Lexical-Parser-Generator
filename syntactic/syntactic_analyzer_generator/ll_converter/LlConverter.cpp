@@ -153,13 +153,55 @@ void LlConverter::left_factor(vector<GrammarElement *> *rules , unordered_set<Gr
 						if ((*itr)->expression[0]->getType() == NON_TERMINAL) {
 							NonTerminal * temp = static_cast<NonTerminal *>((*itr)->expression[0]);
 							(*itr)->expression.erase((*itr)->expression.begin());
+							for (unsigned j = 0; j < temp->referenced_in.size(); ++j) {
+								if (temp->referenced_in[j] == (*itr)) {
+									temp->referenced_in.erase(temp->referenced_in.begin() + j);
+								}
+							}
 							for (unsigned j = 0; j < temp->leads_to.size(); ++j) {
 								GrammarExpression * exprTemp = new GrammarExpression(rule);
+								NonTerminal * castNTerminal;
 								for (unsigned k = 0; k < temp->leads_to[j]->expression.size(); ++k) {
 									exprTemp->expression.push_back(temp->leads_to[j]->expression[k]);
+									if (temp->leads_to[j]->expression[k]->getType() == NON_TERMINAL) {
+										castNTerminal = static_cast<NonTerminal *>(temp->leads_to[j]->expression[k]);
+										castNTerminal->referenced_in.push_back(exprTemp);
+									}
 								}
 								for (unsigned k = 0; k < (*itr)->expression.size(); ++k) {
 									exprTemp->expression.push_back((*itr)->expression[k]);
+									if ((*itr)->expression[k]->getType() == NON_TERMINAL) {
+										castNTerminal = static_cast<NonTerminal *>((*itr)->expression[k]);
+										castNTerminal->referenced_in.push_back(exprTemp);
+									}
+								}
+								if (exprTemp->expression[0]->getType() == NON_TERMINAL) {
+									NonTerminal * start_ele = static_cast<NonTerminal *>(exprTemp->expression[0]);
+									for (auto itra = start_ele->first_strings.begin();
+										itra != start_ele->first_strings.end(); ++itra) {
+										exprTemp->first_strings.insert(*itra);
+									}
+								} else {
+									exprTemp->first_strings.insert(exprTemp->expression[0]->getName());
+								}
+								rule->leads_to.push_back(exprTemp);
+								(*expressions).insert(exprTemp);
+							}
+							for (unsigned k = 0; k < rule->leads_to.size(); ++k) {
+								if (rule->leads_to[k] == (*itr)) {
+									rule->leads_to.erase(rule->leads_to.begin() + k);
+								}
+							}
+							if (temp->eps) {
+								GrammarExpression * exprTemp = new GrammarExpression(rule);
+								NonTerminal * castNTerminal;
+								exprTemp->expression.clear();
+								for (unsigned k = 0; k < (*itr)->expression.size(); ++k) {
+									exprTemp->expression.push_back((*itr)->expression[k]);
+									if ((*itr)->expression[k]->getType() == NON_TERMINAL) {
+										castNTerminal = static_cast<NonTerminal *>((*itr)->expression[k]);
+										castNTerminal->referenced_in.push_back(exprTemp);
+									}
 								}
 								if (exprTemp->expression[0]->getType() == NON_TERMINAL) {
 									NonTerminal * start_ele = static_cast<NonTerminal *>(exprTemp->expression[0]);
@@ -175,29 +217,6 @@ void LlConverter::left_factor(vector<GrammarElement *> *rules , unordered_set<Gr
 							}
 							(*expressions).erase((*itr));
 							delete (*itr);
-							for (unsigned k = 0; k < rule->leads_to.size(); ++k) {
-								if (rule->leads_to[k] == (*itr)) {
-									rule->leads_to.erase(rule->leads_to.begin() + k);
-								}
-							}
-							if (temp->eps) {
-								GrammarExpression * exprTemp = new GrammarExpression(rule);
-								exprTemp->expression.clear();
-								for (unsigned k = 0; k < (*itr)->expression.size(); ++k) {
-									exprTemp->expression.push_back((*itr)->expression[k]);
-								}
-								if (exprTemp->expression[0]->getType() == NON_TERMINAL) {
-									NonTerminal * start_ele = static_cast<NonTerminal *>(exprTemp->expression[0]);
-									for (auto itra = start_ele->first_strings.begin();
-										itra != start_ele->first_strings.end(); ++itra) {
-									exprTemp->first_strings.insert(*itra);
-									}
-								} else {
-									exprTemp->first_strings.insert(exprTemp->expression[0]->getName());
-								}
-								rule->leads_to.push_back(exprTemp);
-								(*expressions).insert(exprTemp);
-							}
 						}
 					}
 					direct = false;
