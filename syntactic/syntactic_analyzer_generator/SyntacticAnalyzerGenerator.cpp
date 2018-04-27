@@ -48,6 +48,50 @@ void SyntacticAnalyzerGenerator::generate_syntactic_analyzer(string file_name, b
 		this->firstCalculator.set_first_sets(&rules, &expressions);
 		this->followCalculator.set_follow_sets(&rules, &expressions);
 	}
+	for (auto i = rules.begin(); i != rules.end(); i++) {
+		if ((*i)->getType() == NON_TERMINAL) {
+			NonTerminal * e =  static_cast<NonTerminal *>(*i);
+			cout << e->getName() << endl;
+			string fol1 = "{ ", fol2 = "{ ", fol3 = "{";
+			unsigned j = 0;
+			for (auto it = e->follow_strings.begin(); it != e->follow_strings.end(); it++) {
+				fol1 += "\"";
+				fol1 += *it;
+				fol1 += "\"";
+				if (j != e->follow_strings.size() - 1) {
+					fol1 += " , ";
+				}
+				j++;
+			}
+			fol1 += " }";
+			j = 0;
+			for (auto it = e->first_strings.begin(); it != e->first_strings.end(); it++) {
+				fol2 += "\"";
+				fol2 += *it;
+				fol2 += "\"";
+				if (j != e->first_strings.size() - 1) {
+					fol2 += " , ";
+				}
+				j++;
+			}
+			fol2 += " }";
+			j = 0;
+			for (auto it = e->referenced_in.begin(); it != e->referenced_in.end(); it++) {
+				fol3 += "\"";
+				fol3 += (*it)->belongs_to->getName();
+				fol3 += "\"";
+				if (j != e->referenced_in.size() - 1) {
+					fol3 += " , ";
+				}
+				j++;
+			}
+			fol3 += " }";
+			cout << "First : " << fol2 << endl;
+			cout << "Follow : " << fol1 << endl;
+			cout << "Referenced in : " << fol3 << endl;
+			cout << endl;
+		}
+	}
 	GrammarTable * table = this->tableBuilder.build_grammar_table(&rules, &errors);
 	if (!errors.empty()) {
 		cout << "Couldn't build syntactic analyzer! Table error :" << endl;
