@@ -14,6 +14,11 @@ void test_grammar_table(void) {
     vector<string> s;
     bool valid = true;
     s.emplace_back("Hello World");
+    vector<string> terminals = {"a", "b"};
+    vector<string> nonTerminals = {"A"};
+
+    grammarTable->set_terminals(terminals);
+    grammarTable->set_non_terminals(nonTerminals);
 
     grammarTable->add_entry("A", "a", s);
     if (!grammarTable->has_entry("A", "a")) {
