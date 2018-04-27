@@ -110,7 +110,7 @@ void LlConverter::remove_direct_left_recursion(vector<GrammarElement *> *rules ,
 						 	 if (comparable->referenced_in[i] == (*exprs)[j]) {
 						 		 bool flag;
 						 		 for (unsigned k = 1; k < (*exprs)[j]->expression.size(); ++k){
-						 			 if ((*exprs)[j]->expression[k] == comparable->referenced_in[i]){
+						 			 if ((*exprs)[j]->expression[k] == comparable){
 						 				 flag = true;
 						 			 }
 						 		 }
