@@ -358,8 +358,8 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 					temp = static_cast<NonTerminal *>((*itr).second[0]->expression[0]);
 					if (temp->referenced_in.size() == 0) {
 						temp->referenced_in.push_back(newExpr);
-					}else {
-						bool flag;
+					} else {
+						bool flag = false;
 						for (unsigned i = 0; i < temp->referenced_in.size(); ++i) {
 							if (temp->referenced_in[i] == newExpr) {
 								flag = true;
@@ -388,15 +388,20 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 					(*itr).second[i]->expression.erase((*itr).second[i]->expression.begin());
 				}
 				unordered_set <GrammarElement *> first_eles;
-				if ((*itr).second[0]->expression.size() == 0) {
+				if ((*itr).second[0]->expression.size() != 0) {
 					first_eles.insert((*itr).second[0]->expression[0]);
-					for (unsigned j = 1; j < (*itr).second.size() && (*itr).second[j]->expression.size() == 0; ++j) {
-						unordered_set <GrammarElement *>::iterator it = first_eles.find((*itr).second[j]->expression[0]);
-						if (it == first_eles.end()) {
-							j = (*itr).second.size();
+					for (unsigned j = 1; j < (*itr).second.size() && sameFirst; ++j) {
+						if ((*itr).second[j]->expression.size() == 0) {
 							sameFirst = false;
+						} else {
+							unordered_set <GrammarElement *>::iterator it = first_eles.find((*itr).second[j]->expression[0]);
+							if (it == first_eles.end()) {
+								sameFirst = false;
+							}
 						}
 					}
+				} else {
+					sameFirst = false;
 				}
 			}
 			NonTerminal * newEle = new NonTerminal(

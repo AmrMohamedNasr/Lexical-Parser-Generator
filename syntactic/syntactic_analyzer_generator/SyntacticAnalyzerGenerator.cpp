@@ -44,6 +44,7 @@ void SyntacticAnalyzerGenerator::generate_syntactic_analyzer(string file_name, b
 		this->firstCalculator.set_first_sets(&rules, &expressions);
 		this->followCalculator.set_follow_sets(&rules, &expressions);
 	}
+	cout << endl << "-----------------------------------------------------------------------------------" << endl;
 	cout << "After Factoring" << endl;
 	print_rules(&rules);
 	changed.clear();
@@ -52,8 +53,10 @@ void SyntacticAnalyzerGenerator::generate_syntactic_analyzer(string file_name, b
 		this->firstCalculator.set_first_sets(&rules, &expressions);
 		this->followCalculator.set_follow_sets(&rules, &expressions);
 	}
+	cout << endl << "-----------------------------------------------------------------------------------" << endl;
 	cout << "After Recursion" << endl;
 	print_rules(&rules);
+	cout << endl << "-----------------------------------------------------------------------------------" << endl;
 	GrammarTable * table = this->tableBuilder.build_grammar_table(&rules, &errors);
 	if (!errors.empty()) {
 		cout << "Couldn't build syntactic analyzer! Table error :" << endl;
