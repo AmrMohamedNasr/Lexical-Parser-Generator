@@ -12,8 +12,6 @@ bool GrammarTable::add_entry(string non_terminal, string terminal, vector<string
     pair<string, string> nt_t_pair = make_pair(non_terminal, terminal);
     if (!exist) {
         table.insert(make_pair(nt_t_pair, rules));
-        non_terminals.insert(non_terminal);
-        terminals.insert(terminal);
     }
 
     return !exist;
@@ -39,9 +37,6 @@ vector<string> GrammarTable::get_entry(string non_terminal, string terminal) {
 }
 
 void GrammarTable::add_synch(string non_terminal, string terminal) {
-    non_terminals.insert(non_terminal);
-    terminals.insert(terminal);
-
     synchronizing.insert(make_pair(non_terminal, terminal));
 }
 

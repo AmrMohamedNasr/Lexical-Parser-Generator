@@ -19,6 +19,7 @@ class GrammarTableBuilder {
 	private:
 		void set_expression_vector(vector<string>* expression_vector
 				, GrammarExpression* grammarExpression);
+		void build_terminals_nonTerminals(GrammarTable* table, vector<GrammarElement *> * rules);
 	public:
 		GrammarTable* build_grammar_table(vector<GrammarElement *> * rules,
 		vector<string> * errors);

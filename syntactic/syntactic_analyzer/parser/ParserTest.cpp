@@ -40,6 +40,10 @@ bool test_1() {
     grammarTable.add_entry("B", "a", {});
     grammarTable.add_entry("B", "b", {"b", "B"});
     grammarTable.set_start("S");
+    vector<string> terminals = {"a", "b"};
+    vector<string> nonTerminals = {"S", "B"};
+    grammarTable.set_non_terminals(nonTerminals);
+    grammarTable.set_terminals(terminals);
 
     Parser parser;
     parser.set_grammar_table(grammarTable);
@@ -103,6 +107,12 @@ bool test_2() {
     grammarTable.add_synch("A", "d");
 
     grammarTable.set_start("S");
+
+    vector<string> terminals = {"a", "b", "c", "d", "e", "$"};
+    vector<string> nonTerminals = {"S", "A"};
+    grammarTable.set_non_terminals(nonTerminals);
+    grammarTable.set_terminals(terminals);
+
 
     Parser parser;
     parser.set_grammar_table(grammarTable);
@@ -170,6 +180,12 @@ bool test_3() {
     grammarTable.add_synch("A", "d");
 
     grammarTable.set_start("S");
+
+    vector<string> terminals = {"a", "b", "c", "d", "e", "$"};
+    vector<string> nonTerminals = {"S", "A"};
+    grammarTable.set_non_terminals(nonTerminals);
+    grammarTable.set_terminals(terminals);
+
 
     Parser parser;
     parser.set_grammar_table(grammarTable);
