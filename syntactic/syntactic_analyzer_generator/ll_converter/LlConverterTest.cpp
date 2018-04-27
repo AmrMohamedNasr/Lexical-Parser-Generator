@@ -250,6 +250,7 @@ void test_direct_left_factoring() {
 	a->first_strings = { "a", "c" };
 	unordered_set <NonTerminal*> set3;
 	LlConverter converter;
+	converter.remove_left_recursion(&set, &set2, &set3);
 	converter.left_factor(&set, &set2, &set3);
 	NonTerminal * ele0 =  static_cast<NonTerminal *> (set[0]);
 	NonTerminal * ele =  static_cast<NonTerminal *> (set[1]);
@@ -435,6 +436,7 @@ void test_indirect_left_factoring_2() {
 	unordered_set <GrammarExpression*> set2 = {exp11, exp12, exp13, exp14, exp21, exp31, exp41, exp51, exp61};
 	unordered_set <NonTerminal*> set3;
 	LlConverter converter;
+	converter.remove_left_recursion(&set, &set2, &set3);
 	converter.left_factor(&set, &set2, &set3);
 
 	NonTerminal * ele12 =  static_cast<NonTerminal *> (set[12]);
