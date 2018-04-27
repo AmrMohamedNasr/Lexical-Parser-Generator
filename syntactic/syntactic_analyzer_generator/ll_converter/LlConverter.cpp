@@ -101,15 +101,15 @@ void LlConverter::remove_direct_left_recursion(vector<GrammarElement *> *rules ,
 			static_cast<NonTerminal *>(newRule)->eps = true;
 			vector<GrammarExpression *> *exprs = &(static_cast<NonTerminal *>(rule)->leads_to);
 			unsigned size = exprs->size();
-			for (unsigned j = 0; j < size; ++j) {
+			for (int j = size - 1; j >= 0; j--) {
 				 if ((*exprs)[j]->expression[0]->getType() == NON_TERMINAL) {
 					 NonTerminal * comparable = static_cast<NonTerminal *> ((*exprs)[j]->expression[0]);
 					 if (comparable == rule) {
 						 (*exprs)[j]->expression.erase((*exprs)[j]->expression.begin());
 						 for (unsigned i = 0; i < comparable->referenced_in.size(); ++i) {
 						 	 if (comparable->referenced_in[i] == (*exprs)[j]) {
-						 		 bool flag;
-						 		 for (unsigned k = 1; k < (*exprs)[j]->expression.size(); ++k){
+						 		 bool flag = false;
+						 		 for (unsigned k = 0; k < (*exprs)[j]->expression.size(); ++k){
 						 			 if ((*exprs)[j]->expression[k] == comparable){
 						 				 flag = true;
 						 			 }
@@ -118,7 +118,6 @@ void LlConverter::remove_direct_left_recursion(vector<GrammarElement *> *rules ,
 						 			comparable->referenced_in.erase((comparable->referenced_in.begin() + i));
 						 		}
 						 	 }
-
 						 }
 						 (*exprs)[j]->expression.push_back(newRule);
 						 (*exprs)[j]->belongs_to = static_cast<NonTerminal *>(newRule);
