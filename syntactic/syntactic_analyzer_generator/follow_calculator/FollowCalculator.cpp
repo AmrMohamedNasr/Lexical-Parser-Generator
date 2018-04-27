@@ -69,8 +69,6 @@ void FollowCalculator::set_follow_sets(vector<GrammarElement *> *rules , unorder
 			wrapper->follow_elements.clear();
 		}
 	}
-
-
 	for (auto it = createdEleWrappers.begin(); it != createdEleWrappers.end(); it++) {
 		FollowElementWrapper * wrapper = *it;
 		wrapper->core->follow_strings.insert(wrapper->follow_strings.begin(), wrapper->follow_strings.end());

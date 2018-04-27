@@ -36,14 +36,30 @@ void SyntacticAnalyzerGenerator::generate_syntactic_analyzer(string file_name, b
 	}
 	this->firstCalculator.set_first_sets(&rules, &expressions);
 	this->followCalculator.set_follow_sets(&rules, &expressions);
+	cout << "ENDF&F" << endl;
 	unordered_set<NonTerminal *> changed;
 	this->converter.left_factor(&rules, &expressions, &changed);
-	this->firstCalculator.set_first_sets(&rules, &expressions);
-	this->followCalculator.set_follow_sets(&rules, &expressions);
+	if (changed.size() > 0) {
+		for (auto i = rules.begin(); i != rules.end(); i++) {
+			if ((*i)->getType() == NON_TERMINAL) {
+				NonTerminal * e = static_cast<NonTerminal*>(*i);
+				for (auto j = e->referenced_in.begin(); j != e->referenced_in.end(); j++) {
+					GrammarExpression * exp = (*j);
+					cout << exp->expression.size() << endl;
+				}
+			}
+		}
+		cout << "Victory" << endl;
+		this->firstCalculator.set_first_sets(&rules, &expressions);
+		this->followCalculator.set_follow_sets(&rules, &expressions);
+	}
 	changed.clear();
+	cout << "ENDLF" << endl;
 	this->converter.remove_left_recursion(&rules,&expressions,&changed);
-	this->firstCalculator.set_first_sets(&rules, &expressions);
-	this->followCalculator.set_follow_sets(&rules, &expressions);
+	if (changed.size() > 0) {
+		this->firstCalculator.set_first_sets(&rules, &expressions);
+		this->followCalculator.set_follow_sets(&rules, &expressions);
+	}
 	GrammarTable * table = this->tableBuilder.build_grammar_table(&rules, &errors);
 	if (!errors.empty()) {
 		cout << "Couldn't build syntactic analyzer! Table error :" << endl;
