@@ -8,7 +8,12 @@
 #ifndef SYNTACTIC_SYNTACTIC_ANALYZER_WRITERS_DERIVATIONSWRITER_H_
 #define SYNTACTIC_SYNTACTIC_ANALYZER_WRITERS_DERIVATIONSWRITER_H_
 
-void write_derivations(vector<vector<string>> derivations, ostream * outStream);
+#include <ostream>
+#include <vector>
+
+using namespace std;
+
+void write_derivations(vector<vector<string>> *derivations, ostream * outStream);
 
 
 

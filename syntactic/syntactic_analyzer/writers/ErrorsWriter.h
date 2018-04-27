@@ -8,8 +8,12 @@
 #ifndef SYNTACTIC_SYNTACTIC_ANALYZER_WRITERS_ERRORSWRITER_H_
 #define SYNTACTIC_SYNTACTIC_ANALYZER_WRITERS_ERRORSWRITER_H_
 
+#include <ostream>
+#include <vector>
 
-void write_errors(vector<string> errors, ostream * outStream);
+using namespace std;
+
+void write_errors(vector<string> *errors, ostream * outStream);
 
 
 #endif /* SYNTACTIC_SYNTACTIC_ANALYZER_WRITERS_ERRORSWRITER_H_ */

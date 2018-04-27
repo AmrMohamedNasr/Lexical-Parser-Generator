@@ -199,3 +199,7 @@ CMakeLists\.txt
 /Testing/
 /Generator/
 /Analyzer/
+/LGenerator/
+/LAnalyzer/
+/SGenerator/
+/SAnalyzer/
