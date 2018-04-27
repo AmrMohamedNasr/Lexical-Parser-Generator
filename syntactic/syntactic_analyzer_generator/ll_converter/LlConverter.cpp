@@ -339,7 +339,15 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 				for (unsigned i = 0; i < temp->referenced_in.size(); ++i) {
 					for (unsigned j = 0; j < (*itr).second.size(); ++j)
 						if (temp == (*itr).second[j]->expression[0]) {
-							temp->referenced_in.erase(temp->referenced_in.begin() + i);
+							bool flag = false;
+							for (unsigned k = 1; k < (*itr).second[j]->expression.size(); ++k) {
+								if ((*itr).second[j]->expression[k] == temp) {
+									flag = true;
+								}
+							}
+							if (!flag) {
+								temp->referenced_in.erase(temp->referenced_in.begin() + i);
+							}
 						}
 				}
 			}
