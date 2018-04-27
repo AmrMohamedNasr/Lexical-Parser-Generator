@@ -98,11 +98,6 @@ void LlConverter::remove_direct_left_recursion(vector<GrammarElement *> *rules ,
 					 NonTerminal * comparable = static_cast<NonTerminal *> ((*exprs)[j]->expression[0]);
 					 if (comparable == rule) {
 						 (*exprs)[j]->expression.erase((*exprs)[j]->expression.begin());
-						 for (unsigned i = 0; i < comparable->referenced_in.size(); ++i) {
-							 if (comparable->referenced_in[i] == (*exprs)[j]) {
-								 comparable->referenced_in.erase((comparable->referenced_in.begin() + i));
-							 }
-						 }
 						 (*exprs)[j]->expression.push_back(newRule);
 						 (*exprs)[j]->belongs_to = static_cast<NonTerminal *>(newRule);
 						 static_cast<NonTerminal *>(newRule)->referenced_in.push_back((*exprs)[j]);
