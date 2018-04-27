@@ -318,9 +318,16 @@ void LlConverter:: generate_direct_left_factoring(GrammarElement * source,
 		}
 		while (sameFirst) {
 			newExpr->expression.push_back((*itr).second[0]->expression[0]);
+			NonTerminal * temp;
 			if ((*itr).second[0]->expression[0]->getType() == NON_TERMINAL) {
-				NonTerminal * temp = static_cast<NonTerminal *>((*itr).second[0]->expression[0]);
+				temp = static_cast<NonTerminal *>((*itr).second[0]->expression[0]);
 				temp->referenced_in.push_back(newExpr);
+				for (unsigned i = 0; i < temp->referenced_in.size(); ++i) {
+					for (unsigned j = 0; j < (*itr).second.size(); ++j)
+						if (temp == (*itr).second[j]->expression[0]) {
+							temp->referenced_in.erase(temp->referenced_in.begin() + i);
+						}
+				}
 			}
 			for (unsigned i = 0; i < (*itr).second.size(); ++i) {
 				(*itr).second[i]->expression.erase((*itr).second[i]->expression.begin());
