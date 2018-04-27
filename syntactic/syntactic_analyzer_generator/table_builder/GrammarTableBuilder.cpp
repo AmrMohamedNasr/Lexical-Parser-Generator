@@ -96,7 +96,7 @@ void GrammarTableBuilder::build_terminals_nonTerminals(GrammarTable *table, vect
             terminals.push_back(grammarElement->getName());
         }
     }
-
+    terminals.push_back("$");
     table->set_terminals(terminals);
     table->set_non_terminals(nonTerminals);
 }

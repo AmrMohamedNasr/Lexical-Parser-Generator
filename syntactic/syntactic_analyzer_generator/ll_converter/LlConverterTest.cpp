@@ -4,7 +4,8 @@
  *  Created on: Apr 18, 2018
  *      Author: amrnasr
  */
-#include "../../syntactic_analyzer_generator/ll_converter/LlConverter.h"
+#include "../../../syntactic/syntactic_analyzer_generator/file_parser/GrammarFileParser.h"
+#include "LlConverter.h"
 #include "../../../syntactic/syntactic_analyzer_generator/models/GrammarExpression.h"
 #include "../../../syntactic/syntactic_analyzer_generator/models/GrammarElement.h"
 #include "../../../syntactic/syntactic_analyzer_generator/models/NonTerminal.h"
@@ -459,6 +460,9 @@ void test_indirect_left_factoring_2() {
 									if (ele12->leads_to[0]->expression[2] == ele13 &&
 										ele12->leads_to[0]->expression[1] == eS) {
 										if (set2.size() == 11) {
+											if (ele12->getType() == NON_TERMINAL &&
+												ele13->getType() == NON_TERMINAL &&
+												ele14->getType() == NON_TERMINAL)
 											cout << "Nested left factoring success..." << endl;
 										}
 									}
@@ -482,7 +486,7 @@ void test_indirect_left_factoring_2() {
 	delete dS;
 	delete eS;
 	delete fS;
-
-
 }
+
+
 

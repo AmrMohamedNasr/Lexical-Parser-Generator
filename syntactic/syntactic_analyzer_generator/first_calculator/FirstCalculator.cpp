@@ -20,6 +20,7 @@ void FirstCalculator::set_first_sets(vector<GrammarElement *> *rules , unordered
 		if ((*rules)[i]->getType() == NON_TERMINAL) {
 			FirstElementWrapper *wrapper = new FirstElementWrapper();
 			NonTerminal * e = static_cast<NonTerminal *>((*rules)[i]);
+			e->first_strings.clear();
 			wrapper->core = e;
 			eleWrappers.insert(pair<NonTerminal *, FirstElementWrapper *>(e, wrapper));
 			createdEleWrappers.push_back(wrapper);
@@ -27,6 +28,7 @@ void FirstCalculator::set_first_sets(vector<GrammarElement *> *rules , unordered
 	}
 	for (auto it = expressions->begin(); it != expressions->end(); it++) {
 		FirstExpressionWrapper *wrapper = new FirstExpressionWrapper();
+		(*it)->first_strings.clear();
 		wrapper->core = (*it);
 		expWrappers.insert(pair<GrammarExpression *, FirstExpressionWrapper *>(*it, wrapper));
 		createdExpWrappers.push_back(wrapper);

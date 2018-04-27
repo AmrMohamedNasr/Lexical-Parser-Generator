@@ -12,7 +12,7 @@
 
 void free_resources(vector<GrammarElement *> * rules, unordered_set<GrammarExpression *> *expressions,
 		GrammarTable * table);
-
+void print_rules(vector<GrammarElement *> *rules);
 void SyntacticAnalyzerGenerator::generate_syntactic_analyzer(string file_name, bool print) {
 	ifstream inFile;
 	inFile.open(file_name);
@@ -37,17 +37,26 @@ void SyntacticAnalyzerGenerator::generate_syntactic_analyzer(string file_name, b
 	this->firstCalculator.set_first_sets(&rules, &expressions);
 	this->followCalculator.set_follow_sets(&rules, &expressions);
 	unordered_set<NonTerminal *> changed;
+	cout << "Before Factoring" << endl;
+	print_rules(&rules);
 	this->converter.left_factor(&rules, &expressions, &changed);
 	if (changed.size() > 0) {
 		this->firstCalculator.set_first_sets(&rules, &expressions);
 		this->followCalculator.set_follow_sets(&rules, &expressions);
 	}
+	cout << endl << "-----------------------------------------------------------------------------------" << endl;
+	cout << "After Factoring" << endl;
+	print_rules(&rules);
 	changed.clear();
 	this->converter.remove_left_recursion(&rules,&expressions,&changed);
 	if (changed.size() > 0) {
 		this->firstCalculator.set_first_sets(&rules, &expressions);
 		this->followCalculator.set_follow_sets(&rules, &expressions);
 	}
+	cout << endl << "-----------------------------------------------------------------------------------" << endl;
+	cout << "After Recursion" << endl;
+	print_rules(&rules);
+	cout << endl << "-----------------------------------------------------------------------------------" << endl;
 	GrammarTable * table = this->tableBuilder.build_grammar_table(&rules, &errors);
 	if (!errors.empty()) {
 		cout << "Couldn't build syntactic analyzer! Table error :" << endl;
@@ -80,6 +89,68 @@ void SyntacticAnalyzerGenerator::generate_syntactic_analyzer(string file_name, b
 		this->tableWriter.writeGrammarTableInReadableForamt(table, &outFile);
 	}
 	free_resources(&rules, &expressions, table);
+}
+
+void print_rules(vector<GrammarElement *> *rules) {
+	for (auto i = rules->begin(); i != rules->end(); i++) {
+		if ((*i)->getType() == NON_TERMINAL) {
+			NonTerminal * e =  static_cast<NonTerminal *>(*i);
+			cout << e->getName() << endl;
+			string fol1 = "{ ", fol2 = "{ ", fol3 = "{", fol4 = "{";
+			unsigned j = 0;
+			for (auto it = e->follow_strings.begin(); it != e->follow_strings.end(); it++) {
+				fol1 += "\"";
+				fol1 += *it;
+				fol1 += "\"";
+				if (j != e->follow_strings.size() - 1) {
+					fol1 += " , ";
+				}
+				j++;
+			}
+			fol1 += " }";
+			j = 0;
+			for (auto it = e->first_strings.begin(); it != e->first_strings.end(); it++) {
+				fol2 += "\"";
+				fol2 += *it;
+				fol2 += "\"";
+				if (j != e->first_strings.size() - 1) {
+					fol2 += " , ";
+				}
+				j++;
+			}
+			if (e->eps) {
+				fol2 += " , \"eps\"";
+			}
+			fol2 += " }";
+			j = 0;
+			for (auto it = e->referenced_in.begin(); it != e->referenced_in.end(); it++) {
+				fol3 += "\"";
+				fol3 += (*it)->belongs_to->getName();
+				fol3 += "\"";
+				if (j != e->referenced_in.size() - 1) {
+					fol3 += " , ";
+				}
+				j++;
+			}
+			fol3 += " }";
+			j = 0;
+			for (auto it = e->leads_to.begin(); it != e->leads_to.end(); it++) {
+				fol4 += "\"";
+				fol4 += (*it)->getName();
+				fol4 += "\"";
+				if (j != e->leads_to.size() - 1) {
+					fol4 += " , ";
+				}
+				j++;
+			}
+			fol4 += " }";
+			cout << "First : " << fol2 << endl;
+			cout << "Follow : " << fol1 << endl;
+			cout << "Referenced in : " << fol3 << endl;
+			cout << "Leads to : " << fol4 << endl;
+			cout << endl;
+		}
+	}
 }
 
 void free_resources(vector<GrammarElement *> * rules, unordered_set<GrammarExpression *> *expressions,

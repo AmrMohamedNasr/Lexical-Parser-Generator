@@ -18,6 +18,7 @@ void FollowCalculator::set_follow_sets(vector<GrammarElement *> *rules , unorder
 		if ((*rules)[i]->getType() == NON_TERMINAL) {
 			FollowElementWrapper *wrapper = new FollowElementWrapper();
 			NonTerminal * e = static_cast<NonTerminal *>((*rules)[i]);
+			e->follow_strings.clear();
 			wrapper->core = e;
 			eleWrappers.insert(pair<NonTerminal *, FollowElementWrapper *>(e, wrapper));
 			createdEleWrappers.push_back(wrapper);
