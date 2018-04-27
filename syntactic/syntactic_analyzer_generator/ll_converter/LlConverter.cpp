@@ -39,7 +39,7 @@ void LlConverter::remove_left_recursion(vector<GrammarElement *> *rules , unorde
 					NonTerminal * ele = static_cast<NonTerminal *> (expr->expression[0]);
 					for (unsigned k = 0; k < ele->referenced_in.size(); ++k) {
 						if (ele->referenced_in[k] == expr) {
-							bool flag;
+							bool flag = false;
 							for (unsigned j = 1; j < expr->expression.size(); ++j) {
 								if (expr->expression[j] == ele) {
 									flag = true;
