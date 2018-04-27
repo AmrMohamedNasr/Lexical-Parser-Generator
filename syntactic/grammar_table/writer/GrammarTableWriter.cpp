@@ -97,5 +97,5 @@ void GrammarTableWriter::writeGrammarTableInHumanReadableFormat(GrammarTable *ta
         }
         *stream << endl;
     }
-    *stream << endl << "Start is: " << table->get_start()
+    *stream << endl << "Start is: " << table->get_start();
 }
